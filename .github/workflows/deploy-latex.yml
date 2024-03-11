@@ -31,6 +31,7 @@ jobs:
           mkdir ./public
           pandoc -s --highlight-style kate --toc -c latex2html.css report/main.tex -o public/index.html
           cp latex2html.css public
+          cp -r report/img public/report
           pdflatex report/main.tex
           pdflatex report/main.tex
 
