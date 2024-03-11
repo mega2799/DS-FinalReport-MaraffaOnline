@@ -201,6 +201,8 @@ id="toc-servizio-per-la-chat">Servizio per la Chat</a></li>
 <li><a href="#servizio-per-gestione-utenti"
 id="toc-servizio-per-gestione-utenti">Servizio per Gestione
 Utenti</a></li>
+<li><a href="#servizio-business-logic"
+id="toc-servizio-business-logic">Servizio Business Logic</a></li>
 <li><a href="#servizio-ponte-tra-i-microservizi"
 id="toc-servizio-ponte-tra-i-microservizi">Servizio ponte tra i
 microservizi</a></li>
@@ -1347,12 +1349,105 @@ alt="image" /><br />
 <h2 id="micro-servizi-e-la-loro-architettura">Micro-servizi e la loro
 architettura</h2>
 <h3 id="servizio-per-la-chat">Servizio per la Chat</h3>
+<div id="tab:chat_serv_table">
+<table>
+<caption>Tabella descrittiva Chat Service</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Linguaggio</td>
+<td style="text-align: left;">Java</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Server</td>
+<td style="text-align: left;">Vertx, Swagger</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Librerie</td>
+<td style="text-align: left;">RabbitMQ(vertx)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Architettura</td>
+<td style="text-align: left;">Agenti vertx</td>
+</tr>
+</tbody>
+</table>
+</div>
 <p><img src="report/img/Architettura ChatService.png" style="width:15cm"
 alt="image" /><br />
 </p>
 <h3 id="servizio-per-gestione-utenti">Servizio per Gestione Utenti</h3>
+<div id="tab:user_serv_table">
+<table>
+<caption>Tabella descrittiva User Service</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Linguaggio</td>
+<td style="text-align: left;">Node.JS/TypeScript</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Framework</td>
+<td style="text-align: left;">NestJS</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Persistence</td>
+<td style="text-align: left;">Mysql</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Librerie</td>
+<td style="text-align: left;">TypeORM</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Architettura</td>
+<td style="text-align: left;">Model-Controller-service</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="servizio-business-logic">Servizio Business Logic</h3>
+<div id="tab:bl_serv_table">
+<table>
+<caption>Tabella descrittiva Business Logic</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Linguaggio</td>
+<td style="text-align: left;">Node.JS/TypeScript</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Framework</td>
+<td style="text-align: left;">NestJS</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Architettura</td>
+<td style="text-align: left;">Model-Controller-service</td>
+</tr>
+</tbody>
+</table>
+</div>
 <h3 id="servizio-ponte-tra-i-microservizi">Servizio ponte tra i
 microservizi</h3>
+<div id="tab:middleware_serv_table">
+<table>
+<caption>Tabella descrittiva Middleware</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Linguaggio</td>
+<td style="text-align: left;">Java</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Server</td>
+<td style="text-align: left;">Vertx</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Librerie</td>
+<td style="text-align: left;">RabbitMQ(vertx)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Architettura</td>
+<td style="text-align: left;">Multi-agent, motore di gioco</td>
+</tr>
+</tbody>
+</table>
+</div>
 <h2 id="dsspe-perche-i-microservizi">[DS/SPE] Perche’ i
 microservizi?</h2>
 <p>Ogni microservizio si occupa di gestire un singolo ambito di
