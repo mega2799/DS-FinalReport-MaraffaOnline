@@ -1,7 +1,6 @@
 \chapter{Architettura e Design}
 \label{ch:architectures}
 
-
 \section{Design generale del software}
 
 L'architettura del software è basata su micro-servizi autonomi e indipendenti tra loro e la loro comunicazione avviene tramite API REST.
@@ -22,14 +21,71 @@ I microservizi che si sono scelti di sviluppare si occupano di varie aree legate
 
 \subsection{Servizio per la Chat}
 
-\includegraphics[width=15cm]{report/img/Architettura ChatService.png}\\[10.5cm]
+\begin{table}[h!]
+    \centering
+    \caption{Tabella descrittiva Chat Service}
+    \label{tab:chat_serv_table}
+    \begin{tabular}{ll}     
+        \toprule                   
+        Linguaggio & Java \\        
+        Server & Vertx, Swagger \\
+        Librerie & RabbitMQ(vertx) \\
+        Architettura & Agenti vertx \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
+\includegraphics[width=15cm]{report/img/Architettura ChatService.png}\\[10.5cm]
 
 \subsection{Servizio per Gestione Utenti}
 
+\begin{table}[h!]
+    \centering
+    \caption{Tabella descrittiva User Service}
+    \label{tab:user_serv_table}
+    \begin{tabular}{ll}     
+        \toprule                   
+        Linguaggio & Node.JS/TypeScript \\        
+        Framework & NestJS   \\                   
+        Persistence & Mysql  \\
+        Librerie & TypeORM   \\
+        Architettura & Model-Controller-service  \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+
+\subsection{Servizio Business Logic}
+
+\begin{table}[h!]
+    \centering
+    \caption{Tabella descrittiva Business Logic}
+    \label{tab:bl_serv_table}
+    \begin{tabular}{ll}     
+        \toprule                   
+        Linguaggio & Node.JS/TypeScript \\        
+        Framework & NestJS   \\                   
+        Architettura & Model-Controller-service  \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 \subsection{Servizio ponte tra i microservizi}
 
+
+\begin{table}[h!]
+    \centering
+    \caption{Tabella descrittiva Middleware}
+    \label{tab:middleware_serv_table}
+    \begin{tabular}{ll}     
+        \toprule                   
+        Linguaggio & Java \\        
+        Server & Vertx \\
+        Librerie & RabbitMQ(vertx) \\
+        Architettura & Multi-agent, motore di gioco \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 \section{[DS/SPE] Perche' i microservizi?}
 
