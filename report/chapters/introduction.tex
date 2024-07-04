@@ -1,4 +1,24 @@
-\chapter{Introduction}
+\chapter{Introduzione}
 \label{ch:into} % This how you label a chapter and the key (e.g., ch:into) will be used to refer this chapter ``Introduction'' later in the report. 
 % the key ``ch:into'' can be used with command \ref{ch:intor} to refere this Chapter.
+MaraffaOnline è un'applicazione che permette alle persone di giocare al gioco di carte \href{https://it.wikipedia.org/wiki/Marafone_Beccacino}{Maraffa/Beccacino}. 
+Il progetto consiste nell’eseguire una manutenzione evolutiva del gioco di carte reperibile su MaraffaOnline, attualmente sviluppato dalla prof.ssa Lumini.
+In particolare la nuova versione avrà un'architettura a microservizi e introdurrà anche nuove funzionalità come formazione personalizzata delle squadre, una nuova modalità 
+di gioco (vittoria 11 a 0 in caso di violazione delle regole da parte di una squadra), salvataggio delle statistiche delle partite e degli utenti, ...
+\\
+Per realizzare questa evoluzione, il progetto sarà suddiviso in diverse fasi, ognuna delle quali si concentrerà su un aspetto specifico dell'architettura
+e delle funzionalità. 
 
+La prima fase riguarderà la decomposizione dell'applicazione monolitica esistente in microservizi indipendenti, che comunicheranno
+tra loro attraverso API RESTful. 
+
+Nella seconda fase, saranno sviluppati i sistemi di salvataggio delle statistiche e la chat. Le statistiche di gioco saranno memorizzate in un database relazionale,
+permettendo agli utenti di visualizzare le loro performance nel tempo e confrontarsi con altri giocatori.
+Il gioco disporrà di due chat: una globale, accessibile a tutti gli utenti, e una relativa alla partita, accessibile solo ai giocatori della partita in corso.
+
+La terza fase si concentrerà sull'implementazione delle nuove funzionalità, partendo dalla formazione personalizzata delle squadre fino alla modalità 11 a 0, la quale assicurerà
+che le violazioni delle regole siano rilevate automaticamente.
+
+Il progetto sarà gestito utilizzando metodologie agili, con sprint di sviluppo e feedback continuo da parte degli utenti.
+In questo modo, sarà possibile adattare rapidamente il piano di lavoro in base ai consigli,
+garantendo al contempo un prodotto finale di alta qualità e in linea con le aspettative degli utenti.

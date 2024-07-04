@@ -1,28 +1,80 @@
 \chapter{Analisi}
 \label{ch:analisi} %Label of the chapter lit rev. The key ``ch:lit_rev'' can be used with command \ref{ch:lit_rev} to refer this Chapter.
 \section{Obiettivi}
-\section{Politiche di autovalutazione} persone le hanno messe, tipo Riccardo Sanità
-esempio politiche autovalutazione
-Si devono seguire le regole per completare una sessione di gioco.
-• Se un giocatore che non `e l’ultimo rimasto si disconnette si disconnette la
-partita deve continuare. Nel caso in cui la partita fosse ancora in e il giocatre disconneso si volesse riconnettere il server far`a in modo di mostrare
-al giocatre le carte che aveva al momento della disconnessione
-• Se l’ultimo giocatore si disconnette allora la partita deve terminare.
-• L’elenco delle partite aperte/chiuse deve rimanere aggiornato. Inoltre,
-devono essere costantemente sincronizzati i client dei giocatori all’interno
-della stessa partita, in modo da garantire la coerenza del gioco.
-• L’obiettivo principale del software sviluppato `e garantire una solida capacit`a di adattamento alle dimensioni, una fluidit`a accettabile nell’esperienza
-di gioco e una sufficiente resilienza agli errori. In modo specifico, il servizio web necessita di gestire in modo efficace un grande numero di utenti
-simultaneamente, mentre l’esecuzione del gioco deve risultare scorrevole
-sul dispositivo dell’utente, evitando inconvenienti legati alle prestazioni sia
-grafiche che funzionali. Inoltre, `e essenziale che il sistema non si blocchi
-in caso di eventuali problemi.
+\section{Politiche di autovalutazione} 
+\begin{itemize}
+    \item l'elenco delle partite iniziate/finite deve rimanere aggiornato
+    \item se un giocatore si disconnette la partita termina per tutti (analizzando i casi pratici si è notato che quando un giocatore si disconnette è perchè non ha intenzione di rientrare, è pertanto inutile far attendere gli altri giocatori per una possibile riconnessione)
+    \item nel caso di connessione lenta o malfunzionamenti da parte di un giocatore, il giocatore potrà rimanere sempre aggiornato sullo stato corrente della partita riaggiornado la pagina
+    \item quando un giocatore clicca sul tasto "esci", verrà comunicato a tutti gli altri giocatori che la partita è terminata e verranno reindirizzati alla schermata principale
+    \item nel caso di un crash di un servizio si deve garantire che il servizio venga riavviato in automatico evitando che il sistema si blocchi
+    % \item se crasha un servizio docker ha già una funzione builtin di riavviare in automatico il container
+\end{itemize}
+% Si devono seguire le regole per completare una sessione di gioco.
+% • Se un giocatore che non `e l’ultimo rimasto si disconnette si disconnette la
+% partita deve continuare. Nel caso in cui la partita fosse ancora in e il giocatre disconneso si volesse riconnettere il server far`a in modo di mostrare
+% al giocatre le carte che aveva al momento della disconnessione
+% • Se l’ultimo giocatore si disconnette allora la partita deve terminare.
+% • L’elenco delle partite aperte/chiuse deve rimanere aggiornato. Inoltre,
+% devono essere costantemente sincronizzati i client dei giocatori all’interno
+% della stessa partita, in modo da garantire la coerenza del gioco.
+% • L’obiettivo principale del software sviluppato `e garantire una solida capacit`a di adattamento alle dimensioni, una fluidit`a accettabile nell’esperienza
+% di gioco e una sufficiente resilienza agli errori. In modo specifico, il servizio web necessita di gestire in modo efficace un grande numero di utenti
+% simultaneamente, mentre l’esecuzione del gioco deve risultare scorrevole
+% sul dispositivo dell’utente, evitando inconvenienti legati alle prestazioni sia
+% grafiche che funzionali. Inoltre, `e essenziale che il sistema non si blocchi
+% in caso di eventuali problemi.
 
-se va giù uno dei servizi? se va giù il middleware?
-\section{Requisiti}
-(molti li strutturano a FAQ, facendo domande)
-\section{Casi d'uso}
-
+\section{Requisiti e casi d'uso}
+\subsection{Requisiti}
+\begin{enumerate}
+    \item Account
+        \begin{enumerate}
+            \item Login
+            \item Registrazione
+            \item Recupero password
+            \item Visualizzazione profilo
+            \item Modifica password
+            \item Possibilità di scegliere se giocare come ospite o effettuare il login
+        \end{enumerate}
+    \item Realizzazione partita
+        \begin{enumerate}
+            \item Creazione partita
+            \item Partecipazione partita
+            \item gioca carta
+            \item Inizio partita
+            \item Fine mano
+            \item Fine partita
+        \end{enumerate}
+    \item Chat di gioco
+        \begin{enumerate}
+            \item chat globale
+            \item chat partita
+        \end{enumerate}
+    \item Possibilità di scegliere un compagno di squadra
+    \item Scelta del seme, parole consentite
+    \item Modalità di gioco 11 a 0
+    \item Gestione punteggio
+        \begin{enumerate}
+            \item Calcolo totale e parziale (Gestione per ogni mano) del punteggio
+            \item Maraffa/Cricca (+3 punti)
+        \end{enumerate}
+    \item Servizio gestione utenti
+    \item Salvataggio statistiche
+    \item Realizzazione GUI
+        \begin{enumerate}
+            \item Refactor della GUI esistente
+            \item Rinnovamento GUI
+        \end{enumerate}
+\end{enumerate}
+\subsection{Casi d'uso}
+Si riporta di seguito lo schema dei casi d'uso che modella l'interazione dell'utente con l'applicazione.
+\begin{figure}[h!]
+    \centering 
+    \includegraphics[scale=0.45]{report/img/Casi_duso.png}
+    \caption{Casi d'uso}
+    \label{use_case}
+\end{figure}
 
 % Take a note of the commands \textbackslash cite\{\} and \textbackslash citep\{\}. The command \textbackslash cite\{\} will write like ``Author et al. (2019)'' style for Harvard, APA and Chicago style. The command \textbackslash citep\{\} will write like ``(Author et al., 2019).'' Depending on how you construct a sentence, you need to use them smartly. Check the examples of \textbf{in-text citation} of sources listed here [This template recommends the \textbf{Harvard style} of referencing.]:
 % \begin{itemize}
