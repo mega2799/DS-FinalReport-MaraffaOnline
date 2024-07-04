@@ -31,15 +31,19 @@
 of Abbreviations</a></li>
 <li><a href="#glossario-dei-termini"
 id="toc-glossario-dei-termini">Glossario dei termini</a></li>
-<li><a href="#ch:into" id="toc-ch:into">Introduction</a></li>
+<li><a href="#ch:into" id="toc-ch:into">Introduzione</a></li>
 <li><a href="#ch:analisi" id="toc-ch:analisi">Analisi</a>
 <ul>
 <li><a href="#obiettivi" id="toc-obiettivi">Obiettivi</a></li>
 <li><a href="#politiche-di-autovalutazione"
 id="toc-politiche-di-autovalutazione">Politiche di
 autovalutazione</a></li>
+<li><a href="#requisiti-e-casi-duso"
+id="toc-requisiti-e-casi-duso">Requisiti e casi d’uso</a>
+<ul>
 <li><a href="#requisiti" id="toc-requisiti">Requisiti</a></li>
 <li><a href="#casi-duso" id="toc-casi-duso">Casi d’uso</a></li>
+</ul></li>
 </ul></li>
 <li><a href="#ch:architectures" id="toc-ch:architectures">Architettura e
 Design</a>
@@ -323,33 +327,111 @@ mano</td>
 </tr>
 </tbody>
 </table>
-<h1 id="ch:into">Introduction</h1>
+<h1 id="ch:into">Introduzione</h1>
+<p>MaraffaOnline è un’applicazione che permette alle persone di giocare
+al gioco di carte <a
+href="https://it.wikipedia.org/wiki/Marafone_Beccacino">Maraffa/Beccacino</a>.
+Il progetto consiste nell’eseguire una manutenzione evolutiva del gioco
+di carte reperibile su MaraffaOnline, attualmente sviluppato dalla
+prof.ssa Lumini. In particolare la nuova versione avrà un’architettura a
+microservizi e introdurrà anche nuove funzionalità come formazione
+personalizzata delle squadre, una nuova modalità di gioco (vittoria 11 a
+0 in caso di violazione delle regole da parte di una squadra),
+salvataggio delle statistiche delle partite e degli utenti, ...<br />
+Per realizzare questa evoluzione, il progetto sarà suddiviso in diverse
+fasi, ognuna delle quali si concentrerà su un aspetto specifico
+dell’architettura e delle funzionalità.</p>
+<p>La prima fase riguarderà la decomposizione dell’applicazione
+monolitica esistente in microservizi indipendenti, che comunicheranno
+tra loro attraverso API RESTful.</p>
+<p>Nella seconda fase, saranno sviluppati i sistemi di salvataggio delle
+statistiche e la chat. Le statistiche di gioco saranno memorizzate in un
+database relazionale, permettendo agli utenti di visualizzare le loro
+performance nel tempo e confrontarsi con altri giocatori. Il gioco
+disporrà di due chat: una globale, accessibile a tutti gli utenti, e una
+relativa alla partita, accessibile solo ai giocatori della partita in
+corso.</p>
+<p>La terza fase si concentrerà sull’implementazione delle nuove
+funzionalità, partendo dalla formazione personalizzata delle squadre
+fino alla modalità 11 a 0, la quale assicurerà che le violazioni delle
+regole siano rilevate automaticamente.</p>
+<p>Il progetto sarà gestito utilizzando metodologie agili, con sprint di
+sviluppo e feedback continuo da parte degli utenti. In questo modo, sarà
+possibile adattare rapidamente il piano di lavoro in base ai consigli,
+garantendo al contempo un prodotto finale di alta qualità e in linea con
+le aspettative degli utenti.</p>
 <h1 id="ch:analisi">Analisi</h1>
 <h2 id="obiettivi">Obiettivi</h2>
 <h2 id="politiche-di-autovalutazione">Politiche di autovalutazione</h2>
-<p>persone le hanno messe, tipo Riccardo Sanità esempio politiche
-autovalutazione Si devono seguire le regole per completare una sessione
-di gioco. • Se un giocatore che non ‘e l’ultimo rimasto si disconnette
-si disconnette la partita deve continuare. Nel caso in cui la partita
-fosse ancora in e il giocatre disconneso si volesse riconnettere il
-server far‘a in modo di mostrare al giocatre le carte che aveva al
-momento della disconnessione • Se l’ultimo giocatore si disconnette
-allora la partita deve terminare. • L’elenco delle partite aperte/chiuse
-deve rimanere aggiornato. Inoltre, devono essere costantemente
-sincronizzati i client dei giocatori all’interno della stessa partita,
-in modo da garantire la coerenza del gioco. • L’obiettivo principale del
-software sviluppato ‘e garantire una solida capacit‘a di adattamento
-alle dimensioni, una fluidit‘a accettabile nell’esperienza di gioco e
-una sufficiente resilienza agli errori. In modo specifico, il servizio
-web necessita di gestire in modo efficace un grande numero di utenti
-simultaneamente, mentre l’esecuzione del gioco deve risultare scorrevole
-sul dispositivo dell’utente, evitando inconvenienti legati alle
-prestazioni sia grafiche che funzionali. Inoltre, ‘e essenziale che il
-sistema non si blocchi in caso di eventuali problemi.</p>
-<p>se va giù uno dei servizi? se va giù il middleware?</p>
-<h2 id="requisiti">Requisiti</h2>
-<p>(molti li strutturano a FAQ, facendo domande)</p>
-<h2 id="casi-duso">Casi d’uso</h2>
+<ul>
+<li><p>l’elenco delle partite iniziate/finite deve rimanere
+aggiornato</p></li>
+<li><p>se un giocatore si disconnette la partita termina per tutti
+(analizzando i casi pratici si è notato che quando un giocatore si
+disconnette è perchè non ha intenzione di rientrare, è pertanto inutile
+far attendere gli altri giocatori per una possibile
+riconnessione)</p></li>
+<li><p>nel caso di connessione lenta o malfunzionamenti da parte di un
+giocatore, il giocatore potrà rimanere sempre aggiornato sullo stato
+corrente della partita riaggiornado la pagina</p></li>
+<li><p>quando un giocatore clicca sul tasto "esci", verrà comunicato a
+tutti gli altri giocatori che la partita è terminata e verranno
+reindirizzati alla schermata principale</p></li>
+<li><p>nel caso di un crash di un servizio si deve garantire che il
+servizio venga riavviato in automatico evitando che il sistema si
+blocchi</p></li>
+</ul>
+<h2 id="requisiti-e-casi-duso">Requisiti e casi d’uso</h2>
+<h3 id="requisiti">Requisiti</h3>
+<ol>
+<li><p>Account</p>
+<ol>
+<li><p>Login</p></li>
+<li><p>Registrazione</p></li>
+<li><p>Recupero password</p></li>
+<li><p>Visualizzazione profilo</p></li>
+<li><p>Modifica password</p></li>
+<li><p>Possibilità di scegliere se giocare come ospite o effettuare il
+login</p></li>
+</ol></li>
+<li><p>Realizzazione partita</p>
+<ol>
+<li><p>Creazione partita</p></li>
+<li><p>Partecipazione partita</p></li>
+<li><p>gioca carta</p></li>
+<li><p>Inizio partita</p></li>
+<li><p>Fine mano</p></li>
+<li><p>Fine partita</p></li>
+</ol></li>
+<li><p>Chat di gioco</p>
+<ol>
+<li><p>chat globale</p></li>
+<li><p>chat partita</p></li>
+</ol></li>
+<li><p>Possibilità di scegliere un compagno di squadra</p></li>
+<li><p>Scelta del seme, parole consentite</p></li>
+<li><p>Modalità di gioco 11 a 0</p></li>
+<li><p>Gestione punteggio</p>
+<ol>
+<li><p>Calcolo totale e parziale (Gestione per ogni mano) del
+punteggio</p></li>
+<li><p>Maraffa/Cricca (+3 punti)</p></li>
+</ol></li>
+<li><p>Servizio gestione utenti</p></li>
+<li><p>Salvataggio statistiche</p></li>
+<li><p>Realizzazione GUI</p>
+<ol>
+<li><p>Refactor della GUI esistente</p></li>
+<li><p>Rinnovamento GUI</p></li>
+</ol></li>
+</ol>
+<h3 id="casi-duso">Casi d’uso</h3>
+<p>Si riporta di seguito lo schema dei casi d’uso che modella
+l’interazione dell’utente con l’applicazione.</p>
+<figure id="use_case">
+<img src="report/img/Casi_duso.png" />
+<figcaption>Casi d’uso</figcaption>
+</figure>
 <h1 id="ch:architectures">Architettura e Design</h1>
 <h2 id="design-generale-del-software">Design generale del software</h2>
 <p>L’architettura del software è basata su micro-servizi autonomi e
