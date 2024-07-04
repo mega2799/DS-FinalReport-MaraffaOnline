@@ -133,12 +133,10 @@ Nella prossima sezione verrà approfondito come il deployment con Docker permett
 Qualora il progetto maraffa-online dovesse avere un numero di utenti molto elevato, si potrebbe pensare di scalare il sistema in modo orizzontale, aggiungendo nuovi nodi al cluster, 
 e tramite la dovuta configurazione, Kubernetes si occuperebbe di bilanciare il carico tra i vari nodi dei servizi scalabili. 
 
+
 \subsubsection{Docker}
 
-Suddividere un progetto monolitico in servizi a sè stanti permette di dockerizzare comodamente ogni servizio, e questo permette di avere un sistema che è facilmente deployabile, versionabile e portabile.
-Uno dei requisiti fondamentali del progetto era riuscire a dockerizzare interamente il sistema, nel caso in cui si volesse fare un deploy su un server remoto sarebbe sufficiente avere Docker installato e
-accedere al docker-compose del progetto, settare le corrette variabili d'ambiente e poi il progetto opera in totale autonomia.
-Inoltre utilizzare uno stack permette anche di poter gestire eventuali failure dei servizi in modo più semplice, in quanto Docker permette di avere un sistema fault-tolerant, se un servizio dovesse
-andare in crash per qualche motivo inspiegabile, Docker si occupa di riavviarlo in modo autonomo.
-L'utilizzo di uno stack permette anche di poter scalare i servizi in modo più semplice, in quanto basta settare il numero di repliche che si vogliono avere di un servizio e Docker si occupa di creare
-le repliche e di bilanciare il carico tra di esse, questo è un vantaggio che si ha nel caso in cui si voglia scalare il sistema in modo verticale, ovvero aumentare le risorse di un singolo servizio.
+Suddividere un progetto monolitico in servizi a sé stanti permette di dockerizzare comodamente ogni servizio, e questo consente di avere un sistema facilmente deployabile, versionabile e portabile.
+Uno dei requisiti fondamentali del progetto era riuscire a dockerizzare interamente il sistema. Nel caso in cui si volesse fare un deploy su un server remoto, sarebbe sufficiente avere Docker installato, accedere al docker-compose del progetto, settare le corrette variabili d'ambiente e poi il progetto opererebbe in totale autonomia.
+Inoltre, utilizzare uno stack permette anche di gestire eventuali failure dei servizi in modo più semplice, poiché Docker consente di avere un sistema fault-tolerant. Se un servizio dovesse andare in crash per qualche motivo inspiegabile, Docker si occuperebbe di riavviarlo in modo autonomo.
+L'utilizzo di uno stack permette anche di scalare i servizi in modo più semplice, poiché basta settare il numero di repliche desiderate per un servizio e Docker si occuperà di creare le repliche e di bilanciare il carico tra di esse. Questo è un vantaggio nel caso in cui si voglia scalare il sistema in modo verticale, ovvero aumentando le risorse di un singolo servizio.
