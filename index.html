@@ -68,6 +68,22 @@ microservizi?</a>
 id="toc-vantaggi-dellarchitettura-a-microservizi">Vantaggi
 dell’architettura a microservizi</a></li>
 </ul></li>
+<li><a href="#servizi-di-business-logic-e-user-service"
+id="toc-servizi-di-business-logic-e-user-service">Servizi di Business
+Logic e User Service</a>
+<ul>
+<li><a href="#business-logic" id="toc-business-logic">Business
+Logic</a></li>
+<li><a href="#user-service" id="toc-user-service">User Service</a></li>
+</ul></li>
+<li><a href="#front-end" id="toc-front-end">Front-End</a></li>
+<li><a href="#middleware" id="toc-middleware">Middleware</a>
+<ul>
+<li><a href="#struttura-api-gateway"
+id="toc-struttura-api-gateway">Struttura API Gateway</a></li>
+</ul></li>
+<li><a href="#punti-comuni-tra-i-servizi"
+id="toc-punti-comuni-tra-i-servizi">Punti comuni tra i servizi</a></li>
 </ul></li>
 <li><a href="#ch:interazioni"
 id="toc-ch:interazioni">Interazioni</a></li>
@@ -523,6 +539,62 @@ basta settare il numero di repliche desiderate per un servizio e Docker
 si occuperà di creare le repliche e di bilanciare il carico tra di esse.
 Questo è un vantaggio nel caso in cui si voglia scalare il sistema in
 modo verticale, ovvero aumentando le risorse di un singolo servizio.</p>
+<h2 id="servizi-di-business-logic-e-user-service">Servizi di Business
+Logic e User Service</h2>
+<p>Entrambi questi servizi sono stati realizzati con lo stack NestJS, un
+framework per Node.js che semplifica la realizzazione di web server e
+API REST. Si occupano rispettivamente di gestire la logica di gioco e la
+gestione degli utenti che vogliono utilizzare il sistema, due core
+business del progetto.</p>
+<h3 id="business-logic">Business Logic</h3>
+<p>Questo servizio mantiene al proprio interno tutte le regole del gioco
+e il calcolo dei punteggi. Ha svariati endpoint che permettono al
+middleware di avere il minor numero possibile di responsabilità,
+delegando al servizio di business logic le operazioni riguardanti il
+gioco.</p>
+<p>Questa scelta è stata fatta per mantenere il middleware il più
+leggero possibile e per evitare che si occupi di operazioni non di sua
+competenza. Inoltre, in futuro sarà possibile aggiungere nuovi giochi
+modificando il meno possibile il middleware, che dovrà semplicemente
+occuparsi della gestione delle partite e comunicare tempestivamente con
+i servizi di business logic in base al gioco scelto.</p>
+<h3 id="user-service">User Service</h3>
+<p>Questo servizio gestisce gli utenti, quindi la loro registrazione,
+autenticazione e gestione dei dati personali. Anche in questo caso, il
+middleware delega al servizio di gestione degli utenti le operazioni
+riguardanti gli utenti, per mantenere il middleware il più leggero
+possibile e per evitare che si occupi di operazioni non di sua
+competenza. Il core di questo servizio è dato dalla combinazione di
+NestJS e TypeORM, che permettono di gestire in modo semplice e veloce la
+persistenza dei dati e le operazioni CRUD su un database MySQL. Oltre
+alle informazioni degli utenti, il database contiene anche le
+informazioni riguardanti le partite giocate e le statistiche personali
+di ogni utente del sistema.</p>
+<h2 id="front-end">Front-End</h2>
+<p>Il front-end è stato realizzato con Angular e si occupa di gestire
+l’interfaccia grafica e la comunicazione con il middleware. Sono state
+realizzate diverse pagine, tra cui la home page, la pagina di
+registrazione, la pagina di login, la pagina di gioco e la pagina di
+profilo utente. Utilizza API REST per comunicare con il middleware e
+ottenere i dati necessari per il funzionamento del gioco, mentre
+utilizza WebSockets per la comunicazione in tempo reale con il
+middleware.</p>
+<h2 id="middleware">Middleware</h2>
+<p>Come già citato, il middleware è il cuore del sistema. L’architettura
+utilizzata per la gestione delle partite è quella di un multi-agente, in
+cui ogni agente si occupa di gestire una partita e di orchestrare la
+comunicazione con gli altri servizi, come ad esempio il front-end.
+Questo core è stato realizzato con Vertx, che è stato utilizzato anche
+per creare un web-server in Java.</p>
+<p>Inoltre, al middleware è collegato un database NoSQL su MongoDB, che
+viene aggiornato a ogni trick completato dai giocatori per creare uno
+storico delle partite e salvare le loro decisioni in gioco. Questa
+raccolta di dati sarà parte di uno sviluppo futuro, in cui, dopo aver
+raccolto una grande quantità di dati di partite, si potrà tentare di
+creare un modello di machine learning per sviluppare un’intelligenza
+artificiale che possa giocare al posto di un giocatore umano.</p>
+<h3 id="struttura-api-gateway">Struttura API Gateway</h3>
+<h2 id="punti-comuni-tra-i-servizi">Punti comuni tra i servizi</h2>
 <h1 id="ch:interazioni">Interazioni</h1>
 <p>interazioni tra i componenti, come comunicano, diagrammi d’attività.
 (parlare di api gateway (permette comunicazione tra client esterni con i
