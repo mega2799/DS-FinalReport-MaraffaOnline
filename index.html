@@ -51,8 +51,6 @@ software</a></li>
 id="toc-micro-servizi-e-la-loro-architettura">Micro-servizi e la loro
 architettura</a>
 <ul>
-<li><a href="#servizio-per-la-chat"
-id="toc-servizio-per-la-chat">Servizio per la Chat</a></li>
 <li><a href="#servizio-per-gestione-utenti"
 id="toc-servizio-per-gestione-utenti">Servizio per Gestione
 Utenti</a></li>
@@ -66,9 +64,9 @@ microservizi</a></li>
 id="toc-dsspe-perche-i-microservizi">[DS/SPE] Perche’ i
 microservizi?</a>
 <ul>
-<li><a href="#spe-vantaggi" id="toc-spe-vantaggi">[SPE]
-Vantaggi</a></li>
-<li><a href="#ds-vantaggi" id="toc-ds-vantaggi">[DS] Vantaggi</a></li>
+<li><a href="#vantaggi-dellarchitettura-a-microservizi"
+id="toc-vantaggi-dellarchitettura-a-microservizi">Vantaggi
+dell’architettura a microservizi</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#ch:interazioni"
@@ -120,7 +118,7 @@ id="toc-ch:validazione">Validazione</a></li>
 <span> <em>Supervisors:</em> Giovanni Ciatto, Matteo Magnani, Andrea
 Omicini </span><br />
 </p>
-<p>2024-03-20</p>
+<p>2024-07-04</p>
 </div>
 </div>
 <h2 id="list-of-abbreviations">List of Abbreviations</h2>
@@ -346,8 +344,6 @@ tencologie.</p>
 <p>I microservizi che si sono scelti di sviluppare si occupano di varie
 aree legate alla natura del progetto e sono:</p>
 <ul>
-<li><p><strong>ChatService</strong>: si occupa della gestione delle chat
-tra utenti.</p></li>
 <li><p><strong>UserService</strong>: si occupa della gestione degli
 utenti, quindi la loro registrazione, autenticazione e gestione dei dati
 personali.</p></li>
@@ -364,33 +360,6 @@ alt="image" /><br />
 </p>
 <h2 id="micro-servizi-e-la-loro-architettura">Micro-servizi e la loro
 architettura</h2>
-<h3 id="servizio-per-la-chat">Servizio per la Chat</h3>
-<div id="tab:chat_serv_table">
-<table>
-<caption>Tabella descrittiva Chat Service</caption>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Linguaggio</td>
-<td style="text-align: left;">Java</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Server</td>
-<td style="text-align: left;">Vertx, Swagger</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Librerie</td>
-<td style="text-align: left;">RabbitMQ(vertx)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Architettura</td>
-<td style="text-align: left;">Agenti vertx</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p><img src="report/img/Architettura ChatService.png" style="width:15cm"
-alt="image" /><br />
-</p>
 <h3 id="servizio-per-gestione-utenti">Servizio per Gestione Utenti</h3>
 <div id="tab:user_serv_table">
 <table>
@@ -469,11 +438,10 @@ microservizi?</h2>
 <p>Ogni microservizio si occupa di gestire un singolo ambito di
 progetto, il che fa sì che si ottengano ottimi risultati riguardo la
 qualità e l’affidabilità, la riutilizzabilità, la flessibilità e la
-scalabilità siano più Tutti i componenti sono "loosely coupled",
-distribuiti in modo indipendente, e in ambiti reali gestiti da un
-piccolo team e altamente collaudabili e gestibili. Tuttavia, non si
-tratta di una soluzione definitiva, ha anche degli svantaggi come ad
-esempio:</p>
+scalabilità. Tutti i componenti sono "loosely coupled", distribuiti in
+modo indipendente, altamente collaudabili e gestibili e in ambiti reali
+gestiti da un piccolo team. Tuttavia, non si tratta di una soluzione
+definitiva, ha anche degli svantaggi come ad esempio:</p>
 <ul>
 <li><p>la complessità di gestione e la necessità di un’infrastruttura di
 rete molto complessa.</p></li>
@@ -484,10 +452,61 @@ microservizi.</p></li>
 <li><p>Non si ha la certezza che l’infrastruttura funzioni correttamente
 fino a quando tutti i servizi non cooperano tra loro.</p></li>
 </ul>
-<h3 id="spe-vantaggi">[SPE] Vantaggi</h3>
-<p>- devops - ci</p>
-<h3 id="ds-vantaggi">[DS] Vantaggi</h3>
-<p>- fault tolerance - scalability - docker</p>
+<h3 id="vantaggi-dellarchitettura-a-microservizi">Vantaggi
+dell’architettura a microservizi</h3>
+<h4 id="fault-tolerance">Fault Tolerance</h4>
+<p>Progettare un sistema completamente privo di errori è un obiettivo
+decisamente ambizioso e molto difficile da raggiungere. Molto più
+realistico, e inerente al nostro percorso, è progettare un sistema che
+sia in grado di tollerare, nella giusta misura, gli errori che
+inevitabilmente si verificheranno. La scelta di questa architettura tra
+i vari vantaggi offre la possibilità di <strong>isolare parti del
+sistema</strong>, evitando che gli errori si propaghino in modo
+incontrollato e che il sistema nel suo complesso vada in crash. Ogni
+sistema opera in modo indipendente e autonomo, con le proprie risorse e
+la propria logica.</p>
+<p>Lo snodo centrale di comunicazione dei servizi, il middleware, è in
+grado di gestire le comunicazioni tra i vari microservizi e di garantire
+che il sistema sia in grado di funzionare anche in caso di guasti.
+Purtroppo non esiste alcun progetto senza alcun tipo di <strong>single
+point of failure</strong>, o almeno non con le risorse a disposizione di
+noi studenti, quindi all’interno di questo servizio la gestione degli
+errori dei servizi con cui comunica è gestita, ma di fatto, nel caso in
+cui il middleware smetta di funzionare, non avendo nessun altro servizio
+che possa fare da garante per il suo corretto funzionamento, tutto il
+sistema non permetterà, ad esempio, di giocare a nessun gioco. Questo
+perché il middleware è il cuore pulsante del sistema; avendo
+disponibilità di risorse e abbastanza conoscenze in un ambito reale,
+questo problema ha soluzioni:</p>
+<ul>
+<li><p><strong>Backup del middleware</strong>: avere dei backup dei
+processi che si occupano di gestire le partite, ma questo
+significherebbe andare a modificare inevitabilmente la struttura già
+esistente del servizio.</p></li>
+<li><p><strong>Ridondanza del middleware</strong>: avere molteplici
+istanze del middleware, preferibilmente 3, di cui una principale e le
+altre 2 in copia, facendo in modo che ogni azione sul middleware
+principale venga replicata sulle altre due istanze e che quindi, in caso
+di guasto hardware, le altre copie possano rispondere alle
+richieste.</p></li>
+</ul>
+<h4 id="scalabilità">Scalabilità</h4>
+<p>Nel caso del middleware, la scalabilità è un altro modo per chiamare
+la duplicazione, ma questo si applica soltanto al middleware, in quanto
+i microservizi sono realmente scalabili. Ogni microservizio è in grado
+di scalare in modo indipendente, in base alle proprie esigenze, e questo
+permette di avere un sistema che si adatta in modo dinamico alle
+richieste degli utenti. Nella prossima sezione verrà approfondito come
+il deployment con Docker permetta di scalare i microservizi.
+L’implementazione di un sistema di load balancing viene fornita
+"gratuitamente" da Kubernetes, che permette di bilanciare il carico tra
+i vari nodi del cluster. Qualora il progetto maraffa-online dovesse
+avere un numero di utenti molto elevato, si potrebbe pensare di scalare
+il sistema in modo orizzontale, aggiungendo nuovi nodi al cluster, e
+tramite la dovuta configurazione, Kubernetes si occuperebbe di
+bilanciare il carico tra i vari nodi dei servizi scalabili.</p>
+<h4 id="docker">Docker</h4>
+<h4 id="docker-1">Docker</h4>
 <h1 id="ch:interazioni">Interazioni</h1>
 <p>interazioni tra i componenti, come comunicano, diagrammi d’attività.
 (parlare di api gateway (permette comunicazione tra client esterni con i
