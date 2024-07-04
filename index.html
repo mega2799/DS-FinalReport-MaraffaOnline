@@ -493,9 +493,9 @@ richieste.</p></li>
 <h4 id="scalabilità">Scalabilità</h4>
 <p>Nel caso del middleware, la scalabilità è un altro modo per chiamare
 la duplicazione, ma questo si applica soltanto al middleware, in quanto
-i microservizi sono realmente scalabili. Ogni microservizio è in grado
-di scalare in modo indipendente, in base alle proprie esigenze, e questo
-permette di avere un sistema che si adatta in modo dinamico alle
+gli altri microservizi sono realmente scalabili. Ogni microservizio è in
+grado di scalare in modo indipendente, in base alle proprie esigenze, e
+questo permette di avere un sistema che si adatta in modo dinamico alle
 richieste degli utenti. Nella prossima sezione verrà approfondito come
 il deployment con Docker permetta di scalare i microservizi.
 L’implementazione di un sistema di load balancing viene fornita
@@ -506,7 +506,23 @@ il sistema in modo orizzontale, aggiungendo nuovi nodi al cluster, e
 tramite la dovuta configurazione, Kubernetes si occuperebbe di
 bilanciare il carico tra i vari nodi dei servizi scalabili.</p>
 <h4 id="docker">Docker</h4>
-<h4 id="docker-1">Docker</h4>
+<p>Suddividere un progetto monolitico in servizi a sé stanti permette di
+dockerizzare comodamente ogni servizio, e questo consente di avere un
+sistema facilmente deployabile, versionabile e portabile. Uno dei
+requisiti fondamentali del progetto era riuscire a dockerizzare
+interamente il sistema. Nel caso in cui si volesse fare un deploy su un
+server remoto, sarebbe sufficiente avere Docker installato, accedere al
+docker-compose del progetto, settare le corrette variabili d’ambiente e
+poi il progetto opererebbe in totale autonomia. Inoltre, utilizzare uno
+stack permette anche di gestire eventuali failure dei servizi in modo
+più semplice, poiché Docker consente di avere un sistema fault-tolerant.
+Se un servizio dovesse andare in crash per qualche motivo inspiegabile,
+Docker si occuperebbe di riavviarlo in modo autonomo. L’utilizzo di uno
+stack permette anche di scalare i servizi in modo più semplice, poiché
+basta settare il numero di repliche desiderate per un servizio e Docker
+si occuperà di creare le repliche e di bilanciare il carico tra di esse.
+Questo è un vantaggio nel caso in cui si voglia scalare il sistema in
+modo verticale, ovvero aumentando le risorse di un singolo servizio.</p>
 <h1 id="ch:interazioni">Interazioni</h1>
 <p>interazioni tra i componenti, come comunicano, diagrammi d’attività.
 (parlare di api gateway (permette comunicazione tra client esterni con i
