@@ -140,3 +140,26 @@ Suddividere un progetto monolitico in servizi a sé stanti permette di dockerizz
 Uno dei requisiti fondamentali del progetto era riuscire a dockerizzare interamente il sistema. Nel caso in cui si volesse fare un deploy su un server remoto, sarebbe sufficiente avere Docker installato, accedere al docker-compose del progetto, settare le corrette variabili d'ambiente e poi il progetto opererebbe in totale autonomia.
 Inoltre, utilizzare uno stack permette anche di gestire eventuali failure dei servizi in modo più semplice, poiché Docker consente di avere un sistema fault-tolerant. Se un servizio dovesse andare in crash per qualche motivo inspiegabile, Docker si occuperebbe di riavviarlo in modo autonomo.
 L'utilizzo di uno stack permette anche di scalare i servizi in modo più semplice, poiché basta settare il numero di repliche desiderate per un servizio e Docker si occuperà di creare le repliche e di bilanciare il carico tra di esse. Questo è un vantaggio nel caso in cui si voglia scalare il sistema in modo verticale, ovvero aumentando le risorse di un singolo servizio.
+
+\section{Servizi di Business Logic e User Service}
+
+Entrambi questi servizi sono stati realizzati con lo stack NestJS, un framework per Node.js che semplifica la realizzazione di web server e API REST.
+Rispettivamente si occupano di gestire la logica di gioco e la gestione degli utenti che vogliono utilizzare il sistema, due business core del progetto.
+
+\subsection{Business Logic}
+
+Si occupa di mantenere al proprio interno tutte le regole proprie del gioco e del calcolo dei punteggi. 
+Ha svariati endpoint che permettono al middleware di avere il minor numero possibile di responsabilità, delegando al servizio di business logic le operazioni che riguardano il gioco.
+
+Questa scelta è stata fatta per mantenere il middleware il più possibile leggero e per evitare che si occupi di operazioni che non gli competono. E per poter in un futuro aggiungere
+nuovi giochi modificando il meno possibile il middleware che dovrà semplicemente occuparsi della gestione delle partite e comunicare tempestivamente con i servizi di business logic in 
+base al gioco scelto.
+
+\subsection{User Service}
+
+Si occupa di gestire gli utenti, quindi la loro registrazione, autenticazione e gestione dei dati personali.
+Anche in questo caso, il middleware si occupa di delegare al servizio di gestione degli utenti le operazioni che riguardano gli utenti, in modo da mantenere il middleware il più possibile leggero e per evitare che si occupi di operazioni che non gli competono.
+Il core di questo servizio è dato dalla combinazione di NestJS e TypeORM, che permettono di gestire in modo semplice e veloce la persistenza dei dati e la gestione delle operazioni CRUD verso un database MySQL.
+Che oltre alle informazioni degli utenti, contiene anche le informazioni riguardanti le partite giocate e statistiche personali di ogni utente del sistema.
+
+
