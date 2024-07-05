@@ -18,6 +18,73 @@
       vertical-align: middle;
     }
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        background-color: #ffffff;
+        color: #a0a0a0;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+    div.sourceCode
+      { color: #1f1c1b; background-color: #ffffff; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #1f1c1b; } /* Normal */
+    code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+    code span.an { color: #ca60ca; } /* Annotation */
+    code span.at { color: #0057ae; } /* Attribute */
+    code span.bn { color: #b08000; } /* BaseN */
+    code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+    code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #924c9d; } /* Char */
+    code span.cn { color: #aa5500; } /* Constant */
+    code span.co { color: #898887; } /* Comment */
+    code span.cv { color: #0095ff; } /* CommentVar */
+    code span.do { color: #607880; } /* Documentation */
+    code span.dt { color: #0057ae; } /* DataType */
+    code span.dv { color: #b08000; } /* DecVal */
+    code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+    code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+    code span.fl { color: #b08000; } /* Float */
+    code span.fu { color: #644a9b; } /* Function */
+    code span.im { color: #ff5500; } /* Import */
+    code span.in { color: #b08000; } /* Information */
+    code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+    code span.op { color: #1f1c1b; } /* Operator */
+    code span.ot { color: #006e28; } /* Other */
+    code span.pp { color: #006e28; } /* Preprocessor */
+    code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+    code span.sc { color: #3daee9; } /* SpecialChar */
+    code span.ss { color: #ff5500; } /* SpecialString */
+    code span.st { color: #bf0303; } /* String */
+    code span.va { color: #0057ae; } /* Variable */
+    code span.vs { color: #bf0303; } /* VerbatimString */
+    code span.wa { color: #bf0303; } /* Warning */
   </style>
   <link rel="stylesheet" href="latex2html.css" />
   <!--[if lt IE 9]>
@@ -86,15 +153,20 @@ Logic</a></li>
 <li><a href="#struttura-api-gateway"
 id="toc-struttura-api-gateway">Struttura API Gateway</a></li>
 </ul></li>
-<li><a href="#punti-comuni-tra-i-servizi"
-id="toc-punti-comuni-tra-i-servizi">Punti comuni tra i servizi</a></li>
 </ul></li>
 <li><a href="#ch:interazioni"
 id="toc-ch:interazioni">Interazioni</a></li>
 <li><a href="#ch:implementazione"
 id="toc-ch:implementazione">Implementazione</a>
 <ul>
-<li><a href="#tecnologie" id="toc-tecnologie">Tecnologie</a></li>
+<li><a href="#tecnologie" id="toc-tecnologie">Tecnologie</a>
+<ul>
+<li><a href="#swagger---openapi" id="toc-swagger---openapi">Swagger -
+OpenAPI</a></li>
+<li><a href="#postman" id="toc-postman">Postman</a></li>
+<li><a href="#log-automatici" id="toc-log-automatici">Log
+automatici</a></li>
+</ul></li>
 <li><a
 href="#parte-di-distribuiti-che-non-so-dove-mettere-sta-nellimpl-p.s.-dargli-un-nome-decente"
 id="toc-parte-di-distribuiti-che-non-so-dove-mettere-sta-nellimpl-p.s.-dargli-un-nome-decente">Parte
@@ -138,7 +210,7 @@ id="toc-ch:validazione">Validazione</a></li>
 <span> <em>Supervisors:</em> Giovanni Ciatto, Matteo Magnani, Andrea
 Omicini </span><br />
 </p>
-<p>2024-07-04</p>
+<p>2024-07-05</p>
 </div>
 </div>
 <h2 id="list-of-abbreviations">List of Abbreviations</h2>
@@ -676,7 +748,28 @@ raccolto una grande quantità di dati di partite, si potrà tentare di
 creare un modello di machine learning per sviluppare un’intelligenza
 artificiale che possa giocare al posto di un giocatore umano.</p>
 <h3 id="struttura-api-gateway">Struttura API Gateway</h3>
-<h2 id="punti-comuni-tra-i-servizi">Punti comuni tra i servizi</h2>
+<p>Il pattern di progettazione utilizzato per la realizzazione del
+middleware è quello dell’API Gateway, che permette di creare
+un’interfaccia unica per l’accesso ai vari servizi del sistema.</p>
+<p>Nel nostro progetto, il client effettua semplici chiamate verso il
+middleware, che nei casi necessari effettua chiamate verso altri servizi
+per svolgere una determinata operazione. Queste chiamate non sono
+obbligatoriamente dirette verso il servizio interessato, ma possono
+anche essere routine che effettuano molteplici chiamate per ottenere il
+risultato desiderato. Ad esempio, nel caso di una partita, considerando
+l’azione di giocare sul tavolo una carta da parte di un utente, il
+middleware si occuperà di effettuare alcune chiamate verso il servizio
+di business logic per assicurarsi che la carta giocata in quel momento
+sia valida rispetto alle altre presenti sul tavolo virtuale e di
+conteggiare effettivamente i punti della mano nel caso in cui tutti i
+giocatori abbiano giocato una carta. Implementare queste chiamate
+direttamente nel front-end avrebbe reso il codice molto più complesso e
+difficile da mantenere, e la gestione di partite multiple sarebbe stata
+molto più difficile.</p>
+<p>Non è stato implementato nessun meccanismo di discovery per la
+gestione di chiamate verso gli altri servizi, in quanto tutti presenti
+sullo stesso server e nello stesso stack di Docker, quindi facilmente
+individuabili sulla rete virtuale creata da Docker.</p>
 <h1 id="ch:interazioni">Interazioni</h1>
 <p>interazioni tra i componenti, come comunicano, diagrammi d’attività.
 (parlare di api gateway (permette comunicazione tra client esterni con i
@@ -688,6 +781,76 @@ minime tra i servizi reattività agli eventi</p>
 <p>(swagger, postman, autogenerazione javadoc?, rabbitMQ, JWT per
 autenticazione utenti, docker, nodejs, typescript, mongodb, jest,
 angular, figma, ...)</p>
+<h3 id="swagger---openapi">Swagger - OpenAPI</h3>
+<p>Uno dei requisiti fondamentali di questo progetto è stata la
+documentazione delle API. Per fare ciò è stato utilizzato Swagger, un
+framework open-source che permette di descrivere, produrre e consumare
+servizi web RESTful. Swagger permette di testare le API direttamente
+dalla documentazione, grazie a un’interfaccia grafica che consente di
+inviare richieste e visualizzare le risposte.</p>
+<p>Per i servizi creati in Node.js è stata utilizzata una libreria ad
+hoc, in grado di generare la documentazione automaticamente tramite i
+corretti decoratori. Al contrario, per i servizi in Java non esiste
+alcuna libreria in grado di generare automaticamente la documentazione
+API a partire dai metodi esposti, quindi è stata creata manualmente.
+Grazie a un lavoro preliminare open-source svolto da <a
+href="https://github.com/anupsaund"><u>Anup Saund</u></a> sulla sua
+repository <a
+href="https://github.com/anupsaund/vertx-auto-swagger"><u>Vertx auto
+swagger</u></a>, è stato possibile creare automaticamente un file HTML
+contenente la documentazione delle API esposte dai servizi in Java.
+Purtroppo, questo file non era in grado di aggiornarsi automaticamente
+in caso di modifiche alle rotte, quindi è stato necessario adattarlo per
+renderlo più flessibile e adatto al nostro progetto.</p>
+<p>Vertx è una libreria davvero completa e ben strutturata. È stato
+possibile creare un Router in grado di gestire tutte le rotte del
+progetto in Java utilizzando una semplice classe astratta che ha
+definito tutti i metodi utilizzati nel progetto, tramite la quale si è
+potuto razionalizzare il codice e creare dinamicamente la funzionalità
+richiesta.</p>
+<div class="sourceCode" id="list:java_swagger_interface"
+data-language="Java"
+data-caption="Semplice interfaccia per le rotte HTTP"
+label="list:java_swagger_interface"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="list:java_swagger_interface-1"><a href="#list:java_swagger_interface-1" aria-hidden="true" tabindex="-1"></a><span class="kw">package</span><span class="im"> httpRest</span><span class="op">;</span></span>
+<span id="list:java_swagger_interface-2"><a href="#list:java_swagger_interface-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:java_swagger_interface-3"><a href="#list:java_swagger_interface-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">io</span><span class="op">.</span><span class="im">vertx</span><span class="op">.</span><span class="im">core</span><span class="op">.</span><span class="im">Handler</span><span class="op">;</span></span>
+<span id="list:java_swagger_interface-4"><a href="#list:java_swagger_interface-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">io</span><span class="op">.</span><span class="im">vertx</span><span class="op">.</span><span class="im">core</span><span class="op">.</span><span class="im">http</span><span class="op">.</span><span class="im">HttpMethod</span><span class="op">;</span></span>
+<span id="list:java_swagger_interface-5"><a href="#list:java_swagger_interface-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">io</span><span class="op">.</span><span class="im">vertx</span><span class="op">.</span><span class="im">ext</span><span class="op">.</span><span class="im">web</span><span class="op">.</span><span class="im">RoutingContext</span><span class="op">;</span></span>
+<span id="list:java_swagger_interface-6"><a href="#list:java_swagger_interface-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:java_swagger_interface-7"><a href="#list:java_swagger_interface-7" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="kw">interface</span> IRouteResponse <span class="op">{</span></span>
+<span id="list:java_swagger_interface-8"><a href="#list:java_swagger_interface-8" aria-hidden="true" tabindex="-1"></a>    HttpMethod <span class="fu">getMethod</span><span class="op">();</span></span>
+<span id="list:java_swagger_interface-9"><a href="#list:java_swagger_interface-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">String</span> <span class="fu">getRoute</span><span class="op">();</span></span>
+<span id="list:java_swagger_interface-10"><a href="#list:java_swagger_interface-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Handler</span><span class="op">&lt;</span>RoutingContext<span class="op">&gt;</span> <span class="fu">getHandler</span><span class="op">();</span></span>
+<span id="list:java_swagger_interface-11"><a href="#list:java_swagger_interface-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>La parte realmente complicata è stata fare in modo che le annotazioni
+presenti nel codice sorgente venissero lette e trasformate in un file
+JSON che rappresentasse correttamente la documentazione delle API. Dopo
+alcuni tentativi, è stato possibile automatizzare anche questa
+operazione.</p>
+<div class="sourceCode" id="list:java_swagger_modules"
+data-language="Java"
+data-caption="Aggiunta dei moduli delle classi contenenti rotte HTTP"
+label="list:java_swagger_modules"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="list:java_swagger_modules-1"><a href="#list:java_swagger_modules-1" aria-hidden="true" tabindex="-1"></a><span class="dt">final</span> ImmutableSet<span class="op">&lt;</span>ClassPath<span class="op">.</span><span class="fu">ClassInfo</span><span class="op">&gt;</span> modelClasses <span class="op">=</span> ImmutableSet<span class="op">.&lt;</span>ClassPath<span class="op">.</span><span class="fu">ClassInfo</span><span class="op">&gt;</span><span class="fu">builder</span><span class="op">()</span></span>
+<span id="list:java_swagger_modules-2"><a href="#list:java_swagger_modules-2" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">addAll</span><span class="op">(</span><span class="kw">this</span><span class="op">.</span><span class="fu">getClassesInPackage</span><span class="op">(</span><span class="st">&quot;game&quot;</span><span class="op">))</span></span>
+<span id="list:java_swagger_modules-3"><a href="#list:java_swagger_modules-3" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">addAll</span><span class="op">(</span><span class="kw">this</span><span class="op">.</span><span class="fu">getClassesInPackage</span><span class="op">(</span><span class="st">&quot;userModule&quot;</span><span class="op">))</span></span>
+<span id="list:java_swagger_modules-4"><a href="#list:java_swagger_modules-4" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">addAll</span><span class="op">(</span><span class="kw">this</span><span class="op">.</span><span class="fu">getClassesInPackage</span><span class="op">(</span><span class="st">&quot;BLManagement&quot;</span><span class="op">))</span></span>
+<span id="list:java_swagger_modules-5"><a href="#list:java_swagger_modules-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">addAll</span><span class="op">(</span><span class="kw">this</span><span class="op">.</span><span class="fu">getClassesInPackage</span><span class="op">(</span><span class="st">&quot;chatModule&quot;</span><span class="op">))</span></span>
+<span id="list:java_swagger_modules-6"><a href="#list:java_swagger_modules-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">build</span><span class="op">();</span></span></code></pre></div>
+<p>Java permette di creare oggetti molto complessi, diversi dai JSON /
+object solitamente utilizzati in JavaScript. Era fondamentale poter
+adoperare questi schemi per avere una documentazione ricca e per poter
+testare velocemente le API senza utilizzare necessariamente un client
+come Postman.</p>
+<p>Infine, per poter mostrare correttamente la documentazione, è stato
+necessario creare un file HTML che permettesse di visualizzare la
+documentazione in modo chiaro e ordinato. Questo file statico, presente
+nella repository del progetto, utilizza come fonte il file JSON di
+OpenAPI che viene rigenerato a ogni build del progetto, in modo da avere
+sempre la documentazione aggiornata.</p>
+<h3 id="postman">Postman</h3>
+<h3 id="log-automatici">Log automatici</h3>
 <h2
 id="parte-di-distribuiti-che-non-so-dove-mettere-sta-nellimpl-p.s.-dargli-un-nome-decente">Parte
 di distribuiti che non so dove mettere, sta nell’impl? p.s. dargli un
