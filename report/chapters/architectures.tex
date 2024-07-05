@@ -179,4 +179,19 @@ Questa raccolta di dati sarà parte di uno sviluppo futuro, in cui, dopo aver ra
 
 \subsection{Struttura API Gateway}
 
+Il pattern di progettazione utilizzato per la realizzazione del middleware è quello dell'API Gateway, che permette di creare un'interfaccia unica per l'accesso ai vari servizi del sistema.
+
+Nel nostro progetto, il client effetua delle semplici chiamate verso il middleware che riesce nei casi che lo richiedono ad effettuare chiamate verso altri servizi per poter svolgere una determinata operazione.
+Queste chiamate non sono obbligatoriamente dirette verso il servizio interessato ma possono anche routine che effettuano molteplici chiamate per poter ottenere il risultato desiderato. 
+Ad esempio nel caso di una partita, considerando l'azione di giocare sul tavolo una carta da parte di un utente il middleware si occuperà di effettuare alcune chiamate verso il servizio di business logic
+per poter assicurarsi prima di tutto che la carta giocata in quel momento sia valida rispetto alle altre presenti sul tavolo virtuale e di conteggiare effettivamente i punti della mano nel 
+caso in cui tutti i giocatori abbiano giocato una carta. Implementare queste chiamate direttamente nel front-end avrebbe reso il codice molto più complesso e difficile da mantenere 
+e la gestione di partite multiple sarebbe stata molto più difficile da gestire.
+
+Non è stato implementato nessun meccanismo di discovery per la gestione di chiamate verso gli altri servizi in quanto tutti presenti sullo stesso server, e nello stesso stack di docker
+quindi facilmente individuabili sulla rete virtuale creata da Docker.
+
+
 \section{Punti comuni tra i servizi}
+
+\subsection{Swagger}
