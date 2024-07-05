@@ -7,6 +7,64 @@ reattività agli eventi
 \section{Tecnologie}
 (swagger, postman, autogenerazione javadoc?, rabbitMQ, JWT per autenticazione utenti,
  docker, nodejs, typescript, mongodb, jest, angular, figma, ...)
+
+\subsection{Swagger - OpenAPI}
+
+Una dei requisiti fondamentali di questo progetto è stata la documentazione delle API.
+Per fare ciò è stato utilizzato Swagger, un framework open-source che permette di descrivere, produrre e consumare servizi web RESTful. 
+Swagger permette di testare le API direttamente dalla documentazione, grazie a un'interfaccia grafica che permette di inviare richieste e visualizzare le risposte.
+
+Per i servizi creati in Node.Js è stata utilizzata una libreria ad hoc, in grado tramite i corretti decoratori di generare la documentazione automaticamente in modo abbastanza semplice.
+Al contrario per i servizi in java non esiste alcuna libreria in grado di generare automaticamente la documentazione API a partire dai metodi esposti quindi è stata creata manualmente.
+Grazie ad un lavoro preliminare open-source svolto da \href{https://github.com/anupsaund}{\underline{Anup Saund}} sulla sua repository \href{https://github.com/anupsaund/vertx-auto-swagger}{\underline{Vertx auto swagger}}
+è stato possibile creare automaticamente un file html contenente la documentazione delle API esposte dai servizi in Java. 
+Purtroppo però questo file non era in grado di aggiornarsi automaticamente in caso di modifiche alle rotte quindi è stato necessario adattarlo per renderlo più flessibile e adatto al nostro progetto.
+
+Vertx è una libreria davvero completa e ben strutturata, è stato possibile creare un Router in grado di gestire tutte le rotte del progetto in java 
+utilizzando una semplice classe astratta che ha definito tutti i metodi utilizzati nel progetto tramite la quale si è potutto razionalizzare il codice e creare dinamicamente la funzionalità richiesta.
+
+\begin{lstlisting}[language=Java, caption={Semplice interfaccia per le rotte HTTP}, label=list:java_swagger_interface]
+package httpRest;
+
+import io.vertx.core.Handler;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.ext.web.RoutingContext;
+
+public interface IRouteResponse {
+	HttpMethod getMethod();
+
+	String getRoute();
+
+	Handler<RoutingContext> getHandler();
+}
+
+\end{lstlisting}
+
+La parte realmente complicata infine è stato fare in modo che le annotazioni presenti nel codice sorgente venissero lette e trasformate in un file json che rappresentasse la documentazione delle API correttamente, 
+dopo alcuni tentativi è stato possibile rendere anche questa operazione automatica. 
+
+\begin{lstlisting}[language=Java, caption={Aggiunta dei moduli delle classi contenti rotte HTTP}, label=list:java_swagger_modules]
+    final ImmutableSet<ClassPath.ClassInfo> modelClasses = ImmutableSet.<ClassPath.ClassInfo>builder()
+            .addAll(this.getClassesInPackage("game"))
+            .addAll(this.getClassesInPackage("userModule"))
+            .addAll(this.getClassesInPackage("BLManagement"))
+            .addAll(this.getClassesInPackage("chatModule"))
+            .build();
+\end{lstlisting}
+
+Java permette di creare oggetti molto complessi, che sono diversi dai json / obcject solitamente utilizzati in javascript. Era fondamentale poter adoperare
+questi schemi per avere una documentazione ricca e per poter testare velocemente le API non utilizzando a tutti i costi un client come postman. 
+
+Infine per poter mostrare correttamente la documentazione è stato necessario creare un file html che permettesse di visualizzare la documentazione in modo chiaro e ordinato che 
+di fatto è un file statico che è presente nella repository del progetto il quale però utilizza come fonte il file json di OpenAPI che viene ri-generato 
+ad ogni build del progetto in modo da avere sempre la documentazione aggiornata.
+
+\subsection{Postman}
+
+
+\subsection{Log automatici}
+
+
 \section{Parte di distribuiti che non so dove mettere, sta nell'impl? p.s. dargli un nome decente}
 FAULT DETECTION (con node nel cluster, nel nostro caso?)/TOLLERANCE
 SCALABILITà?
