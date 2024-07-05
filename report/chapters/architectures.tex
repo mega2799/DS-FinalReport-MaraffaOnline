@@ -111,6 +111,7 @@ Progettare un sistema completamente privo di errori è un obiettivo decisamente 
 Molto più realistico, e inerente al nostro percorso, è progettare un sistema che sia in grado di tollerare, nella giusta misura, gli errori che inevitabilmente si verificheranno. 
 La scelta di questa architettura tra i vari vantaggi offre la possibilità di \textbf{isolare parti del sistema}, evitando che gli errori si propaghino in modo incontrollato e che il sistema nel suo complesso vada in crash. 
 Ogni sistema opera in modo indipendente e autonomo, con le proprie risorse e la propria logica.
+\vspace{1cm}
 
 Lo snodo centrale di comunicazione dei servizi, il middleware, è in grado di gestire le comunicazioni tra i vari microservizi e di garantire che il sistema sia in grado di funzionare anche in caso di guasti.
 Purtroppo non esiste alcun progetto senza alcun tipo di \textbf{single point of failure}, o almeno non con le risorse a disposizione di noi studenti, quindi all'interno di questo servizio la 
@@ -181,17 +182,13 @@ Questa raccolta di dati sarà parte di uno sviluppo futuro, in cui, dopo aver ra
 
 Il pattern di progettazione utilizzato per la realizzazione del middleware è quello dell'API Gateway, che permette di creare un'interfaccia unica per l'accesso ai vari servizi del sistema.
 
-Nel nostro progetto, il client effetua delle semplici chiamate verso il middleware che riesce nei casi che lo richiedono ad effettuare chiamate verso altri servizi per poter svolgere una determinata operazione.
-Queste chiamate non sono obbligatoriamente dirette verso il servizio interessato ma possono anche routine che effettuano molteplici chiamate per poter ottenere il risultato desiderato. 
-Ad esempio nel caso di una partita, considerando l'azione di giocare sul tavolo una carta da parte di un utente il middleware si occuperà di effettuare alcune chiamate verso il servizio di business logic
-per poter assicurarsi prima di tutto che la carta giocata in quel momento sia valida rispetto alle altre presenti sul tavolo virtuale e di conteggiare effettivamente i punti della mano nel 
-caso in cui tutti i giocatori abbiano giocato una carta. Implementare queste chiamate direttamente nel front-end avrebbe reso il codice molto più complesso e difficile da mantenere 
-e la gestione di partite multiple sarebbe stata molto più difficile da gestire.
+Nel nostro progetto, il client effettua semplici chiamate verso il middleware, che nei casi necessari effettua chiamate verso altri servizi per svolgere una determinata operazione.
+Queste chiamate non sono obbligatoriamente dirette verso il servizio interessato, ma possono anche essere routine che effettuano molteplici chiamate per ottenere il risultato desiderato. 
+Ad esempio, nel caso di una partita, considerando l'azione di giocare sul tavolo una carta da parte di un utente, il middleware si occuperà di effettuare alcune chiamate verso il servizio di business
+logic per assicurarsi che la carta giocata in quel momento sia valida rispetto alle altre presenti sul tavolo virtuale e di conteggiare effettivamente i punti della mano nel caso in cui tutti i giocatori abbiano giocato una carta. Implementare queste chiamate direttamente nel front-end avrebbe reso il codice molto più complesso e difficile da mantenere, e la gestione di partite multiple sarebbe stata molto più difficile.
 
-Non è stato implementato nessun meccanismo di discovery per la gestione di chiamate verso gli altri servizi in quanto tutti presenti sullo stesso server, e nello stesso stack di docker
-quindi facilmente individuabili sulla rete virtuale creata da Docker.
+Non è stato implementato nessun meccanismo di discovery per la gestione di chiamate verso gli altri servizi, in quanto tutti presenti sullo stesso server e nello stesso stack di Docker, quindi facilmente individuabili sulla rete virtuale creata da Docker.
 
+% \section{Punti comuni tra i servizi}
 
-\section{Punti comuni tra i servizi}
-
-\subsection{Swagger}
+% \subsection{Swagger}
