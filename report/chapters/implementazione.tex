@@ -5,7 +5,7 @@ parla di decomposizione delle funzionalità in microservizi
 dipendenze minime tra i servizi
 reattività agli eventi
 \section{Tecnologie}
-(swagger, postman, autogenerazione javadoc?, rabbitMQ, JWT per autenticazione utenti,
+(-swagger, postman, autogenerazione javadoc?, rabbitMQ, JWT per autenticazione utenti,
  docker, nodejs, typescript, mongodb, jest, angular, figma, ...)
 \subsection{Swagger - OpenAPI}
 
@@ -58,19 +58,59 @@ Infine, per poter mostrare correttamente la documentazione, è stato necessario 
 
 \subsection{Postman}
 
+Swagger ha semplificato il lavoro 
 
 \subsection{Log automatici}
 
-Il servizio core del sistema è il middleware e per poterlo monitorare è stato necessario implementare un sistema di log automatici. Tenere traccia di tutte le operazioni è un compito molto complesso e avrebbe reso difficile un eventuale debug su un software in produzione quindi 
-grazie a Vertx, che offre gratuitamente un logger e alla libreria \href{https://mvnrepository.com/artifact/ch.qos.logback/logback-classic}{\underline{LogBack}} i dei servizi più importanti sono trascritti su file .log in modo da poterli analizzare in caso di problemi.
+Il servizio core del sistema è il middleware e per poterlo monitorare è stato necessario implementare un sistema di log automatici. Tenere traccia di tutte le operazioni è un compito molto complesso e avrebbe reso difficile un eventuale debug su un software in produzione che in caso di errore potrebbe riavviarsi e perdere definitivamente quell'errore.
+Grazie a Vertx, che offre "gratuitamente" un logger, e alla libreria \href{https://mvnrepository.com/artifact/ch.qos.logback/logback-classic}{\underline{LogBack}}, i log legati alle funzionalità più importanti sono trascritti su file .log in modo da poterli analizzare in caso di problemi.
 
-Questo sistema poi si è evoluto grazie ad una configurazione di logback in un file xml tramite il quale è possibile personalizzare completamente il sistema di log, decidendo quali package loggare, in quali file trascriverli, scegliere addirittura il livello di log (info, debug, error, ecc...)
-ed infine attuare un sistema di log rotate secondo il quale i log oltre una certa dimensione impostata da questa configurazione vengono compressi e rinominati in modo da non occupare troppo spazio ed è possible anche settare il numero di questi file compressi da mantenere.
+Questo sistema poi si è evoluto grazie a una configurazione di LogBack in un file XML, tramite il quale è possibile personalizzare completamente il sistema di log, decidendo quali package loggare, in quali file trascriverli, scegliere il livello di log (info, debug, error, ecc.) e attuare un sistema di log rotate. Secondo questa configurazione, i log oltre una certa dimensione vengono compressi e rinominati per non occupare troppo spazio, e si può anche impostare il numero di questi file compressi da mantenere.
+
+\begin{lstlisting}[language=Xml, caption={File configurazione Log automatici}, label=list:xml_logback]
+    <appender name="DEBUG_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${DEBUG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${DEBUG_FILE}.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <maxFileSize>900MB</maxFileSize>
+            <maxHistory>14</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+
+    <!-- Il package game usera la configurazione del log di debug -->
+    <logger level="INFO" name="game" additivity="false">
+        <appender-ref ref="DEBUG_LOG_ASYNC"/>
+    </logger>
+
+\end{lstlisting}
 
 \vspace{1cm}
 
-Questo sistema si adatta perfettamente ad un software dockerizzabile che ha montato un volume relativo alla cartella /log, che può anche essere un volume remoto, da cui poter consultare velocemente i log in caso di problemi.
+Questo sistema si adatta perfettamente a un software dockerizzabile che ha montato un volume relativo alla cartella /log, che può anche essere un volume remoto, da cui è possibile consultare velocemente i log in caso di problemi.
 
+\begin{lstlisting}[language=Python, caption={Volume di log nel dockerfile l.13 da montare successivamente}, label=list:dockerfile_log]
+FROM gradle:8.6.0-jdk17 AS build
+COPY --chown=gradle:gradle . /home/gradle/src
+WORKDIR /home/gradle/src
+RUN gradle assemble
+RUN gradle fatJar 
+
+FROM openjdk:19
+
+RUN mkdir /app
+RUN mkdir /app/log
+
+COPY --from=build /home/gradle/src/app/build/libs/ /app/
+COPY --from=build /home/gradle/src/app/log /app/log
+
+EXPOSE 3003
+ENTRYPOINT ["java","-jar","/app/Middleware.jar"]
+\end{lstlisting}
 
 \section{Parte di distribuiti che non so dove mettere, sta nell'impl? p.s. dargli un nome decente}
 FAULT DETECTION (con node nel cluster, nel nostro caso?)/TOLLERANCE
