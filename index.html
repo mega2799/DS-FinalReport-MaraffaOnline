@@ -210,7 +210,7 @@ id="toc-ch:validazione">Validazione</a></li>
 <span> <em>Supervisors:</em> Giovanni Ciatto, Matteo Magnani, Andrea
 Omicini </span><br />
 </p>
-<p>2024-07-05</p>
+<p>2024-07-06</p>
 </div>
 </div>
 <h2 id="list-of-abbreviations">List of Abbreviations</h2>
@@ -778,7 +778,7 @@ microservizi, redireziona le richieste ai servizi))</p>
 <p>parla di decomposizione delle funzionalità in microservizi dipendenze
 minime tra i servizi reattività agli eventi</p>
 <h2 id="tecnologie">Tecnologie</h2>
-<p>(swagger, postman, autogenerazione javadoc?, rabbitMQ, JWT per
+<p>(-swagger, postman, autogenerazione javadoc?, rabbitMQ, JWT per
 autenticazione utenti, docker, nodejs, typescript, mongodb, jest,
 angular, figma, ...)</p>
 <h3 id="swagger---openapi">Swagger - OpenAPI</h3>
@@ -850,7 +850,92 @@ nella repository del progetto, utilizza come fonte il file JSON di
 OpenAPI che viene rigenerato a ogni build del progetto, in modo da avere
 sempre la documentazione aggiornata.</p>
 <h3 id="postman">Postman</h3>
+<p>Swagger ha semplificato lo sviluppo delle API e il loro
+funzionamento, ma non è sostenibile per testare chiamate API successive
+che seguono un certo ordine o che necessitano di payload specifici.
+Postman è stato fondamentale per risolvere questo problema.</p>
+<p>È stata creata una raccolta di richieste, comodamente esportate da
+Swagger senza alcun bisogno di riscrittura. Queste possono contenere
+payload parametrizzati grazie alle variabili di ambiente settabili una
+volta per tutte, come ad esempio il GameID, che altrimenti, una volta
+creato, deve essere copiato e incollato in ogni richiesta successiva che
+lo richiede.</p>
+<p>L’altro grande vantaggio di utilizzare Postman è stata la
+funzionalità Flows, che permette di creare un diagramma di flusso delle
+richieste e di salvare alcune risposte in variabili. Fino a quando non
+si è arrivati ad avere un frontend funzionante, questi Flows sono stati
+utili per trovare eventuali bug e avere ben chiaro il flusso di chiamate
+che sarebbero dovute essere implementate nel frontend, il che ha
+velocizzato lo sviluppo del frontend, seppur in minima parte.</p>
+<p>E’ stato realizzato un flow che simulasse la creazione di una
+partita, l’iscrizione di 4 giocatori, l’avvio della partita e la
+simulazione di un turno completo di gioco. Questo ha permesso di testare
+in modo spedito molte delle funzionalità del sistema, e di trovare
+eventuali bug in modo altrettanto rapido.</p>
+<p><img src="report/img/postManFlow.png" style="width:18cm;height:10cm"
+alt="image" /><br />
+</p>
 <h3 id="log-automatici">Log automatici</h3>
+<p>Il servizio core del sistema è il middleware e per poterlo monitorare
+è stato necessario implementare un sistema di log automatici. Tenere
+traccia di tutte le operazioni è un compito molto complesso e avrebbe
+reso difficile un eventuale debug su un software in produzione che in
+caso di errore potrebbe riavviarsi e perdere definitivamente
+quell’errore. Grazie a Vertx, che offre "gratuitamente" un logger, e
+alla libreria <a
+href="https://mvnrepository.com/artifact/ch.qos.logback/logback-classic"><u>LogBack</u></a>,
+i log legati alle funzionalità più importanti sono trascritti su file
+.log in modo da poterli analizzare in caso di problemi.</p>
+<p>Questo sistema poi si è evoluto grazie a una configurazione di
+LogBack in un file XML, tramite il quale è possibile personalizzare
+completamente il sistema di log, decidendo quali package loggare, in
+quali file trascriverli, scegliere il livello di log (info, debug,
+error, ecc.) e attuare un sistema di log rotate. Secondo questa
+configurazione, i log oltre una certa dimensione vengono compressi e
+rinominati per non occupare troppo spazio, e si può anche impostare il
+numero di questi file compressi da mantenere.</p>
+<div class="sourceCode" id="list:xml_logback" data-language="Xml"
+data-caption="File configurazione Log automatici"
+label="list:xml_logback"><pre class="sourceCode Xml"><code class="sourceCode xml"><span id="list:xml_logback-1"><a href="#list:xml_logback-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">appender</span><span class="ot"> name=</span><span class="st">&quot;DEBUG_LOG&quot;</span><span class="ot"> class=</span><span class="st">&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;</span>&gt;</span>
+<span id="list:xml_logback-2"><a href="#list:xml_logback-2" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">file</span>&gt;${DEBUG_FILE}&lt;/<span class="kw">file</span>&gt;</span>
+<span id="list:xml_logback-3"><a href="#list:xml_logback-3" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">rollingPolicy</span><span class="ot"> class=</span><span class="st">&quot;ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy&quot;</span>&gt;</span>
+<span id="list:xml_logback-4"><a href="#list:xml_logback-4" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">fileNamePattern</span>&gt;${DEBUG_FILE}.%d{yyyy-MM-dd}.%i.gz&lt;/<span class="kw">fileNamePattern</span>&gt;</span>
+<span id="list:xml_logback-5"><a href="#list:xml_logback-5" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">maxFileSize</span>&gt;900MB&lt;/<span class="kw">maxFileSize</span>&gt;</span>
+<span id="list:xml_logback-6"><a href="#list:xml_logback-6" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">maxHistory</span>&gt;14&lt;/<span class="kw">maxHistory</span>&gt;</span>
+<span id="list:xml_logback-7"><a href="#list:xml_logback-7" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">totalSizeCap</span>&gt;2GB&lt;/<span class="kw">totalSizeCap</span>&gt;</span>
+<span id="list:xml_logback-8"><a href="#list:xml_logback-8" aria-hidden="true" tabindex="-1"></a>        &lt;/<span class="kw">rollingPolicy</span>&gt;</span>
+<span id="list:xml_logback-9"><a href="#list:xml_logback-9" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">encoder</span>&gt;</span>
+<span id="list:xml_logback-10"><a href="#list:xml_logback-10" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">pattern</span>&gt;${LOG_PATTERN}&lt;/<span class="kw">pattern</span>&gt;</span>
+<span id="list:xml_logback-11"><a href="#list:xml_logback-11" aria-hidden="true" tabindex="-1"></a>        &lt;/<span class="kw">encoder</span>&gt;</span>
+<span id="list:xml_logback-12"><a href="#list:xml_logback-12" aria-hidden="true" tabindex="-1"></a>    &lt;/<span class="kw">appender</span>&gt;</span>
+<span id="list:xml_logback-13"><a href="#list:xml_logback-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:xml_logback-14"><a href="#list:xml_logback-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:xml_logback-15"><a href="#list:xml_logback-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">&lt;!-- Il package game usera la configurazione del log di debug --&gt;</span></span>
+<span id="list:xml_logback-16"><a href="#list:xml_logback-16" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">logger</span><span class="ot"> level=</span><span class="st">&quot;INFO&quot;</span><span class="ot"> name=</span><span class="st">&quot;game&quot;</span><span class="ot"> additivity=</span><span class="st">&quot;false&quot;</span>&gt;</span>
+<span id="list:xml_logback-17"><a href="#list:xml_logback-17" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">appender-ref</span><span class="ot"> ref=</span><span class="st">&quot;DEBUG_LOG_ASYNC&quot;</span>/&gt;</span>
+<span id="list:xml_logback-18"><a href="#list:xml_logback-18" aria-hidden="true" tabindex="-1"></a>    &lt;/<span class="kw">logger</span>&gt;</span></code></pre></div>
+<p>Questo sistema si adatta perfettamente a un software dockerizzabile
+che ha montato un volume relativo alla cartella /log, che può anche
+essere un volume remoto, da cui è possibile consultare velocemente i log
+in caso di problemi.</p>
+<div class="sourceCode" id="list:dockerfile_log" data-language="Python"
+data-caption="Volume di log nel dockerfile l.13 da montare successivamente"
+label="list:dockerfile_log"><pre class="sourceCode python"><code class="sourceCode python"><span id="list:dockerfile_log-1"><a href="#list:dockerfile_log-1" aria-hidden="true" tabindex="-1"></a>FROM gradle:<span class="fl">8.6.0</span><span class="op">-</span>jdk17 AS build</span>
+<span id="list:dockerfile_log-2"><a href="#list:dockerfile_log-2" aria-hidden="true" tabindex="-1"></a>COPY <span class="op">--</span>chown<span class="op">=</span>gradle:gradle . <span class="op">/</span>home<span class="op">/</span>gradle<span class="op">/</span>src</span>
+<span id="list:dockerfile_log-3"><a href="#list:dockerfile_log-3" aria-hidden="true" tabindex="-1"></a>WORKDIR <span class="op">/</span>home<span class="op">/</span>gradle<span class="op">/</span>src</span>
+<span id="list:dockerfile_log-4"><a href="#list:dockerfile_log-4" aria-hidden="true" tabindex="-1"></a>RUN gradle assemble</span>
+<span id="list:dockerfile_log-5"><a href="#list:dockerfile_log-5" aria-hidden="true" tabindex="-1"></a>RUN gradle fatJar </span>
+<span id="list:dockerfile_log-6"><a href="#list:dockerfile_log-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:dockerfile_log-7"><a href="#list:dockerfile_log-7" aria-hidden="true" tabindex="-1"></a>FROM openjdk:<span class="dv">19</span></span>
+<span id="list:dockerfile_log-8"><a href="#list:dockerfile_log-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:dockerfile_log-9"><a href="#list:dockerfile_log-9" aria-hidden="true" tabindex="-1"></a>RUN mkdir <span class="op">/</span>app</span>
+<span id="list:dockerfile_log-10"><a href="#list:dockerfile_log-10" aria-hidden="true" tabindex="-1"></a>RUN mkdir <span class="op">/</span>app<span class="op">/</span>log</span>
+<span id="list:dockerfile_log-11"><a href="#list:dockerfile_log-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:dockerfile_log-12"><a href="#list:dockerfile_log-12" aria-hidden="true" tabindex="-1"></a>COPY <span class="op">--</span><span class="im">from</span><span class="op">=</span>build <span class="op">/</span>home<span class="op">/</span>gradle<span class="op">/</span>src<span class="op">/</span>app<span class="op">/</span>build<span class="op">/</span>libs<span class="op">/</span> <span class="op">/</span>app<span class="op">/</span></span>
+<span id="list:dockerfile_log-13"><a href="#list:dockerfile_log-13" aria-hidden="true" tabindex="-1"></a>COPY <span class="op">--</span><span class="im">from</span><span class="op">=</span>build <span class="op">/</span>home<span class="op">/</span>gradle<span class="op">/</span>src<span class="op">/</span>app<span class="op">/</span>log <span class="op">/</span>app<span class="op">/</span>log</span>
+<span id="list:dockerfile_log-14"><a href="#list:dockerfile_log-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:dockerfile_log-15"><a href="#list:dockerfile_log-15" aria-hidden="true" tabindex="-1"></a>EXPOSE <span class="dv">3003</span></span>
+<span id="list:dockerfile_log-16"><a href="#list:dockerfile_log-16" aria-hidden="true" tabindex="-1"></a>ENTRYPOINT [<span class="st">&quot;java&quot;</span>,<span class="st">&quot;-jar&quot;</span>,<span class="st">&quot;/app/Middleware.jar&quot;</span>]</span></code></pre></div>
 <h2
 id="parte-di-distribuiti-che-non-so-dove-mettere-sta-nellimpl-p.s.-dargli-un-nome-decente">Parte
 di distribuiti che non so dove mettere, sta nell’impl? p.s. dargli un
