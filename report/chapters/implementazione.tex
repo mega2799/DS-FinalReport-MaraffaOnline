@@ -58,13 +58,13 @@ Infine, per poter mostrare correttamente la documentazione, è stato necessario 
 
 \subsection{Postman}
 
-Swagger ha semplificato il lavoro di sviluppo di delle API e il loro funzionamento ma non è sostenibile per testare chiamate API successive che seguono un certo ordine o che necessitano di payload specifici, Postman è stato fondamentale per risolvere questo problema.
+Swagger ha semplificato lo sviluppo delle API e il loro funzionamento, ma non è sostenibile per testare chiamate API successive che seguono un certo ordine o che necessitano di payload specifici. Postman è stato fondamentale per risolvere questo problema.
 
-E' stata creata una raccolta di richieste, comodamente esportate da swagger senza alcun bisogno di riscrittura. Queste possono contenere payload parametrizzati grazie alle variabili di ambiente settabili una volta per tutte, come ad esempio il GameID che altrimenti una volta creato 
-deve essere copiato ed incollato in ogni richiesta successiva che lo richiede.
+È stata creata una raccolta di richieste, comodamente esportate da Swagger senza alcun bisogno di riscrittura. Queste possono contenere payload parametrizzati grazie alle variabili di ambiente settabili una volta per tutte, come ad esempio il GameID, che altrimenti, una volta creato, deve essere copiato e incollato in ogni richiesta successiva che lo richiede.
 
-L'altro grande vantaggio di utilizzare postman è stato la funzionalità Flows che permette di creare un diagramma di flusso delle richieste e di salvare alcune risposte in varibili, fino a quando non si è arrivati ad avere un frontend funzionante questi flows sono stati utili 
-per trovare eventuali bug e avere ben chiaro il flusso di chiamate che sarebbero dovute essere implementate nel frontend e questo, seppur in minima parte ha velocizzato lo sviluppo del frontend.
+L'altro grande vantaggio di utilizzare Postman è stata la funzionalità Flows, che permette di creare un diagramma di flusso delle richieste e di salvare alcune risposte in variabili. Fino a quando non si è arrivati ad avere un frontend funzionante, questi Flows sono stati utili per trovare eventuali bug e avere ben chiaro il flusso di chiamate che sarebbero dovute essere implementate nel frontend, il che ha velocizzato lo sviluppo del frontend, seppur in minima parte.
+
+E' stato realizzato un flow che simulasse la creazione di una partita, l'iscrizione di 4 giocatori, l'avvio della partita e la simulazione di un turno completo di gioco. Questo ha permesso di testare in modo spedito molte delle funzionalità del sistema, e di trovare eventuali bug in modo altrettanto rapido.
 
 \includegraphics[width=18cm, height=10cm]{report/img/postManFlow.png}\\[15.5cm]
 
