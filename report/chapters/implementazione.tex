@@ -61,6 +61,17 @@ Infine, per poter mostrare correttamente la documentazione, è stato necessario 
 
 \subsection{Log automatici}
 
+Il servizio core del sistema è il middleware e per poterlo monitorare è stato necessario implementare un sistema di log automatici. Tenere traccia di tutte le operazioni è un compito molto complesso e avrebbe reso difficile un eventuale debug su un software in produzione quindi 
+grazie a Vertx, che offre gratuitamente un logger e alla libreria \href{https://mvnrepository.com/artifact/ch.qos.logback/logback-classic}{\underline{LogBack}} i dei servizi più importanti sono trascritti su file .log in modo da poterli analizzare in caso di problemi.
+
+Questo sistema poi si è evoluto grazie ad una configurazione di logback in un file xml tramite il quale è possibile personalizzare completamente il sistema di log, decidendo quali package loggare, in quali file trascriverli, scegliere addirittura il livello di log (info, debug, error, ecc...)
+ed infine attuare un sistema di log rotate secondo il quale i log oltre una certa dimensione impostata da questa configurazione vengono compressi e rinominati in modo da non occupare troppo spazio ed è possible anche settare il numero di questi file compressi da mantenere.
+
+\vspace{1cm}
+
+Questo sistema si adatta perfettamente ad un software dockerizzabile che ha montato un volume relativo alla cartella /log, che può anche essere un volume remoto, da cui poter consultare velocemente i log in caso di problemi.
+
+
 \section{Parte di distribuiti che non so dove mettere, sta nell'impl? p.s. dargli un nome decente}
 FAULT DETECTION (con node nel cluster, nel nostro caso?)/TOLLERANCE
 SCALABILITà?
