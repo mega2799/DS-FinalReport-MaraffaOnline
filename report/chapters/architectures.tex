@@ -196,12 +196,58 @@ Non è stato implementato nessun meccanismo di discovery per la gestione di chia
 
 \vspace{1cm}
 
-
 Si è seguito un approccio modulare nello sviluppo di questo componente che, in un primo step, conteneva soltanto la logica di gestione delle partite, al quale sono stati aggiunti i moduli per la comunicazione con il servizio degli utenti e della business logic. Ogni modulo segue la stessa struttura, ossia una classe denominata controller che si occupa esclusivamente della dichiarazione delle rotte HTTP e che a sua volta contiene un service. Ogni servizio contiene poi le logiche di calcolo e crea un JSON di risposta che viene passato al controller che lo invia come risposta HTTP, questo per poter separare completamente e rispettare il principio di single responsibility.
 
 Nel modulo contenente le logiche di gioco è stato necessario aggiungere un ulteriore strato alla struttura controller-service, data la struttura multi-agente della gestione delle partite che non permetteva una separazione netta. Quindi è stato aggiunto, tra il controller e il service, un componente ibrido per poter comunque avere servizi indipendenti.
 
 Questa separazione, oltre a essere una buona pratica, è stata scelta per poter effettuare del testing comodamente soltanto sui servizi, testando quindi solamente la parte relativa all'elaborazione di una risposta.
+
+\subsection{WebSockets}
+
+L'interazione con il frontend avviene prevalementemente tramite il protocollo HTTP ma per la gestione di alcuni aspetti in tempo reale sono state introdotte le websocket.
+Questo componente è stato creato per esempio per la gestione delle chat di gioco, in modo che i giocatori possano comuninicare tra loro in tempo reale. Ogni client che viene 
+instanziato sul computer degli utenti effettua una connessione Websocket con il middleware utilizzando come endopoint il proprio UUID, che viene assegnato automaticamente all'avvio e 
+lo username del giocatore, dopo aver effettuato il login. Il middleware contiene al proprio interno una mappa di di tutti i client e giocatori connessi con la relativa websocket e 
+una classe che espone due metodi che permette di inviare messaggi ad un singolo giocatore o effettuare un messaggio broadcast a tutti i giocatori connessi.
+
+Il modulo di game si occupa di gestire le partite quindi è l'unico che può sapere quali giocatori devono ricevere determinati messaggi relativi ad una singola partita quindi per poter
+utilizzare il servizio di websocket è stata implementata una semplice intefraccia all'interno del agente di gioco con il quale si effettuano chiamate "onEvent". Ogni volta 
+che un particolare evento si verifica un'invocazione a queste chiamate permette di inviare messaggi alle websocket dei giocatori interessati. 
+
+\begin{lstlisting}[language=Java, caption={Interfaccia per gestire chiamate websocket}, label=list:java_websocket_interface]
+package game;
+
+import game.service.User;
+
+public interface IGameAgent {
+
+	void onCreateGame(User user);
+
+	void onNewRound();
+
+	void onJoinGame(User user);
+
+	void onStartGame();
+
+	void onCheckMaraffa(int suit, String username);
+
+	void onPlayCard();
+
+	void onTrickCompleted(Trick latestTrick);
+
+	void onMessage();
+
+	void onEndRound();
+
+	void onEndGame();
+
+	void onNewGame(String newGameID);
+
+	void onChangeTeam();
+
+	void onMakeCall(final Call call);
+}
+\end{lstlisting}
 
 % \section{Punti comuni tra i servizi}
 
