@@ -204,15 +204,10 @@ Questa separazione, oltre a essere una buona pratica, è stata scelta per poter 
 
 \subsection{WebSockets}
 
-L'interazione con il frontend avviene prevalementemente tramite il protocollo HTTP ma per la gestione di alcuni aspetti in tempo reale sono state introdotte le websocket.
-Questo componente è stato creato per esempio per la gestione delle chat di gioco, in modo che i giocatori possano comuninicare tra loro in tempo reale. Ogni client che viene 
-instanziato sul computer degli utenti effettua una connessione Websocket con il middleware utilizzando come endopoint il proprio UUID, che viene assegnato automaticamente all'avvio e 
-lo username del giocatore, dopo aver effettuato il login. Il middleware contiene al proprio interno una mappa di di tutti i client e giocatori connessi con la relativa websocket e 
-una classe che espone due metodi che permette di inviare messaggi ad un singolo giocatore o effettuare un messaggio broadcast a tutti i giocatori connessi.
+L'interazione con il frontend avviene prevalentemente tramite il protocollo HTTP, ma per la gestione di alcuni aspetti in tempo reale sono state introdotte le WebSocket.
+Questo componente è stato creato, ad esempio, per la gestione delle chat di gioco, in modo che i giocatori possano comunicare tra loro in tempo reale. Ogni client, istanziato sul computer degli utenti, effettua una connessione WebSocket con il middleware utilizzando come endpoint il proprio UUID, che viene assegnato automaticamente all'avvio, e lo username del giocatore, dopo aver effettuato il login. Il middleware contiene al proprio interno una mappa di tutti i client e giocatori connessi con la relativa WebSocket e una classe che espone due metodi per inviare messaggi a un singolo giocatore o effettuare un messaggio broadcast a tutti i giocatori connessi.
 
-Il modulo di game si occupa di gestire le partite quindi è l'unico che può sapere quali giocatori devono ricevere determinati messaggi relativi ad una singola partita quindi per poter
-utilizzare il servizio di websocket è stata implementata una semplice intefraccia all'interno del agente di gioco con il quale si effettuano chiamate "onEvent". Ogni volta 
-che un particolare evento si verifica un'invocazione a queste chiamate permette di inviare messaggi alle websocket dei giocatori interessati. 
+Il modulo di game si occupa di gestire le partite, quindi è l'unico che può sapere quali giocatori devono ricevere determinati messaggi relativi a una singola partita. Per utilizzare il servizio di WebSocket, è stata implementata una semplice interfaccia all'interno dell'agente di gioco con la quale si effettuano chiamate "onEvent". Ogni volta che un particolare evento si verifica, un'invocazione a queste chiamate permette di inviare messaggi alle WebSocket dei giocatori interessati.
 
 \begin{lstlisting}[language=Java, caption={Interfaccia per gestire chiamate websocket}, label=list:java_websocket_interface]
 package game;
