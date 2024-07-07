@@ -15,6 +15,7 @@ I microservizi che si sono scelti di sviluppare si occupano di varie aree legate
     \item \textbf{Middleware}: si occupa della gestione delle comunicazioni tra i vari microservizi, e svolge la funzione di "motore di gioco".
 \end{itemize}
 
+
 \includegraphics[width=12cm]{report/img/Architecture.png}\\[10.5cm]
 
 \section{Micro-servizi e la loro architettura}
@@ -184,10 +185,23 @@ Il pattern di progettazione utilizzato per la realizzazione del middleware è qu
 
 Nel nostro progetto, il client effettua semplici chiamate verso il middleware, che nei casi necessari effettua chiamate verso altri servizi per svolgere una determinata operazione.
 Queste chiamate non sono obbligatoriamente dirette verso il servizio interessato, ma possono anche essere routine che effettuano molteplici chiamate per ottenere il risultato desiderato. 
-Ad esempio, nel caso di una partita, considerando l'azione di giocare sul tavolo una carta da parte di un utente, il middleware si occuperà di effettuare alcune chiamate verso il servizio di business
-logic per assicurarsi che la carta giocata in quel momento sia valida rispetto alle altre presenti sul tavolo virtuale e di conteggiare effettivamente i punti della mano nel caso in cui tutti i giocatori abbiano giocato una carta. Implementare queste chiamate direttamente nel front-end avrebbe reso il codice molto più complesso e difficile da mantenere, e la gestione di partite multiple sarebbe stata molto più difficile.
+Ad esempio, nel caso di una partita, considerando l'azione di giocare sul tavolo una carta da parte di un utente.
+Il middleware si occuperà di effettuare alcune chiamate verso il servizio di business
+logic per assicurarsi che la carta giocata in quel momento sia valida rispetto alle altre presenti sul tavolo virtuale e di conteggiare effettivamente i punti della mano nel caso in cui tutti i giocatori abbiano giocato una carta.
+Implementare queste chiamate direttamente nel front-end avrebbe reso il codice molto più complesso e difficile da mantenere, e la gestione di partite multiple sarebbe stata molto più difficile.
+
+\vspace{1cm}
 
 Non è stato implementato nessun meccanismo di discovery per la gestione di chiamate verso gli altri servizi, in quanto tutti presenti sullo stesso server e nello stesso stack di Docker, quindi facilmente individuabili sulla rete virtuale creata da Docker.
+
+\vspace{1cm}
+
+
+Si è seguito un approccio modulare nello sviluppo di questo componente che, in un primo step, conteneva soltanto la logica di gestione delle partite, al quale sono stati aggiunti i moduli per la comunicazione con il servizio degli utenti e della business logic. Ogni modulo segue la stessa struttura, ossia una classe denominata controller che si occupa esclusivamente della dichiarazione delle rotte HTTP e che a sua volta contiene un service. Ogni servizio contiene poi le logiche di calcolo e crea un JSON di risposta che viene passato al controller che lo invia come risposta HTTP, questo per poter separare completamente e rispettare il principio di single responsibility.
+
+Nel modulo contenente le logiche di gioco è stato necessario aggiungere un ulteriore strato alla struttura controller-service, data la struttura multi-agente della gestione delle partite che non permetteva una separazione netta. Quindi è stato aggiunto, tra il controller e il service, un componente ibrido per poter comunque avere servizi indipendenti.
+
+Questa separazione, oltre a essere una buona pratica, è stata scelta per poter effettuare del testing comodamente soltanto sui servizi, testando quindi solamente la parte relativa all'elaborazione di una risposta.
 
 % \section{Punti comuni tra i servizi}
 
