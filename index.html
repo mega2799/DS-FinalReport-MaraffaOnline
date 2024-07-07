@@ -734,7 +734,9 @@ ottenere i dati necessari per il funzionamento del gioco, mentre
 utilizza WebSockets per la comunicazione in tempo reale con il
 middleware.</p>
 <h2 id="middleware">Middleware</h2>
-<p>Come già citato, il middleware è il cuore del sistema. L’architettura
+<p><img src="report/img/middleware.png" style="width:12cm"
+alt="image" /><br />
+Come già citato, il middleware è il cuore del sistema. L’architettura
 utilizzata per la gestione delle partite è quella di un multi-agente, in
 cui ogni agente si occupa di gestire una partita e di orchestrare la
 comunicazione con gli altri servizi, come ad esempio il front-end.
@@ -756,16 +758,10 @@ middleware, che nei casi necessari effettua chiamate verso altri servizi
 per svolgere una determinata operazione. Queste chiamate non sono
 obbligatoriamente dirette verso il servizio interessato, ma possono
 anche essere routine che effettuano molteplici chiamate per ottenere il
-risultato desiderato. Ad esempio, nel caso di una partita, considerando
-l’azione di giocare sul tavolo una carta da parte di un utente. Il
-middleware si occuperà di effettuare alcune chiamate verso il servizio
-di business logic per assicurarsi che la carta giocata in quel momento
-sia valida rispetto alle altre presenti sul tavolo virtuale e di
-conteggiare effettivamente i punti della mano nel caso in cui tutti i
-giocatori abbiano giocato una carta. Implementare queste chiamate
-direttamente nel front-end avrebbe reso il codice molto più complesso e
-difficile da mantenere, e la gestione di partite multiple sarebbe stata
-molto più difficile.</p>
+risultato desiderato. Implementare queste chiamate direttamente nel
+front-end avrebbe reso il codice molto più complesso e difficile da
+mantenere, e la gestione di partite multiple sarebbe stata molto più
+difficile.</p>
 <p>Non è stato implementato nessun meccanismo di discovery per la
 gestione di chiamate verso gli altri servizi, in quanto tutti presenti
 sullo stesso server e nello stesso stack di Docker, quindi facilmente
