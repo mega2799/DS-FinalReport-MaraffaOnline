@@ -124,6 +124,8 @@ Questo perché il middleware è il cuore pulsante del sistema; avendo disponibil
     la struttura già esistente del servizio.
     \item \textbf{Ridondanza del middleware}: avere molteplici istanze del middleware, preferibilmente 3, di cui una principale e le altre 2 in copia, facendo in modo che
     ogni azione sul middleware principale venga replicata sulle altre due istanze e che quindi, in caso di guasto hardware, le altre copie possano rispondere alle richieste.
+    Se si utilizza questa soluzione bisogna prestare attenzione alla consistenza delle copie. La non consistenza potrebbe addirittura peggiorare la situazione.
+    Per questo motivo è consigliato averne più di una, in modo tale da controllarne la consistenza.
 \end{itemize}
 
 \subsubsection{Scalabilità}
