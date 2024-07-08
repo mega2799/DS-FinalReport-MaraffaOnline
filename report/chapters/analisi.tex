@@ -1,6 +1,20 @@
 \chapter{Analisi}
 \label{ch:analisi} %Label of the chapter lit rev. The key ``ch:lit_rev'' can be used with command \ref{ch:lit_rev} to refer this Chapter.
 \section{Obiettivi}
+I principali requisiti funzionali e obiettivi del sistema sono:
+
+\begin{itemize}
+    \item \textbf{Costruzione di un'architettura a micro-servizi}.
+
+    \item \textbf{Autenticazione e registrazione utenti: } possibilità di accedere ad un'area privata per poter visualizzare informazioni personali, oltre alla possibilità di poter giocare senza un proprio account in modalità 'ospite'.
+    \item \textbf{Creazione e gestione partita: } gli utenti possono creare o partecipare ad una partita che inizierà soltanto quando 4 giocatori saranno presenti e disposti in due squadre da 2.
+
+    \item \textbf{Chat di gioco: } possibilità di scambiare messaggi.
+
+    \item \textbf{Nuova modalità di gioco} in cui se si commette un errore di gioco la partita viene conclusa conferendo alla squadra avversaria il massimo dei punti.
+
+    \item \textbf{Persistenza dei dati: } salvataggio su database degli utenti e delle statistiche delle partite (mani giocate, briscola, etc...).
+\end{itemize}
 \section{Politiche di autovalutazione} 
 \begin{itemize}
     \item l'elenco delle partite iniziate/finite deve rimanere aggiornato
