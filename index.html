@@ -152,6 +152,7 @@ Logic</a></li>
 <ul>
 <li><a href="#struttura-api-gateway"
 id="toc-struttura-api-gateway">Struttura API Gateway</a></li>
+<li><a href="#websockets" id="toc-websockets">WebSockets</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#ch:interazioni"
@@ -806,6 +807,64 @@ servizi indipendenti.</p>
 per poter effettuare del testing comodamente soltanto sui servizi,
 testando quindi solamente la parte relativa all’elaborazione di una
 risposta.</p>
+<h3 id="websockets">WebSockets</h3>
+<p>L’interazione con il frontend avviene prevalentemente tramite il
+protocollo HTTP, ma per la gestione di alcuni aspetti in tempo reale
+sono state introdotte le WebSocket. Questo componente è stato creato, ad
+esempio, per la gestione delle chat di gioco, in modo che i giocatori
+possano comunicare tra loro in tempo reale. Ogni client, istanziato sul
+computer degli utenti, effettua una connessione WebSocket con il
+middleware utilizzando come endpoint il proprio UUID, che viene
+assegnato automaticamente all’avvio, e lo username del giocatore, dopo
+aver effettuato il login. Il middleware contiene al proprio interno una
+mappa di tutti i client e giocatori connessi con la relativa WebSocket e
+una classe che espone due metodi per inviare messaggi a un singolo
+giocatore o effettuare un messaggio broadcast a tutti i giocatori
+connessi.</p>
+<p>Il modulo di game si occupa di gestire le partite, quindi è l’unico
+che può sapere quali giocatori devono ricevere determinati messaggi
+relativi a una singola partita. Per utilizzare il servizio di WebSocket,
+è stata implementata una semplice interfaccia all’interno dell’agente di
+gioco con la quale si effettuano chiamate "onEvent". Ogni volta che un
+particolare evento si verifica, un’invocazione a queste chiamate
+permette di inviare messaggi alle WebSocket dei giocatori
+interessati.</p>
+<div class="sourceCode" id="list:java_websocket_interface"
+data-language="Java"
+data-caption="Interfaccia per gestire chiamate websocket"
+label="list:java_websocket_interface"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="list:java_websocket_interface-1"><a href="#list:java_websocket_interface-1" aria-hidden="true" tabindex="-1"></a><span class="kw">package</span><span class="im"> game</span><span class="op">;</span></span>
+<span id="list:java_websocket_interface-2"><a href="#list:java_websocket_interface-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:java_websocket_interface-3"><a href="#list:java_websocket_interface-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">game</span><span class="op">.</span><span class="im">service</span><span class="op">.</span><span class="im">User</span><span class="op">;</span></span>
+<span id="list:java_websocket_interface-4"><a href="#list:java_websocket_interface-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:java_websocket_interface-5"><a href="#list:java_websocket_interface-5" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="kw">interface</span> IGameAgent <span class="op">{</span></span>
+<span id="list:java_websocket_interface-6"><a href="#list:java_websocket_interface-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:java_websocket_interface-7"><a href="#list:java_websocket_interface-7" aria-hidden="true" tabindex="-1"></a>	<span class="dt">void</span> <span class="fu">onCreateGame</span><span class="op">(</span>User user<span class="op">);</span></span>
+<span id="list:java_websocket_interface-8"><a href="#list:java_websocket_interface-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:java_websocket_interface-9"><a href="#list:java_websocket_interface-9" aria-hidden="true" tabindex="-1"></a>	<span class="dt">void</span> <span class="fu">onNewRound</span><span class="op">();</span></span>
+<span id="list:java_websocket_interface-10"><a href="#list:java_websocket_interface-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:java_websocket_interface-11"><a href="#list:java_websocket_interface-11" aria-hidden="true" tabindex="-1"></a>	<span class="dt">void</span> <span class="fu">onJoinGame</span><span class="op">(</span>User user<span class="op">);</span></span>
+<span id="list:java_websocket_interface-12"><a href="#list:java_websocket_interface-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:java_websocket_interface-13"><a href="#list:java_websocket_interface-13" aria-hidden="true" tabindex="-1"></a>	<span class="dt">void</span> <span class="fu">onStartGame</span><span class="op">();</span></span>
+<span id="list:java_websocket_interface-14"><a href="#list:java_websocket_interface-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:java_websocket_interface-15"><a href="#list:java_websocket_interface-15" aria-hidden="true" tabindex="-1"></a>	<span class="dt">void</span> <span class="fu">onCheckMaraffa</span><span class="op">(</span><span class="dt">int</span> suit<span class="op">,</span> <span class="bu">String</span> username<span class="op">);</span></span>
+<span id="list:java_websocket_interface-16"><a href="#list:java_websocket_interface-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:java_websocket_interface-17"><a href="#list:java_websocket_interface-17" aria-hidden="true" tabindex="-1"></a>	<span class="dt">void</span> <span class="fu">onPlayCard</span><span class="op">();</span></span>
+<span id="list:java_websocket_interface-18"><a href="#list:java_websocket_interface-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:java_websocket_interface-19"><a href="#list:java_websocket_interface-19" aria-hidden="true" tabindex="-1"></a>	<span class="dt">void</span> <span class="fu">onTrickCompleted</span><span class="op">(</span>Trick latestTrick<span class="op">);</span></span>
+<span id="list:java_websocket_interface-20"><a href="#list:java_websocket_interface-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:java_websocket_interface-21"><a href="#list:java_websocket_interface-21" aria-hidden="true" tabindex="-1"></a>	<span class="dt">void</span> <span class="fu">onMessage</span><span class="op">();</span></span>
+<span id="list:java_websocket_interface-22"><a href="#list:java_websocket_interface-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:java_websocket_interface-23"><a href="#list:java_websocket_interface-23" aria-hidden="true" tabindex="-1"></a>	<span class="dt">void</span> <span class="fu">onEndRound</span><span class="op">();</span></span>
+<span id="list:java_websocket_interface-24"><a href="#list:java_websocket_interface-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:java_websocket_interface-25"><a href="#list:java_websocket_interface-25" aria-hidden="true" tabindex="-1"></a>	<span class="dt">void</span> <span class="fu">onEndGame</span><span class="op">();</span></span>
+<span id="list:java_websocket_interface-26"><a href="#list:java_websocket_interface-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:java_websocket_interface-27"><a href="#list:java_websocket_interface-27" aria-hidden="true" tabindex="-1"></a>	<span class="dt">void</span> <span class="fu">onNewGame</span><span class="op">(</span><span class="bu">String</span> newGameID<span class="op">);</span></span>
+<span id="list:java_websocket_interface-28"><a href="#list:java_websocket_interface-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:java_websocket_interface-29"><a href="#list:java_websocket_interface-29" aria-hidden="true" tabindex="-1"></a>	<span class="dt">void</span> <span class="fu">onChangeTeam</span><span class="op">();</span></span>
+<span id="list:java_websocket_interface-30"><a href="#list:java_websocket_interface-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:java_websocket_interface-31"><a href="#list:java_websocket_interface-31" aria-hidden="true" tabindex="-1"></a>	<span class="dt">void</span> <span class="fu">onMakeCall</span><span class="op">(</span><span class="dt">final</span> Call call<span class="op">);</span></span>
+<span id="list:java_websocket_interface-32"><a href="#list:java_websocket_interface-32" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <h1 id="ch:interazioni">Interazioni</h1>
 <p>interazioni tra i componenti, come comunicano, diagrammi d’attività.
 (parlare di api gateway (permette comunicazione tra client esterni con i
