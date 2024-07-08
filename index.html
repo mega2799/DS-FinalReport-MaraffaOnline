@@ -168,11 +168,6 @@ OpenAPI</a></li>
 <li><a href="#log-automatici" id="toc-log-automatici">Log
 automatici</a></li>
 </ul></li>
-<li><a
-href="#parte-di-distribuiti-che-non-so-dove-mettere-sta-nellimpl-p.s.-dargli-un-nome-decente"
-id="toc-parte-di-distribuiti-che-non-so-dove-mettere-sta-nellimpl-p.s.-dargli-un-nome-decente">Parte
-di distribuiti che non so dove mettere, sta nell’impl? p.s. dargli un
-nome decente</a></li>
 <li><a href="#screen" id="toc-screen">Screen</a></li>
 <li><a href="#optionalmockup"
 id="toc-optionalmockup">Optional(Mockup)</a></li>
@@ -683,8 +678,11 @@ esistente del servizio.</p></li>
 istanze del middleware, preferibilmente 3, di cui una principale e le
 altre 2 in copia, facendo in modo che ogni azione sul middleware
 principale venga replicata sulle altre due istanze e che quindi, in caso
-di guasto hardware, le altre copie possano rispondere alle
-richieste.</p></li>
+di guasto hardware, le altre copie possano rispondere alle richieste. Se
+si utilizza questa soluzione bisogna prestare attenzione alla
+consistenza delle copie. La non consistenza potrebbe addirittura
+peggiorare la situazione. Per questo motivo è consigliato averne più di
+una, in modo tale da controllarne la consistenza.</p></li>
 </ul>
 <h4 id="scalabilità">Scalabilità</h4>
 <p>Nel caso del middleware, la scalabilità è un altro modo per chiamare
@@ -1037,18 +1035,6 @@ label="list:dockerfile_log"><pre class="sourceCode python"><code class="sourceCo
 <span id="list:dockerfile_log-14"><a href="#list:dockerfile_log-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="list:dockerfile_log-15"><a href="#list:dockerfile_log-15" aria-hidden="true" tabindex="-1"></a>EXPOSE <span class="dv">3003</span></span>
 <span id="list:dockerfile_log-16"><a href="#list:dockerfile_log-16" aria-hidden="true" tabindex="-1"></a>ENTRYPOINT [<span class="st">&quot;java&quot;</span>,<span class="st">&quot;-jar&quot;</span>,<span class="st">&quot;/app/Middleware.jar&quot;</span>]</span></code></pre></div>
-<h2
-id="parte-di-distribuiti-che-non-so-dove-mettere-sta-nellimpl-p.s.-dargli-un-nome-decente">Parte
-di distribuiti che non so dove mettere, sta nell’impl? p.s. dargli un
-nome decente</h2>
-<p>FAULT DETECTION (con node nel cluster, nel nostro caso?)/TOLLERANCE
-SCALABILITà? verificare la scalabilità orizzontale (aumento richieste in
-un periodo)? PERSISTENZA CONSISTENZA AFFIDABILITà FAULTS (GIOCATORE SI
-DISCONNETTE NEL MEZZO DELLA PARTITA) IL SISTEMA SI BLOCCA IN CASO DI
-ERRORI? **GUARDA L’ESEMPIO DI POLITICHE AUTOVALUTAZIONE
-NELL’ANALISI**</p>
-<p>monitoraggio per osservare stato attuale sistema (mi sa che noi non
-l’abbiamo)</p>
 <h2 id="screen">Screen</h2>
 <h2 id="optionalmockup">Optional(Mockup)</h2>
 <h1 id="ch:DevOps">DevOps</h1>
