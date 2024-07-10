@@ -16,7 +16,7 @@ Anche in questo caso, il middleware si occupa di instradare i messaggi alle gius
 \section{Stack Docker -> reti interne e IP privati}
 
 Il sistema è stato progettato per essere eseguito su qualsiasi piattaforma e si è arrivati a creare uno stack completo di Docker Compose. Questo ha permesso anche la creazione di reti interne tra i container che vengono utilizzate per la comunicazione tra i servizi. È stato possibile assegnare IP privati ai container, permettendo di non esporre i servizi all'esterno e di mantenere un'architettura più sicura. Tra le variabili d'ambiente che vengono passate ai container c'è anche l'indirizzo del servizio a cui connettersi, e questo indirizzo è il nome del servizio all'interno della rete. Questo permette di non dover modificare il codice ogni volta che si cambia l'indirizzo del servizio a cui connettersi, ma basta modificare il file di configurazione del Docker Compose.
-
+\subsection{Nginx} \label{Nginx}
 Per quanto riguarda il frontend, è stato utilizzato Nginx per eseguire l'applicazione all'interno del container e per poterla raggiungere dall'esterno. Per fare ciò è stato necessario configurare Nginx tramite un file di configurazione che ha permesso anche di gestire un'operazione di reverse proxy per indirizzare le chiamate al backend.
 
 \begin{lstlisting}[language=Python, caption={Configurazione Nginx del front-end}, label=list:nginx_frontend]
