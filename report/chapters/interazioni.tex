@@ -15,6 +15,36 @@ Anche in questo caso, il middleware si occupa di instradare i messaggi alle gius
 
 \section{Stack Docker -> reti interne e IP privati}
 
+Il sistema è stato pensato per essere seguito su qualisiasi sistema  ed   si  è arrivati a creare uno stack completo di docker compose. Questo ha permesso anche la creazione di reti interne tra i container che 
+vengono utilizzate per la comunicazione tra i servizi. E' stato possibile assegnare IP privati ai container, permettendo di non esporre i servizi all'esterno e di mantenere un'architettura più sicura. Tra le 
+variabili d'ambiente che vengono passate ai container, c'è anche l'indirizzo del servizio a cui connettersi e questo indirizzo è il nome del servizio all'interno della rete. Questo permette di non dover 
+modificare il codice ogni volta che si cambia l'indirizzo del servizio a cui connettersi, ma basta modificare il file di configurazione del docker compose.
+
+Riguardo al frontend è stato utilizzato Nginx per eseguire l'applicazione all'interno del container e per poterla raggiungere dall'esterno. 
+Per fare ciò è stato necessario configurare Nginx tramite un file di configurazione che ha permesso anche di gestire un'operazione di reverse proxy per indirizzare le chiamate al backend.
+
+\begin{lstlisting}[language=Python, caption={Configurazione Nginx del front-end}, label=list:nginx_frontend]
+server {
+    listen 80;
+    
+    location / {
+        root /usr/share/nginx/html;
+        index index.html index.htm;
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /api/ {
+        proxy_pass "http://${API_HOST}:${API_PORT}/";
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+\end{lstlisting}
+
+L'indirizzo del backend è stato configurato anch'esse tramite variabili d'ambiente, in modo da poterlo cambiare facilmente in base all'ambiente in cui si trova il container, e queste variabili vengono sostituite a seconda dell'ambiente di deploy in cui l'applicativo Angular viene eseguito.
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
