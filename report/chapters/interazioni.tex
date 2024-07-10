@@ -1,8 +1,8 @@
 \chapter{Interazioni}
 \label{ch:interazioni} % This how you label a chapter and the key (e.g., ch:into) will be used to refer this chapter ``Introduction'' later in the report. 
 % the key ``ch:into'' can be used with command \ref{ch:intor} to refere this Chapter.
-interazioni tra i componenti, come comunicano, diagrammi d'attività.
-(parlare di api gateway (permette comunicazione tra client esterni con i microservizi, redireziona le richieste ai servizi))
+% interazioni tra i componenti, come comunicano, diagrammi d'attività.
+% (parlare di api gateway (permette comunicazione tra client esterni con i microservizi, redireziona le richieste ai servizi))
 
 \section{Frontend <-> WebSocket} 
 
@@ -15,13 +15,9 @@ Anche in questo caso, il middleware si occupa di instradare i messaggi alle gius
 
 \section{Stack Docker -> reti interne e IP privati}
 
-Il sistema è stato pensato per essere seguito su qualisiasi sistema  ed   si  è arrivati a creare uno stack completo di docker compose. Questo ha permesso anche la creazione di reti interne tra i container che 
-vengono utilizzate per la comunicazione tra i servizi. E' stato possibile assegnare IP privati ai container, permettendo di non esporre i servizi all'esterno e di mantenere un'architettura più sicura. Tra le 
-variabili d'ambiente che vengono passate ai container, c'è anche l'indirizzo del servizio a cui connettersi e questo indirizzo è il nome del servizio all'interno della rete. Questo permette di non dover 
-modificare il codice ogni volta che si cambia l'indirizzo del servizio a cui connettersi, ma basta modificare il file di configurazione del docker compose.
+Il sistema è stato progettato per essere eseguito su qualsiasi piattaforma e si è arrivati a creare uno stack completo di Docker Compose. Questo ha permesso anche la creazione di reti interne tra i container che vengono utilizzate per la comunicazione tra i servizi. È stato possibile assegnare IP privati ai container, permettendo di non esporre i servizi all'esterno e di mantenere un'architettura più sicura. Tra le variabili d'ambiente che vengono passate ai container c'è anche l'indirizzo del servizio a cui connettersi, e questo indirizzo è il nome del servizio all'interno della rete. Questo permette di non dover modificare il codice ogni volta che si cambia l'indirizzo del servizio a cui connettersi, ma basta modificare il file di configurazione del Docker Compose.
 
-Riguardo al frontend è stato utilizzato Nginx per eseguire l'applicazione all'interno del container e per poterla raggiungere dall'esterno. 
-Per fare ciò è stato necessario configurare Nginx tramite un file di configurazione che ha permesso anche di gestire un'operazione di reverse proxy per indirizzare le chiamate al backend.
+Per quanto riguarda il frontend, è stato utilizzato Nginx per eseguire l'applicazione all'interno del container e per poterla raggiungere dall'esterno. Per fare ciò è stato necessario configurare Nginx tramite un file di configurazione che ha permesso anche di gestire un'operazione di reverse proxy per indirizzare le chiamate al backend.
 
 \begin{lstlisting}[language=Python, caption={Configurazione Nginx del front-end}, label=list:nginx_frontend]
 server {
@@ -44,8 +40,7 @@ server {
 }
 \end{lstlisting}
 
-L'indirizzo del backend è stato configurato anch'esse tramite variabili d'ambiente, in modo da poterlo cambiare facilmente in base all'ambiente in cui si trova il container, e queste variabili vengono sostituite a seconda dell'ambiente di deploy in cui l'applicativo Angular viene eseguito.
-
+L'indirizzo del backend è stato configurato anch'esso tramite variabili d'ambiente, in modo da poterlo cambiare facilmente in base all'ambiente in cui si trova il container, e queste variabili vengono sostituite a seconda dell'ambiente di deploy in cui l'applicativo Angular viene eseguito.
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \section{Problem statement}
