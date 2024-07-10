@@ -165,7 +165,10 @@ id="toc-chat-globale-e-privata">Chat globale e privata</a></li>
 </ul></li>
 <li><a href="#stack-docker---reti-interne-e-ip-privati"
 id="toc-stack-docker---reti-interne-e-ip-privati">Stack Docker -&gt;
-reti interne e IP privati</a></li>
+reti interne e IP privati</a>
+<ul>
+<li><a href="#Nginx" id="toc-Nginx">Nginx</a></li>
+</ul></li>
 </ul></li>
 <li><a href="#ch:implementazione"
 id="toc-ch:implementazione">Implementazione</a>
@@ -205,7 +208,13 @@ automation</a></li>
 id="toc-ch:validazione">Validazione</a></li>
 <li><a href="#ch:deployment" id="toc-ch:deployment">Deployment</a>
 <ul>
-<li><a href="#deployment" id="toc-deployment">deployment</a></li>
+<li><a href="#containerization"
+id="toc-containerization">Containerization</a>
+<ul>
+<li><a href="#nodejs" id="toc-nodejs">NodeJS</a></li>
+<li><a href="#java" id="toc-java">Java</a></li>
+<li><a href="#angular" id="toc-angular">Angular</a></li>
+</ul></li>
 </ul></li>
 <li><a href="#ch:con" id="toc-ch:con">Conclusions and Future Work</a>
 <ul>
@@ -923,6 +932,7 @@ del servizio all’interno della rete. Questo permette di non dover
 modificare il codice ogni volta che si cambia l’indirizzo del servizio a
 cui connettersi, ma basta modificare il file di configurazione del
 Docker Compose.</p>
+<h3 id="Nginx">Nginx</h3>
 <p>Per quanto riguarda il frontend, è stato utilizzato Nginx per
 eseguire l’applicazione all’interno del container e per poterla
 raggiungere dall’esterno. Per fare ciò è stato necessario configurare
@@ -1180,8 +1190,84 @@ unit e integrazione con jest) Ma noi usiamo Lint e Prettier??? -vuole
 che i test della ci siano runnati il più frequentemente possibile (bot
 git che li runna?)</p>
 <h1 id="ch:deployment">Deployment</h1>
-<h2 id="deployment">deployment</h2>
-<p>containerizzation</p>
+<h2 id="containerization">Containerization</h2>
+<p>Data l’architettura del progetto in microservizi, usare Docker per
+creare un’immagine per ogni servizio è stata una scelta naturale.
+L’obiettivo finale è avere un sistema facilmente deployabile e
+scalabile, eseguibile velocemente in un ambiente generico, con uno stack
+di container Docker che racchiuda tutto il sistema. Per fare ciò è stato
+necessario creare un Dockerfile per ogni servizio, in modo da poter
+creare un’immagine durante la fase di deploy della continuous
+integration.</p>
+<p>La <strong>strategia di containerizzazione</strong> per tutte le
+immagini create è stata quella di utilizzare un’immagine base di Alpine,
+in modo da avere immagini leggere e veloci da scaricare. Per ridurre la
+dimensione delle immagini, si è utilizzata un’immagine di sviluppo per
+compilare il codice e un’immagine di produzione per eseguire il codice
+compilato, copiando solo i file necessari.</p>
+<figure>
+<p><img src="report/img/multi_stage.png" style="width:12cm"
+alt="image" /><br />
+</p>
+<figcaption>Comparazione tra le immagini multi-stage e le immagini
+tradizionali</figcaption>
+</figure>
+<h3 id="nodejs">NodeJS</h3>
+<p>I servizi UserManagementMaraffa e BusinessLogic sono stati
+containerizzati utilizzando un’immagine di Node.js. Nell’esempio sotto,
+si può notare la distinzione tra i diversi stage.</p>
+<div class="sourceCode" id="list:dockerfile_nodejs"
+data-language="Python" data-caption="Dockerfile delle immagini NodeJS"
+label="list:dockerfile_nodejs"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="list:dockerfile_nodejs-1"><a href="#list:dockerfile_nodejs-1" aria-hidden="true" tabindex="-1"></a>FROM node:<span class="dv">20</span><span class="op">-</span>alpine <span class="im">as</span> base</span>
+<span id="list:dockerfile_nodejs-2"><a href="#list:dockerfile_nodejs-2" aria-hidden="true" tabindex="-1"></a>WORKDIR <span class="op">/</span>app</span>
+<span id="list:dockerfile_nodejs-3"><a href="#list:dockerfile_nodejs-3" aria-hidden="true" tabindex="-1"></a>COPY yarn.lock package.json <span class="op">/</span>app<span class="op">/</span></span>
+<span id="list:dockerfile_nodejs-4"><a href="#list:dockerfile_nodejs-4" aria-hidden="true" tabindex="-1"></a>RUN yarn install</span>
+<span id="list:dockerfile_nodejs-5"><a href="#list:dockerfile_nodejs-5" aria-hidden="true" tabindex="-1"></a>COPY . <span class="op">/</span>app</span>
+<span id="list:dockerfile_nodejs-6"><a href="#list:dockerfile_nodejs-6" aria-hidden="true" tabindex="-1"></a>RUN yarn build</span>
+<span id="list:dockerfile_nodejs-7"><a href="#list:dockerfile_nodejs-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:dockerfile_nodejs-8"><a href="#list:dockerfile_nodejs-8" aria-hidden="true" tabindex="-1"></a>FROM node:<span class="dv">20</span><span class="op">-</span>alpine</span>
+<span id="list:dockerfile_nodejs-9"><a href="#list:dockerfile_nodejs-9" aria-hidden="true" tabindex="-1"></a>WORKDIR <span class="op">/</span>app    </span>
+<span id="list:dockerfile_nodejs-10"><a href="#list:dockerfile_nodejs-10" aria-hidden="true" tabindex="-1"></a>COPY <span class="op">--</span><span class="im">from</span><span class="op">=</span>base <span class="op">/</span>app<span class="op">/</span>package.json <span class="op">/</span>app<span class="op">/</span>package.json</span>
+<span id="list:dockerfile_nodejs-11"><a href="#list:dockerfile_nodejs-11" aria-hidden="true" tabindex="-1"></a>COPY <span class="op">--</span><span class="im">from</span><span class="op">=</span>base <span class="op">/</span>app<span class="op">/</span>node_modules <span class="op">/</span>app<span class="op">/</span>node_modules</span>
+<span id="list:dockerfile_nodejs-12"><a href="#list:dockerfile_nodejs-12" aria-hidden="true" tabindex="-1"></a>COPY <span class="op">--</span><span class="im">from</span><span class="op">=</span>base <span class="op">/</span>app<span class="op">/</span>dist <span class="op">/</span>app<span class="op">/</span>dist</span>
+<span id="list:dockerfile_nodejs-13"><a href="#list:dockerfile_nodejs-13" aria-hidden="true" tabindex="-1"></a>EXPOSE <span class="dv">3000</span></span>
+<span id="list:dockerfile_nodejs-14"><a href="#list:dockerfile_nodejs-14" aria-hidden="true" tabindex="-1"></a>CMD [<span class="st">&quot;node&quot;</span>,<span class="st">&quot;dist/main.js&quot;</span>]</span></code></pre></div>
+<h3 id="java">Java</h3>
+<p>La containerizzazione del middleware ha richiesto alcuni passaggi
+aggiuntivi rispetto ai servizi in Node.js. È stato necessario adottare
+immagini diverse per gli stage di build e produzione, quindi usare
+un’immagine di Gradle per la build, nella quale eseguire i comandi di
+Gradle, e un’immagine di OpenJDK per l’esecuzione del JAR prodotto dalla
+build.</p>
+<p>Per la compilazione con Gradle, nonostante non sia una pratica
+corretta, è stato necessario mantenere nella repository il file
+gradle-wrapper.jar, in quanto non era possibile scaricarlo durante la
+build all’interno delle GitHub Actions. La build non utilizza il
+classico comando di Gradle per generare il file .jar, ma un task
+personalizzato che si occupa di generare il fatJar del servizio, poiché
+le dipendenze non venivano gestite correttamente all’interno del normale
+file .jar.</p>
+<div class="sourceCode" id="list:gradle_fatJar" data-language="Java"
+data-caption="Task del fatJar da includere nel container"
+label="list:gradle_fatJar"><pre class="sourceCode java"><code class="sourceCode java"><span id="list:gradle_fatJar-1"><a href="#list:gradle_fatJar-1" aria-hidden="true" tabindex="-1"></a>tasks<span class="op">.</span><span class="fu">register</span><span class="op">&lt;</span>Jar<span class="op">&gt;(</span><span class="st">&quot;fatJar&quot;</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="list:gradle_fatJar-2"><a href="#list:gradle_fatJar-2" aria-hidden="true" tabindex="-1"></a>    archiveBaseName<span class="op">.</span><span class="fu">set</span><span class="op">(</span><span class="st">&quot;Middleware&quot;</span><span class="op">)</span></span>
+<span id="list:gradle_fatJar-3"><a href="#list:gradle_fatJar-3" aria-hidden="true" tabindex="-1"></a>    manifest <span class="op">{</span></span>
+<span id="list:gradle_fatJar-4"><a href="#list:gradle_fatJar-4" aria-hidden="true" tabindex="-1"></a>        attributes<span class="op">[</span><span class="st">&quot;Main-Class&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="st">&quot;server.Main&quot;</span></span>
+<span id="list:gradle_fatJar-5"><a href="#list:gradle_fatJar-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="list:gradle_fatJar-6"><a href="#list:gradle_fatJar-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">from</span><span class="op">(</span>sourceSets<span class="op">.</span><span class="fu">main</span><span class="op">.</span><span class="fu">get</span><span class="op">().</span><span class="fu">output</span><span class="op">)</span></span>
+<span id="list:gradle_fatJar-7"><a href="#list:gradle_fatJar-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dependsOn</span><span class="op">(</span>configurations<span class="op">.</span><span class="fu">runtimeClasspath</span><span class="op">)</span></span>
+<span id="list:gradle_fatJar-8"><a href="#list:gradle_fatJar-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">from</span><span class="op">({</span> configurations<span class="op">.</span><span class="fu">runtimeClasspath</span><span class="op">.</span><span class="fu">get</span><span class="op">().</span><span class="fu">filter</span> <span class="op">{</span> it<span class="op">.</span><span class="fu">name</span><span class="op">.</span><span class="fu">endsWith</span><span class="op">(</span><span class="st">&quot;jar&quot;</span><span class="op">)</span> <span class="op">}.</span><span class="fu">map</span> <span class="op">{</span> <span class="fu">zipTree</span><span class="op">(</span>it<span class="op">)</span> <span class="op">}</span> <span class="op">})</span></span>
+<span id="list:gradle_fatJar-9"><a href="#list:gradle_fatJar-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dependsOn</span><span class="op">(</span><span class="st">&quot;compileJava&quot;</span><span class="op">)</span></span>
+<span id="list:gradle_fatJar-10"><a href="#list:gradle_fatJar-10" aria-hidden="true" tabindex="-1"></a>    duplicatesStrategy <span class="op">=</span> DuplicatesStrategy<span class="op">.</span><span class="fu">EXCLUDE</span> <span class="co">// Puoi utilizzare altre strategie come DuplicatesStrategy.WARN per avvisare ma non fermare la build</span></span>
+<span id="list:gradle_fatJar-11"><a href="#list:gradle_fatJar-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="angular">Angular</h3>
+<p>La containerizzazione del frontend ha richiesto l’utilizzo di
+un’immagine di Node.js per lo stage di build, mentre per l’esecuzione è
+stata utilizzata un’immagine di Nginx. Come citato nella sezione <a
+href="#Nginx" data-reference-type="ref" data-reference="Nginx">6.2.1</a>
+Nginx serve per eseguire l’applicazione all’interno del container e per
+poterla raggiungere dall’esterno.</p>
 <h1 id="ch:con">Conclusions and Future Work</h1>
 <h2 id="conclusions">Conclusions</h2>
 <p>Typically a conclusions chapter first summarizes the investigated
