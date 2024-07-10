@@ -4,13 +4,9 @@
 interazioni tra i componenti, come comunicano, diagrammi d'attività.
 (parlare di api gateway (permette comunicazione tra client esterni con i microservizi, redireziona le richieste ai servizi))
 
-\section{Frontend <-> Websocket} 
+\section{Frontend <-> WebSocket} 
 
-Come precedentemente citato il middleware è stato implementato con websocket per poter comunicare in modo reattivo con il frontend. Queste comunicazione frontend <-> middleware sono in buona parte 
-scambi di messaggi tramite HTTP ma in alcuni casi è necessario un canale di comunicazione bidirezionale. Uno degli esempi più "eclatanti" è la dashboard in cui in una prima implementazione era 
-stato utilizzato un polling per aggiornare i dati riguardanti le partite in corso per permettere agli utenti di participare. Immaginando uno scenario distribuito in cui ci sono N utenti 
-contemporaneamente connessi al sistema quella soluzione avrebbe sovraccaricato il sistema. Invece tramite il canale bi-direzionale delle websocket è direttamente il middleware, che al proprio interno 
-ha un servizio che mantiene una mappa dei client connessi, a notificare tramite un operazione di broadcast tutti i client della creazione di una nuova partita. 
+Come precedentemente citato, il middleware è stato implementato con WebSocket per poter comunicare in modo reattivo con il frontend. Queste comunicazioni frontend <-> middleware sono in buona parte scambi di messaggi tramite HTTP, ma in alcuni casi è necessario un canale di comunicazione bidirezionale. Uno degli esempi più "eclatanti" è la dashboard, in cui, in una prima implementazione, era stato utilizzato un polling per aggiornare i dati riguardanti le partite in corso per permettere agli utenti di partecipare. Immaginando uno scenario distribuito in cui ci sono N utenti contemporaneamente connessi al sistema, quella soluzione avrebbe sovraccaricato il sistema. Invece, tramite il canale bidirezionale delle WebSocket, è direttamente il middleware, che al proprio interno ha un servizio che mantiene una mappa dei client connessi, a notificare tramite un'operazione di broadcast tutti i client della creazione di una nuova partita.
 
 \subsection{Chat globale e privata}
 
