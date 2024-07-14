@@ -181,9 +181,9 @@ OpenAPI</a></li>
 <li><a href="#log-automatici" id="toc-log-automatici">Log
 automatici</a></li>
 </ul></li>
-<li><a href="#lettura-varaibili-dambiente-todo"
-id="toc-lettura-varaibili-dambiente-todo">Lettura varaibili d’ambiente
-TODO</a></li>
+<li><a href="#lettura-variabili-dambiente"
+id="toc-lettura-variabili-dambiente">Lettura variabili
+d’ambiente</a></li>
 <li><a href="#screen" id="toc-screen">Screen</a></li>
 <li><a href="#mockup" id="toc-mockup">Mockup</a></li>
 </ul></li>
@@ -232,7 +232,7 @@ id="toc-containerization">Containerization</a>
 <span> <em>Supervisors:</em> Giovanni Ciatto, Matteo Magnani, Andrea
 Omicini </span><br />
 </p>
-<p>2024-07-12</p>
+<p>2024-07-14</p>
 </div>
 </div>
 <h2 id="list-of-abbreviations">List of Abbreviations</h2>
@@ -958,7 +958,10 @@ label="list:nginx_frontend"><pre class="sourceCode python"><code class="sourceCo
 <span id="list:nginx_frontend-16"><a href="#list:nginx_frontend-16" aria-hidden="true" tabindex="-1"></a>        proxy_cache_bypass $http_upgrade<span class="op">;</span></span>
 <span id="list:nginx_frontend-17"><a href="#list:nginx_frontend-17" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="list:nginx_frontend-18"><a href="#list:nginx_frontend-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p>L’indirizzo del backend è stato configurato anch’esso tramite
+<p>La scelta di Nginx è stata fatta soprattutto per la sicurezza nel
+"mascherare" le chiamate fatte al backend, in modo da non esporre
+l’indirizzo del servizio all’esterno e poter superare eventuali problemi
+di CORS. L’indirizzo del backend è stato configurato anch’esso tramite
 variabili d’ambiente, in modo da poterlo cambiare facilmente in base
 all’ambiente in cui si trova il container, e queste variabili vengono
 sostituite a seconda dell’ambiente di deploy in cui l’applicativo
@@ -1125,9 +1128,25 @@ label="list:dockerfile_log"><pre class="sourceCode python"><code class="sourceCo
 <span id="list:dockerfile_log-14"><a href="#list:dockerfile_log-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="list:dockerfile_log-15"><a href="#list:dockerfile_log-15" aria-hidden="true" tabindex="-1"></a>EXPOSE <span class="dv">3003</span></span>
 <span id="list:dockerfile_log-16"><a href="#list:dockerfile_log-16" aria-hidden="true" tabindex="-1"></a>ENTRYPOINT [<span class="st">&quot;java&quot;</span>,<span class="st">&quot;-jar&quot;</span>,<span class="st">&quot;/app/Middleware.jar&quot;</span>]</span></code></pre></div>
-<h2 id="lettura-varaibili-dambiente-todo">Lettura varaibili d’ambiente
-TODO</h2>
-<p>TODO</p>
+<h2 id="lettura-variabili-dambiente">Lettura variabili d’ambiente</h2>
+<p>Data la scelta di dockerizzare interamente i servizi, è stato
+necessario l’utilizzo di variabili d’ambiente. Questo ha permesso di
+creare un sistema di deploy molto flessibile, in cui è possibile
+cambiare l’indirizzo del servizio a cui connettersi semplicemente
+modificando il file di configurazione del Docker Compose. I servizi in
+NodeJS leggono il contenuto delle variabili d’ambiente tramite il modulo
+‘process.env‘, mentre i servizi in Java utilizzano ‘System.getenv‘.
+Questi comportamenti sono corretti per lo sviluppo locale e per ambienti
+di produzione in cui le variabili d’ambiente sono settate
+correttamente.</p>
+<p>Per quanto riguarda invece lo sviluppo in CI, è stato necessario
+creare un file ‘.env.example‘ che contenesse tutte le variabili
+d’ambiente necessarie al funzionamento del servizio, in modo da poterle
+settare correttamente nel CI/CD, soprattutto per la fase di testing, e
+metterlo sulla repository. È importante tenere a mente che non
+dovrebbero mai essere caricati dati sensibili su strumenti di controllo
+di versione. In questo caso, non ci sono database o account cloud
+eventualmente raggiungibili dall’esterno.</p>
 <h2 id="screen">Screen</h2>
 <h2 id="mockup">Mockup</h2>
 <p>Per soddisfare le aspettative degli utenti di Maraffa sono stati
