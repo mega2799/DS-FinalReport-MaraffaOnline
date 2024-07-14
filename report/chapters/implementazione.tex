@@ -121,11 +121,12 @@ EXPOSE 3003
 ENTRYPOINT ["java","-jar","/app/Middleware.jar"]
 \end{lstlisting}
 
-\section{Lettura varaibili d'ambiente}
-Data la scelta di dockerizzare interamente i servizi è stato necessario l'utilizzo di variabili d'ambiente. Questo ha permesso di creare un sistema di deploy molto flessibile, in cui è possibile cambiare l'indirizzo del servizio a cui connettersi semplicemente modificando 
-il file di configurazione del Docker Compose. I servizi in NodeJS leggono il contenuto delle variabili d'ambiente tramite il modulo process.env, i servizi in Java tramite System.getenv, questi comportamenti sono corretti per lo sviluppo locale e per ambienti di produzione in cui le variabili d'ambiente sono settate correttamente.
-Per quando riguarda invece lo sviluppo in CI è stato necessario creare un file env.example che contenesse tutte le variabili d'ambiente necessarie al funzionamento del servizio, in modo da poterle settare correttamente nel CI/CD, soprattuto per la fase di testing, e metterlo sulla repository, tenendo però a mente il fatto che non dovrebbero essere mai carcati dati sensibili
-su strumenti di controllo di versione, in questo caso non ci sono database o account cloud e quindi eventualmente raggiungibili dall'esterno.
+\section{Lettura variabili d'ambiente}
+
+Data la scelta di dockerizzare interamente i servizi, è stato necessario l'utilizzo di variabili d'ambiente. Questo ha permesso di creare un sistema di deploy molto flessibile, in cui è possibile cambiare l'indirizzo del servizio a cui connettersi semplicemente modificando il file di configurazione del Docker Compose. I servizi in NodeJS leggono il contenuto delle variabili d'ambiente tramite il modulo `process.env`, mentre i servizi in Java utilizzano `System.getenv`. Questi comportamenti sono corretti per lo sviluppo locale e per ambienti di produzione in cui le variabili d'ambiente sono settate correttamente.
+
+Per quanto riguarda invece lo sviluppo in CI, è stato necessario creare un file `.env.example` che contenesse tutte le variabili d'ambiente necessarie al funzionamento del servizio, in modo da poterle settare correttamente nel CI/CD, soprattutto per la fase di testing, e metterlo sulla repository. È importante tenere a mente che non dovrebbero mai essere caricati dati sensibili su strumenti di controllo di versione. In questo caso, non ci sono database o account cloud eventualmente raggiungibili dall'esterno.
+
 \section{Screen}
 \section{Mockup}
 Per soddisfare le aspettative degli utenti di Maraffa sono stati realizzati dei mockup. Grazie a questi si è riuscito a raccogliere
