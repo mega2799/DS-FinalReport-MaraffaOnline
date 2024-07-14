@@ -121,7 +121,62 @@ EXPOSE 3003
 ENTRYPOINT ["java","-jar","/app/Middleware.jar"]
 \end{lstlisting}
 
-\section{Lettura variabili d'ambiente}
+
+\subsection{Checkstyle, javadoc, github page [NON so se va bene qua ma lo scrivo] }
+
+% Il componente middleware è stato sviluppato in Java e per garantire la qualità del codice sono stati utilizzati strumenti come Checkstyle e Spotless, come citato in \ref{code_quality}. 
+Dopo aver eseguito i controlli di stile sul codice sono stati trovati numerosi errori e warning, che sono stati corretti automaticamente da un plugin che ha sistemato ciò che Spotless non era riuscito a correggere. Il plugin in questione è \href{https://github.com/openrewrite/rewrite}{\underline{OpenRewrite}}, che ha permesso di correggere molti errori e di risparmiare un lungo e noioso lavoro di correzione manuale.
+
+\begin{lstlisting}[language=Bash, caption={Output di OpenRewrite}, label=list:openrewrite]
+Changes have been made to app\src\main\java\userModule\UserController.java by:
+    org.openrewrite.staticanalysis.CodeCleanup
+        org.openrewrite.java.format.MethodParamPad
+Changes have been made to app\src\main\java\userModule\UserService.java by:
+    org.openrewrite.staticanalysis.CodeCleanup
+        org.openrewrite.staticanalysis.NeedBraces
+Changes have been made to app\src\test\java\integration\BusinessLogicTestIntegration.java by:
+    org.openrewrite.staticanalysis.CodeCleanup
+        org.openrewrite.java.format.MethodParamPad
+Please review and commit the results.
+Estimate time saved: 1h 24m 
+\end{lstlisting}
+
+Dopo aver corretto gli errori di stile, è stato generato il Javadoc per il codice, in modo da avere una documentazione automatica e aggiornata. Inoltre, è stato creato un sito web tramite GitHub Pages per avere una documentazione più user-friendly e facilmente accessibile. 
+
+Per fare ciò si è optato per l'utilizzo di una GitHub Action che, tramite condizioni come una push su determinati branch, genera automaticamente il Javadoc. Questa documentazione viene pubblicata su un branch `javadoc`, automaticamente creato, e tramite le impostazioni del repository, viene pubblicata su GitHub Pages, in modo da avere una documentazione sempre aggiornata e facilmente accessibile.
+
+\includegraphics[width=12cm]{report/img/github_javadoc.jpg}\\[1.5cm]
+
+La documentazione del componente middleware sarà sempre reperibile
+all' indirizzo delle githubpages del progetto con il suffisso javadoc \\ come ad esempio \href{https://sofy24.github.io/MiddlewareMaraffa/javadoc/}{\underline{https://sofy24.github.io/MiddlewareMaraffa/javadoc/}}.
+
+\begin{lstlisting}[language=Bash, caption={Configurazione della GitHub Action per il Javadoc}, label=list:javadoc_action]
+name: Deploy Javadoc
+
+on:
+  push:
+    branches: [main, "develop", "style-doc"]
+
+jobs:
+  publish:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write # if you have a protection rule on your repository, you'll need to give write permission to the workflow.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Deploy JavaDoc
+        uses: MathieuSoysal/Javadoc-publisher.yml@v2.5.0
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          javadoc-source-folder: app/build/docs/javadoc
+          javadoc-branch: javadoc
+          java-version: 20
+          target-folder: javadoc  # url will be https://<username>.github.io/<repo>/javadoc, This can be left as nothing to generate javadocs in the root folder.
+          project: gradle
+\end{lstlisting}
+
+\subsection{Lettura variabili d'ambiente}
 
 Data la scelta di dockerizzare interamente i servizi, è stato necessario l'utilizzo di variabili d'ambiente. Questo ha permesso di creare un sistema di deploy molto flessibile, in cui è possibile cambiare l'indirizzo del servizio a cui connettersi semplicemente modificando il file di configurazione del Docker Compose. I servizi in NodeJS leggono il contenuto delle variabili d'ambiente tramite il modulo `process.env`, mentre i servizi in Java utilizzano `System.getenv`. Questi comportamenti sono corretti per lo sviluppo locale e per ambienti di produzione in cui le variabili d'ambiente sono settate correttamente.
 
