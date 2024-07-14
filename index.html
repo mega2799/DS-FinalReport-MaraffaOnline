@@ -138,41 +138,22 @@ microservizi?</a>
 <li><a href="#vantaggi-dellarchitettura-a-microservizi"
 id="toc-vantaggi-dellarchitettura-a-microservizi">Vantaggi
 dell’architettura a microservizi</a></li>
-</ul></li>
-<li><a href="#servizi-di-business-logic-e-user-service"
-id="toc-servizi-di-business-logic-e-user-service">Servizi di Business
-Logic e User Service</a>
-<ul>
-<li><a href="#business-logic" id="toc-business-logic">Business
-Logic</a></li>
-<li><a href="#user-service" id="toc-user-service">User Service</a></li>
-</ul></li>
-<li><a href="#front-end" id="toc-front-end">Front-End</a></li>
-<li><a href="#middleware" id="toc-middleware">Middleware</a>
-<ul>
 <li><a href="#struttura-api-gateway"
 id="toc-struttura-api-gateway">Struttura API Gateway</a></li>
 <li><a href="#websockets" id="toc-websockets">WebSockets</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#ch:interazioni" id="toc-ch:interazioni">Interazioni</a>
-<ul>
-<li><a href="#frontend---websocket"
-id="toc-frontend---websocket">Frontend &lt;-&gt; WebSocket</a>
-<ul>
-<li><a href="#chat-globale-e-privata"
-id="toc-chat-globale-e-privata">Chat globale e privata</a></li>
-</ul></li>
-<li><a href="#stack-docker---reti-interne-e-ip-privati"
-id="toc-stack-docker---reti-interne-e-ip-privati">Stack Docker -&gt;
-reti interne e IP privati</a>
-<ul>
-<li><a href="#Nginx" id="toc-Nginx">Nginx</a></li>
-</ul></li>
-</ul></li>
 <li><a href="#ch:implementazione"
 id="toc-ch:implementazione">Implementazione</a>
 <ul>
+<li><a href="#componenti" id="toc-componenti">Componenti</a>
+<ul>
+<li><a href="#business-logic" id="toc-business-logic">Business
+Logic</a></li>
+<li><a href="#user-service" id="toc-user-service">User Service</a></li>
+<li><a href="#front-end" id="toc-front-end">Front-End</a></li>
+<li><a href="#middleware" id="toc-middleware">Middleware</a></li>
+</ul></li>
 <li><a href="#tecnologie" id="toc-tecnologie">Tecnologie</a>
 <ul>
 <li><a href="#swagger---openapi" id="toc-swagger---openapi">Swagger -
@@ -191,6 +172,24 @@ d’ambiente</a></li>
 <li><a href="#screen" id="toc-screen">Screen</a></li>
 <li><a href="#mockup" id="toc-mockup">Mockup</a></li>
 </ul></li>
+<li><a href="#ch:interazioni" id="toc-ch:interazioni">Interazioni</a>
+<ul>
+<li><a href="#frontend---websocket"
+id="toc-frontend---websocket">Frontend &lt;-&gt; WebSocket</a>
+<ul>
+<li><a href="#chat-globale-e-privata"
+id="toc-chat-globale-e-privata">Chat globale e privata</a></li>
+<li><a href="#reattivita-e-aggiornamento-in-tempo-reale"
+id="toc-reattivita-e-aggiornamento-in-tempo-reale">Reattivita’ e
+aggiornamento in tempo reale</a></li>
+</ul></li>
+<li><a href="#stack-docker---reti-interne-e-ip-privati"
+id="toc-stack-docker---reti-interne-e-ip-privati">Stack Docker -&gt;
+reti interne e IP privati</a>
+<ul>
+<li><a href="#Nginx" id="toc-Nginx">Nginx</a></li>
+</ul></li>
+</ul></li>
 <li><a href="#ch:DevOps" id="toc-ch:DevOps">DevOps</a>
 <ul>
 <li><a href="#dvcs" id="toc-dvcs">DVCS</a>
@@ -207,8 +206,12 @@ id="toc-continuous-integration">Continuous integration</a></li>
 <li><a href="#build-automation" id="toc-build-automation">Build
 automation</a></li>
 </ul></li>
-<li><a href="#ch:validazione"
-id="toc-ch:validazione">Validazione</a></li>
+<li><a href="#ch:validazione" id="toc-ch:validazione">Validazione</a>
+<ul>
+<li><a href="#test" id="toc-test">Test</a></li>
+<li><a href="#code_quality" id="toc-code_quality">Code quality e
+linting</a></li>
+</ul></li>
 <li><a href="#ch:deployment" id="toc-ch:deployment">Deployment</a>
 <ul>
 <li><a href="#containerization"
@@ -743,62 +746,6 @@ si occuperà di creare le repliche e di bilanciare il carico tra di esse.
 Questo è un vantaggio nel caso in cui si voglia scalare il sistema in
 modo orizzontale, ovvero aumentando le instanze di un singolo
 servizio.</p>
-<h2 id="servizi-di-business-logic-e-user-service">Servizi di Business
-Logic e User Service</h2>
-<p>Entrambi questi servizi sono stati realizzati con lo stack NestJS, un
-framework per Node.js che semplifica la realizzazione di web server e
-API REST. Si occupano rispettivamente di gestire la logica di gioco e la
-gestione degli utenti che vogliono utilizzare il sistema, due core
-business del progetto.</p>
-<h3 id="business-logic">Business Logic</h3>
-<p>Questo servizio mantiene al proprio interno tutte le regole del gioco
-e il calcolo dei punteggi. Ha svariati endpoint che permettono al
-middleware di avere il minor numero possibile di responsabilità,
-delegando al servizio di business logic le operazioni riguardanti il
-gioco.</p>
-<p>Questa scelta è stata fatta per mantenere il middleware il più
-leggero possibile e per evitare che si occupi di operazioni non di sua
-competenza. Inoltre, in futuro sarà possibile aggiungere nuovi giochi
-modificando il meno possibile il middleware, che dovrà semplicemente
-occuparsi della gestione delle partite e comunicare tempestivamente con
-i servizi di business logic in base al gioco scelto.</p>
-<h3 id="user-service">User Service</h3>
-<p>Questo servizio gestisce gli utenti, quindi la loro registrazione,
-autenticazione e gestione dei dati personali. Anche in questo caso, il
-middleware delega al servizio di gestione degli utenti le operazioni
-riguardanti gli utenti, per mantenere il middleware il più leggero
-possibile e per evitare che si occupi di operazioni non di sua
-competenza. Il core di questo servizio è dato dalla combinazione di
-NestJS e TypeORM, che permettono di gestire in modo semplice e veloce la
-persistenza dei dati e le operazioni CRUD su un database MySQL. Oltre
-alle informazioni degli utenti, il database contiene anche le
-informazioni riguardanti le partite giocate e le statistiche personali
-di ogni utente del sistema.</p>
-<h2 id="front-end">Front-End</h2>
-<p>Il front-end è stato realizzato con Angular e si occupa di gestire
-l’interfaccia grafica e la comunicazione con il middleware. Sono state
-realizzate diverse pagine, tra cui la home page, la pagina di
-registrazione, la pagina di login, la pagina di gioco e la pagina di
-profilo utente. Utilizza API REST per comunicare con il middleware e
-ottenere i dati necessari per il funzionamento del gioco, mentre
-utilizza WebSockets per la comunicazione in tempo reale con il
-middleware.</p>
-<h2 id="middleware">Middleware</h2>
-<p><img src="report/img/middleware.png" style="width:12cm"
-alt="image" /><br />
-Come già citato, il middleware è il cuore del sistema. L’architettura
-utilizzata per la gestione delle partite è quella di un multi-agente, in
-cui ogni agente si occupa di gestire una partita e di orchestrare la
-comunicazione con gli altri servizi, come ad esempio il front-end.
-Questo core è stato realizzato con Vertx, che è stato utilizzato anche
-per creare un web-server in Java.</p>
-<p>Inoltre, al middleware è collegato un database NoSQL su MongoDB, che
-viene aggiornato a ogni trick completato dai giocatori per creare uno
-storico delle partite e salvare le loro decisioni in gioco. Questa
-raccolta di dati sarà parte di uno sviluppo futuro, in cui, dopo aver
-raccolto una grande quantità di dati di partite, si potrà tentare di
-creare un modello di machine learning per sviluppare un’intelligenza
-artificiale che possa giocare al posto di un giocatore umano.</p>
 <h3 id="struttura-api-gateway">Struttura API Gateway</h3>
 <p>Il pattern di progettazione utilizzato per la realizzazione del
 middleware è quello dell’API Gateway, che permette di creare
@@ -894,89 +841,63 @@ class="sourceCode java"><code class="sourceCode java"><span id="list:java_websoc
 <span id="list:java_websocket_interface-30"><a href="#list:java_websocket_interface-30" aria-hidden="true" tabindex="-1"></a></span>
 <span id="list:java_websocket_interface-31"><a href="#list:java_websocket_interface-31" aria-hidden="true" tabindex="-1"></a>	<span class="dt">void</span> <span class="fu">onMakeCall</span><span class="op">(</span><span class="dt">final</span> Call call<span class="op">);</span></span>
 <span id="list:java_websocket_interface-32"><a href="#list:java_websocket_interface-32" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<h1 id="ch:interazioni">Interazioni</h1>
-<h2 id="frontend---websocket">Frontend &lt;-&gt; WebSocket</h2>
-<p>Come precedentemente citato, il middleware è stato implementato con
-WebSocket per poter comunicare in modo reattivo con il frontend. Queste
-comunicazioni frontend &lt;-&gt; middleware sono in buona parte scambi
-di messaggi tramite HTTP, ma in alcuni casi è necessario un canale di
-comunicazione bidirezionale. Uno degli esempi più "eclatanti" è la
-dashboard, in cui, in una prima implementazione, era stato utilizzato un
-polling per aggiornare i dati riguardanti le partite in corso per
-permettere agli utenti di partecipare. Immaginando uno scenario
-distribuito in cui ci sono N utenti contemporaneamente connessi al
-sistema, quella soluzione avrebbe sovraccaricato il sistema. Invece,
-tramite il canale bidirezionale delle WebSocket, è direttamente il
-middleware, che al proprio interno ha un servizio che mantiene una mappa
-dei client connessi, a notificare tramite un’operazione di broadcast
-tutti i client della creazione di una nuova partita.</p>
-<h3 id="chat-globale-e-privata">Chat globale e privata</h3>
-<p>Un grande vantaggio dell’uso delle WebSocket sta nella facile
-implementazione delle chat. Questo sistema richiedeva l’impiego di due
-diverse chat per permettere la comunicazione tra utenti sia globalmente
-che all’interno di una singola partita. Anche in questo caso, il
-middleware si occupa di instradare i messaggi alle giuste chat,
-garantendo la privacy delle conversazioni. Il frontend, invece, si
-occupa di visualizzare i messaggi e di inviarli al middleware. La
-gestione della persistenza delle chat è stata implementata tramite l’uso
-del session storage del browser all’interno del middleware, permettendo
-di mantenere la chat anche in caso di refresh della pagina.</p>
-<h2 id="stack-docker---reti-interne-e-ip-privati">Stack Docker -&gt;
-reti interne e IP privati</h2>
-<p>Il sistema è stato progettato per essere eseguito su qualsiasi
-piattaforma e si è arrivati a creare uno stack completo di Docker
-Compose. Questo ha permesso anche la creazione di reti interne tra i
-container che vengono utilizzate per la comunicazione tra i servizi. È
-stato possibile assegnare IP privati ai container, permettendo di non
-esporre i servizi all’esterno e di mantenere un’architettura più sicura.
-Tra le variabili d’ambiente che vengono passate ai container c’è anche
-l’indirizzo del servizio a cui connettersi, e questo indirizzo è il nome
-del servizio all’interno della rete. Questo permette di non dover
-modificare il codice ogni volta che si cambia l’indirizzo del servizio a
-cui connettersi, ma basta modificare il file di configurazione del
-Docker Compose.</p>
-<h3 id="Nginx">Nginx</h3>
-<p>Per quanto riguarda il frontend, è stato utilizzato Nginx per
-eseguire l’applicazione all’interno del container e per poterla
-raggiungere dall’esterno. Per fare ciò è stato necessario configurare
-Nginx tramite un file di configurazione che ha permesso anche di gestire
-un’operazione di reverse proxy per indirizzare le chiamate al
-backend.</p>
-<div class="sourceCode" id="list:nginx_frontend" data-language="Python"
-data-caption="Configurazione Nginx del front-end"
-label="list:nginx_frontend"><pre class="sourceCode python"><code class="sourceCode python"><span id="list:nginx_frontend-1"><a href="#list:nginx_frontend-1" aria-hidden="true" tabindex="-1"></a>server {</span>
-<span id="list:nginx_frontend-2"><a href="#list:nginx_frontend-2" aria-hidden="true" tabindex="-1"></a>    listen <span class="dv">80</span><span class="op">;</span></span>
-<span id="list:nginx_frontend-3"><a href="#list:nginx_frontend-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="list:nginx_frontend-4"><a href="#list:nginx_frontend-4" aria-hidden="true" tabindex="-1"></a>    location <span class="op">/</span> {</span>
-<span id="list:nginx_frontend-5"><a href="#list:nginx_frontend-5" aria-hidden="true" tabindex="-1"></a>        root <span class="op">/</span>usr<span class="op">/</span>share<span class="op">/</span>nginx<span class="op">/</span>html<span class="op">;</span></span>
-<span id="list:nginx_frontend-6"><a href="#list:nginx_frontend-6" aria-hidden="true" tabindex="-1"></a>        index index.html index.htm<span class="op">;</span></span>
-<span id="list:nginx_frontend-7"><a href="#list:nginx_frontend-7" aria-hidden="true" tabindex="-1"></a>        try_files $uri $uri<span class="op">/</span> <span class="op">/</span>index.html<span class="op">;</span></span>
-<span id="list:nginx_frontend-8"><a href="#list:nginx_frontend-8" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="list:nginx_frontend-9"><a href="#list:nginx_frontend-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="list:nginx_frontend-10"><a href="#list:nginx_frontend-10" aria-hidden="true" tabindex="-1"></a>    location <span class="op">/</span>api<span class="op">/</span> {</span>
-<span id="list:nginx_frontend-11"><a href="#list:nginx_frontend-11" aria-hidden="true" tabindex="-1"></a>        proxy_pass <span class="st">&quot;http://$</span><span class="sc">{API_HOST}</span><span class="st">:$</span><span class="sc">{API_PORT}</span><span class="st">/&quot;</span><span class="op">;</span></span>
-<span id="list:nginx_frontend-12"><a href="#list:nginx_frontend-12" aria-hidden="true" tabindex="-1"></a>        proxy_http_version <span class="fl">1.1</span><span class="op">;</span></span>
-<span id="list:nginx_frontend-13"><a href="#list:nginx_frontend-13" aria-hidden="true" tabindex="-1"></a>        proxy_set_header Upgrade $http_upgrade<span class="op">;</span></span>
-<span id="list:nginx_frontend-14"><a href="#list:nginx_frontend-14" aria-hidden="true" tabindex="-1"></a>        proxy_set_header Connection <span class="st">&#39;upgrade&#39;</span><span class="op">;</span></span>
-<span id="list:nginx_frontend-15"><a href="#list:nginx_frontend-15" aria-hidden="true" tabindex="-1"></a>        proxy_set_header Host $host<span class="op">;</span></span>
-<span id="list:nginx_frontend-16"><a href="#list:nginx_frontend-16" aria-hidden="true" tabindex="-1"></a>        proxy_cache_bypass $http_upgrade<span class="op">;</span></span>
-<span id="list:nginx_frontend-17"><a href="#list:nginx_frontend-17" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="list:nginx_frontend-18"><a href="#list:nginx_frontend-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p>La scelta di Nginx è stata fatta soprattutto per la sicurezza nel
-"mascherare" le chiamate fatte al backend, in modo da non esporre
-l’indirizzo del servizio all’esterno e poter superare eventuali problemi
-di CORS. L’indirizzo del backend è stato configurato anch’esso tramite
-variabili d’ambiente, in modo da poterlo cambiare facilmente in base
-all’ambiente in cui si trova il container, e queste variabili vengono
-sostituite a seconda dell’ambiente di deploy in cui l’applicativo
-Angular viene eseguito.</p>
 <h1 id="ch:implementazione">Implementazione</h1>
-<p>parla di decomposizione delle funzionalità in microservizi dipendenze
-minime tra i servizi reattività agli eventi</p>
+<h2 id="componenti">Componenti</h2>
+<p>Entrambi questi servizi sono stati realizzati con lo stack NestJS, un
+framework per Node.js che semplifica la realizzazione di web server e
+API REST. Si occupano rispettivamente di gestire la logica di gioco e la
+gestione degli utenti che vogliono utilizzare il sistema, due core
+business del progetto.</p>
+<h3 id="business-logic">Business Logic</h3>
+<p>Questo servizio mantiene al proprio interno tutte le regole del gioco
+e il calcolo dei punteggi. Ha svariati endpoint che permettono al
+middleware di avere il minor numero possibile di responsabilità,
+delegando al servizio di business logic le operazioni riguardanti il
+gioco.</p>
+<p>Questa scelta è stata fatta per mantenere il middleware il più
+leggero possibile e per evitare che si occupi di operazioni non di sua
+competenza. Inoltre, in futuro sarà possibile aggiungere nuovi giochi
+modificando il meno possibile il middleware, che dovrà semplicemente
+occuparsi della gestione delle partite e comunicare tempestivamente con
+i servizi di business logic in base al gioco scelto.</p>
+<h3 id="user-service">User Service</h3>
+<p>Questo servizio gestisce gli utenti, quindi la loro registrazione,
+autenticazione e gestione dei dati personali. Anche in questo caso, il
+middleware delega al servizio di gestione degli utenti le operazioni
+riguardanti gli utenti, per mantenere il middleware il più leggero
+possibile e per evitare che si occupi di operazioni non di sua
+competenza. Il core di questo servizio è dato dalla combinazione di
+NestJS e TypeORM, che permettono di gestire in modo semplice e veloce la
+persistenza dei dati e le operazioni CRUD su un database MySQL. Oltre
+alle informazioni degli utenti, il database contiene anche le
+informazioni riguardanti le partite giocate e le statistiche personali
+di ogni utente del sistema.</p>
+<h3 id="front-end">Front-End</h3>
+<p>Il front-end è stato realizzato con Angular e si occupa di gestire
+l’interfaccia grafica e la comunicazione con il middleware. Sono state
+realizzate diverse pagine, tra cui la home page, la pagina di
+registrazione, la pagina di login, la pagina di gioco e la pagina di
+profilo utente. Utilizza API REST per comunicare con il middleware e
+ottenere i dati necessari per il funzionamento del gioco, mentre
+utilizza WebSockets per la comunicazione in tempo reale con il
+middleware.</p>
+<h3 id="middleware">Middleware</h3>
+<p><img src="report/img/middleware.png" style="width:12cm"
+alt="image" /><br />
+Come già citato, il middleware è il cuore del sistema. L’architettura
+utilizzata per la gestione delle partite è quella di un multi-agente, in
+cui ogni agente si occupa di gestire una partita e di orchestrare la
+comunicazione con gli altri servizi, come ad esempio il front-end.
+Questo core è stato realizzato con Vertx, che è stato utilizzato anche
+per creare un web-server in Java.</p>
+<p>Inoltre, al middleware è collegato un database NoSQL su MongoDB, che
+viene aggiornato a ogni trick completato dai giocatori per creare uno
+storico delle partite e salvare le loro decisioni in gioco. Questa
+raccolta di dati sarà parte di uno sviluppo futuro, in cui, dopo aver
+raccolto una grande quantità di dati di partite, si potrà tentare di
+creare un modello di machine learning per sviluppare un’intelligenza
+artificiale che possa giocare al posto di un giocatore umano.</p>
 <h2 id="tecnologie">Tecnologie</h2>
-<p>(-swagger, -postman, autogenerazione javadoc?, JWT per autenticazione
-utenti, docker, nodejs, typescript, mongodb, jest, angular, figma,
-...)</p>
 <h3 id="swagger---openapi">Swagger - OpenAPI</h3>
 <p>Uno dei requisiti fondamentali di questo progetto è stata la
 documentazione delle API. Per fare ciò è stato utilizzato Swagger, un
@@ -1245,6 +1166,85 @@ riportano di seguito:</p>
 <img src="report/img/game_mockup.png" />
 <figcaption> Mockup della schermata di gioco</figcaption>
 </figure>
+<h1 id="ch:interazioni">Interazioni</h1>
+<h2 id="frontend---websocket">Frontend &lt;-&gt; WebSocket</h2>
+<p>Come precedentemente citato, il middleware è stato implementato con
+WebSocket per poter comunicare in modo reattivo con il frontend. Queste
+comunicazioni frontend &lt;-&gt; middleware sono in buona parte scambi
+di messaggi tramite HTTP, ma in alcuni casi è necessario un canale di
+comunicazione bidirezionale. Uno degli esempi più "eclatanti" è la
+dashboard, in cui, in una prima implementazione, era stato utilizzato un
+polling per aggiornare i dati riguardanti le partite in corso per
+permettere agli utenti di partecipare. Immaginando uno scenario
+distribuito in cui ci sono N utenti contemporaneamente connessi al
+sistema, quella soluzione avrebbe sovraccaricato il sistema. Invece,
+tramite il canale bidirezionale delle WebSocket, è direttamente il
+middleware, che al proprio interno ha un servizio che mantiene una mappa
+dei client connessi, a notificare tramite un’operazione di broadcast
+tutti i client della creazione di una nuova partita.</p>
+<h3 id="chat-globale-e-privata">Chat globale e privata</h3>
+<p>Un grande vantaggio dell’uso delle WebSocket sta nella facile
+implementazione delle chat. Questo sistema richiedeva l’impiego di due
+diverse chat per permettere la comunicazione tra utenti sia globalmente
+che all’interno di una singola partita. Anche in questo caso, il
+middleware si occupa di instradare i messaggi alle giuste chat,
+garantendo la privacy delle conversazioni. Il frontend, invece, si
+occupa di visualizzare i messaggi e di inviarli al middleware. La
+gestione della persistenza delle chat è stata implementata tramite l’uso
+del session storage del browser all’interno del middleware, permettendo
+di mantenere la chat anche in caso di refresh della pagina.</p>
+<h3 id="reattivita-e-aggiornamento-in-tempo-reale">Reattivita’ e
+aggiornamento in tempo reale</h3>
+<p>TODO</p>
+<h2 id="stack-docker---reti-interne-e-ip-privati">Stack Docker -&gt;
+reti interne e IP privati</h2>
+<p>Il sistema è stato progettato per essere eseguito su qualsiasi
+piattaforma e si è arrivati a creare uno stack completo di Docker
+Compose. Questo ha permesso anche la creazione di reti interne tra i
+container che vengono utilizzate per la comunicazione tra i servizi. È
+stato possibile assegnare IP privati ai container, permettendo di non
+esporre i servizi all’esterno e di mantenere un’architettura più sicura.
+Tra le variabili d’ambiente che vengono passate ai container c’è anche
+l’indirizzo del servizio a cui connettersi, e questo indirizzo è il nome
+del servizio all’interno della rete. Questo permette di non dover
+modificare il codice ogni volta che si cambia l’indirizzo del servizio a
+cui connettersi, ma basta modificare il file di configurazione del
+Docker Compose.</p>
+<h3 id="Nginx">Nginx</h3>
+<p>Per quanto riguarda il frontend, è stato utilizzato Nginx per
+eseguire l’applicazione all’interno del container e per poterla
+raggiungere dall’esterno. Per fare ciò è stato necessario configurare
+Nginx tramite un file di configurazione che ha permesso anche di gestire
+un’operazione di reverse proxy per indirizzare le chiamate al
+backend.</p>
+<div class="sourceCode" id="list:nginx_frontend" data-language="Python"
+data-caption="Configurazione Nginx del front-end"
+label="list:nginx_frontend"><pre class="sourceCode python"><code class="sourceCode python"><span id="list:nginx_frontend-1"><a href="#list:nginx_frontend-1" aria-hidden="true" tabindex="-1"></a>server {</span>
+<span id="list:nginx_frontend-2"><a href="#list:nginx_frontend-2" aria-hidden="true" tabindex="-1"></a>    listen <span class="dv">80</span><span class="op">;</span></span>
+<span id="list:nginx_frontend-3"><a href="#list:nginx_frontend-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="list:nginx_frontend-4"><a href="#list:nginx_frontend-4" aria-hidden="true" tabindex="-1"></a>    location <span class="op">/</span> {</span>
+<span id="list:nginx_frontend-5"><a href="#list:nginx_frontend-5" aria-hidden="true" tabindex="-1"></a>        root <span class="op">/</span>usr<span class="op">/</span>share<span class="op">/</span>nginx<span class="op">/</span>html<span class="op">;</span></span>
+<span id="list:nginx_frontend-6"><a href="#list:nginx_frontend-6" aria-hidden="true" tabindex="-1"></a>        index index.html index.htm<span class="op">;</span></span>
+<span id="list:nginx_frontend-7"><a href="#list:nginx_frontend-7" aria-hidden="true" tabindex="-1"></a>        try_files $uri $uri<span class="op">/</span> <span class="op">/</span>index.html<span class="op">;</span></span>
+<span id="list:nginx_frontend-8"><a href="#list:nginx_frontend-8" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="list:nginx_frontend-9"><a href="#list:nginx_frontend-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:nginx_frontend-10"><a href="#list:nginx_frontend-10" aria-hidden="true" tabindex="-1"></a>    location <span class="op">/</span>api<span class="op">/</span> {</span>
+<span id="list:nginx_frontend-11"><a href="#list:nginx_frontend-11" aria-hidden="true" tabindex="-1"></a>        proxy_pass <span class="st">&quot;http://$</span><span class="sc">{API_HOST}</span><span class="st">:$</span><span class="sc">{API_PORT}</span><span class="st">/&quot;</span><span class="op">;</span></span>
+<span id="list:nginx_frontend-12"><a href="#list:nginx_frontend-12" aria-hidden="true" tabindex="-1"></a>        proxy_http_version <span class="fl">1.1</span><span class="op">;</span></span>
+<span id="list:nginx_frontend-13"><a href="#list:nginx_frontend-13" aria-hidden="true" tabindex="-1"></a>        proxy_set_header Upgrade $http_upgrade<span class="op">;</span></span>
+<span id="list:nginx_frontend-14"><a href="#list:nginx_frontend-14" aria-hidden="true" tabindex="-1"></a>        proxy_set_header Connection <span class="st">&#39;upgrade&#39;</span><span class="op">;</span></span>
+<span id="list:nginx_frontend-15"><a href="#list:nginx_frontend-15" aria-hidden="true" tabindex="-1"></a>        proxy_set_header Host $host<span class="op">;</span></span>
+<span id="list:nginx_frontend-16"><a href="#list:nginx_frontend-16" aria-hidden="true" tabindex="-1"></a>        proxy_cache_bypass $http_upgrade<span class="op">;</span></span>
+<span id="list:nginx_frontend-17"><a href="#list:nginx_frontend-17" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="list:nginx_frontend-18"><a href="#list:nginx_frontend-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>La scelta di Nginx è stata fatta soprattutto per la sicurezza nel
+"mascherare" le chiamate fatte al backend, in modo da non esporre
+l’indirizzo del servizio all’esterno e poter superare eventuali problemi
+di CORS. L’indirizzo del backend è stato configurato anch’esso tramite
+variabili d’ambiente, in modo da poterlo cambiare facilmente in base
+all’ambiente in cui si trova il container, e queste variabili vengono
+sostituite a seconda dell’ambiente di deploy in cui l’applicativo
+Angular viene eseguito.</p>
 <h1 id="ch:DevOps">DevOps</h1>
 <h2 id="dvcs">DVCS</h2>
 <p>Come strumento di controllo di versione è stato scelto git, sono
@@ -1301,10 +1301,117 @@ feedback dagli utenti e monitorare gli eventuali bug.</p>
 (per copia all’intero di repo di magnani))</p>
 <h2 id="build-automation">Build automation</h2>
 <h1 id="ch:validazione">Validazione</h1>
-<p>test driven development self-assessment/autovalidazione (fai i test
-unit e integrazione con jest) Ma noi usiamo Lint e Prettier??? -vuole
-che i test della ci siano runnati il più frequentemente possibile (bot
-git che li runna?)</p>
+<h2 id="test">Test</h2>
+<p>Per ogni servizio in questo sistema è stato adottato, ove possibile,
+il paradigma di programmazione TDD, cioè Test Driven Development. Questo
+approccio prevede che i test siano scritti prima del codice, in modo da
+guidare lo sviluppo e garantire che il codice prodotto soddisfi i
+requisiti specificati. Le operazioni di testing sono stata implementate
+con Jest per quanto riguarda i servizi che usano Node.js, generando di
+fatto un report abbastanza comprensibile. Il componente middleware,
+scritto in Java, invece, generava risultati di test non così chiari. Per
+modificare questo comportamento, è stata introdotta una dipendenza nel
+build Gradle che permette di avere un report più dettagliato e
+comprensibile. La libreria <a
+href="https://plugins.gradle.org/plugin/com.adarshr.test-logger"><u>Test
+Logger</u></a>, tramite una piccola configurazione nel file build.gradle
+come qui riportata, ha soddisfatto le nostre esigenze.</p>
+<div class="sourceCode" id="list:gradle_testlogger" data-language="Java"
+data-caption="Test logger" label="list:gradle_testlogger"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="list:gradle_testlogger-1"><a href="#list:gradle_testlogger-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">com</span><span class="op">.</span><span class="im">adarshr</span><span class="op">.</span><span class="im">gradle</span><span class="op">.</span><span class="im">testlogger</span><span class="op">.</span><span class="im">TestLoggerExtension</span></span>
+<span id="list:gradle_testlogger-2"><a href="#list:gradle_testlogger-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">com</span><span class="op">.</span><span class="im">adarshr</span><span class="op">.</span><span class="im">gradle</span><span class="op">.</span><span class="im">testlogger</span><span class="op">.</span><span class="im">TestLoggerPlugin</span></span>
+<span id="list:gradle_testlogger-3"><a href="#list:gradle_testlogger-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">com</span><span class="op">.</span><span class="im">adarshr</span><span class="op">.</span><span class="im">gradle</span><span class="op">.</span><span class="im">testlogger</span><span class="op">.</span><span class="im">theme</span><span class="op">.</span><span class="im">ThemeType</span></span>
+<span id="list:gradle_testlogger-4"><a href="#list:gradle_testlogger-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="list:gradle_testlogger-5"><a href="#list:gradle_testlogger-5" aria-hidden="true" tabindex="-1"></a>testlogger <span class="op">{</span></span>
+<span id="list:gradle_testlogger-6"><a href="#list:gradle_testlogger-6" aria-hidden="true" tabindex="-1"></a>    theme <span class="op">=</span> ThemeType<span class="op">.</span><span class="fu">MOCHA</span></span>
+<span id="list:gradle_testlogger-7"><a href="#list:gradle_testlogger-7" aria-hidden="true" tabindex="-1"></a>    showExceptions <span class="op">=</span> <span class="kw">true</span></span>
+<span id="list:gradle_testlogger-8"><a href="#list:gradle_testlogger-8" aria-hidden="true" tabindex="-1"></a>    showStackTraces <span class="op">=</span> <span class="kw">true</span></span>
+<span id="list:gradle_testlogger-9"><a href="#list:gradle_testlogger-9" aria-hidden="true" tabindex="-1"></a>    showFullStackTraces <span class="op">=</span> <span class="kw">false</span></span>
+<span id="list:gradle_testlogger-10"><a href="#list:gradle_testlogger-10" aria-hidden="true" tabindex="-1"></a>    showCauses <span class="op">=</span> <span class="kw">true</span></span>
+<span id="list:gradle_testlogger-11"><a href="#list:gradle_testlogger-11" aria-hidden="true" tabindex="-1"></a>    slowThreshold <span class="op">=</span> <span class="dv">2000</span></span>
+<span id="list:gradle_testlogger-12"><a href="#list:gradle_testlogger-12" aria-hidden="true" tabindex="-1"></a>    showSummary <span class="op">=</span> <span class="kw">true</span></span>
+<span id="list:gradle_testlogger-13"><a href="#list:gradle_testlogger-13" aria-hidden="true" tabindex="-1"></a>    showSimpleNames <span class="op">=</span> <span class="kw">false</span></span>
+<span id="list:gradle_testlogger-14"><a href="#list:gradle_testlogger-14" aria-hidden="true" tabindex="-1"></a>    showPassed <span class="op">=</span> <span class="kw">true</span></span>
+<span id="list:gradle_testlogger-15"><a href="#list:gradle_testlogger-15" aria-hidden="true" tabindex="-1"></a>    showSkipped <span class="op">=</span> <span class="kw">true</span></span>
+<span id="list:gradle_testlogger-16"><a href="#list:gradle_testlogger-16" aria-hidden="true" tabindex="-1"></a>    showFailed <span class="op">=</span> <span class="kw">true</span></span>
+<span id="list:gradle_testlogger-17"><a href="#list:gradle_testlogger-17" aria-hidden="true" tabindex="-1"></a>    showOnlySlow <span class="op">=</span> <span class="kw">false</span></span>
+<span id="list:gradle_testlogger-18"><a href="#list:gradle_testlogger-18" aria-hidden="true" tabindex="-1"></a>    showStandardStreams <span class="op">=</span> <span class="kw">false</span></span>
+<span id="list:gradle_testlogger-19"><a href="#list:gradle_testlogger-19" aria-hidden="true" tabindex="-1"></a>    showPassedStandardStreams <span class="op">=</span> <span class="kw">true</span></span>
+<span id="list:gradle_testlogger-20"><a href="#list:gradle_testlogger-20" aria-hidden="true" tabindex="-1"></a>    showSkippedStandardStreams <span class="op">=</span> <span class="kw">true</span></span>
+<span id="list:gradle_testlogger-21"><a href="#list:gradle_testlogger-21" aria-hidden="true" tabindex="-1"></a>    showFailedStandardStreams <span class="op">=</span> <span class="kw">true</span></span>
+<span id="list:gradle_testlogger-22"><a href="#list:gradle_testlogger-22" aria-hidden="true" tabindex="-1"></a>    logLevel <span class="op">=</span> LogLevel<span class="op">.</span><span class="fu">LIFECYCLE</span></span>
+<span id="list:gradle_testlogger-23"><a href="#list:gradle_testlogger-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>L’architettura dei componenti si può riassumere in questo modo:</p>
+<ul>
+<li><p><strong>Classi controller</strong>: che hanno la funzione di
+esporre le rotte e di contenere al loro interno classi di
+servizio.</p></li>
+<li><p><strong>Classi di servizio</strong>: che contengono la logica di
+business.</p></li>
+</ul>
+<p>I test vengono quindi eseguiti sulle classi di servizio, andando a
+testare la logica di business e non le funzioni. Questo approccio
+permette di avere una copertura maggiore del codice e di garantire che
+la logica di business sia corretta. Un esempio di test su una classe di
+servizio, prendendo come esempio il componente userManagement, rende
+chiaro il concetto.</p>
+<p>Questo componente di fatto svolge due funzioni ben distinte:</p>
+<ul>
+<li><p>Collegarsi a un database MySQL e fare delle operazioni CRUD su
+tabelle di utenti e le loro rispettive statistiche.</p></li>
+<li><p>Gestire la registrazione e l’autenticazione degli
+utenti.</p></li>
+</ul>
+<p>La parte di testing quindi non va assolutamente a verificare che la
+connessione al database funzioni, ma che le operazioni CRUD siano
+corrette e che la registrazione e l’autenticazione degli utenti
+avvengano correttamente, così come l’aggiornamento delle
+statistiche.</p>
+<p>Avendo scelto un’architettura a microservizi, è stato necessario
+testare anche il corretto funzionamento delle comunicazioni tra i
+servizi. Per fare ciò, è stato necessario creare dei test di
+integrazione che verificassero il corretto funzionamento delle API
+esposte dai servizi. Questi test sono stati implementati nel componente
+middleware che, come sicuramente si ricorderà, ha il compito di mettere
+in comunicazione i servizi tra di loro e con il frontend.</p>
+<h2 id="code_quality">Code quality e linting</h2>
+<p>Durante lo sviluppo dei servizi è stata adottata una politica di code
+quality e linting per garantire la coerenza e la leggibilità del
+codice.</p>
+<p>Per i servizi in Node.js, sono stati utilizzati ESLint assieme a
+Prettier. ESLint è uno strumento di analisi statica del codice che aiuta
+a identificare e correggere gli errori di codice, le pratiche non
+ottimali e le violazioni dello stile di codice. Questi strumenti
+necessitano soltanto di un file di configurazione che è presente nelle
+repository e che i software per la scrittura di codice, come ad esempio
+VSCode, possono adoperare.</p>
+<p>Il componente in Java ha adottato Checkstyle, un tool di analisi
+statica del codice che aiuta a garantire che il codice Java rispetti uno
+standard di codifica predefinito. Anche in questo caso è stato
+sufficiente aggiungere una dipendenza nel build.gradle per ottenere un
+report dettagliato e comprensibile ed un file di configurazione che è
+stato inserito nella repository. Per automatizzare il processo di
+formattazione del codice il più possibile è stata aggiunta la libreria
+<a href="https://github.com/diffplug/spotless"><u>Spotless</u></a>.
+L’aggiunta di queste dipendenze nel file build.gradle è stata
+sufficiente per garantire la formattazione del codice e la sua
+coerenza.</p>
+<div class="sourceCode" id="list:gradle_codequality"
+data-language="Java" data-caption="Code quality"
+label="list:gradle_codequality"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="list:gradle_codequality-1"><a href="#list:gradle_codequality-1" aria-hidden="true" tabindex="-1"></a>spotless <span class="op">{</span></span>
+<span id="list:gradle_codequality-2"><a href="#list:gradle_codequality-2" aria-hidden="true" tabindex="-1"></a>    java <span class="op">{</span></span>
+<span id="list:gradle_codequality-3"><a href="#list:gradle_codequality-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">importOrder</span><span class="op">()</span> <span class="co">// standard import order</span></span>
+<span id="list:gradle_codequality-4"><a href="#list:gradle_codequality-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">removeUnusedImports</span><span class="op">()</span></span>
+<span id="list:gradle_codequality-5"><a href="#list:gradle_codequality-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">googleJavaFormat</span><span class="op">()</span> <span class="co">// has its own section below</span></span>
+<span id="list:gradle_codequality-6"><a href="#list:gradle_codequality-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">eclipse</span><span class="op">()</span>          <span class="co">// has its own section below</span></span>
+<span id="list:gradle_codequality-7"><a href="#list:gradle_codequality-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="list:gradle_codequality-8"><a href="#list:gradle_codequality-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="list:gradle_codequality-9"><a href="#list:gradle_codequality-9" aria-hidden="true" tabindex="-1"></a>checkstyle <span class="op">{</span></span>
+<span id="list:gradle_codequality-10"><a href="#list:gradle_codequality-10" aria-hidden="true" tabindex="-1"></a>    toolVersion <span class="op">=</span> <span class="st">&quot;8.44&quot;</span> <span class="co">// Versione di Checkstyle</span></span>
+<span id="list:gradle_codequality-11"><a href="#list:gradle_codequality-11" aria-hidden="true" tabindex="-1"></a>    configFile <span class="op">=</span> <span class="fu">file</span><span class="op">(</span><span class="st">&quot;${rootDir}/config/checkstyle/checkstyle.xml&quot;</span><span class="op">)</span> <span class="co">// Configurazione di Checkstyle</span></span>
+<span id="list:gradle_codequality-12"><a href="#list:gradle_codequality-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">// showViolations = true</span></span>
+<span id="list:gradle_codequality-13"><a href="#list:gradle_codequality-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <h1 id="ch:deployment">Deployment</h1>
 <h2 id="containerization">Containerization</h2>
 <p>Data l’architettura del progetto in microservizi, usare Docker per
@@ -1381,7 +1488,7 @@ label="list:gradle_fatJar"><pre class="sourceCode java"><code class="sourceCode 
 <p>La containerizzazione del frontend ha richiesto l’utilizzo di
 un’immagine di Node.js per lo stage di build, mentre per l’esecuzione è
 stata utilizzata un’immagine di Nginx. Come citato nella sezione <a
-href="#Nginx" data-reference-type="ref" data-reference="Nginx">6.2.1</a>
+href="#Nginx" data-reference-type="ref" data-reference="Nginx">7.2.1</a>
 Nginx serve per eseguire l’applicazione all’interno del container e per
 poterla raggiungere dall’esterno.</p>
 <h1 id="ch:con">Conclusions and Future Work</h1>
