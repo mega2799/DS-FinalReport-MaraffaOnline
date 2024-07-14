@@ -39,8 +39,7 @@ server {
     }
 }
 \end{lstlisting}
-
-L'indirizzo del backend è stato configurato anch'esso tramite variabili d'ambiente, in modo da poterlo cambiare facilmente in base all'ambiente in cui si trova il container, e queste variabili vengono sostituite a seconda dell'ambiente di deploy in cui l'applicativo Angular viene eseguito.
+La scelta di Nginx è stata fatta soprattutto per la sicurezza nel "mascherare" le chiamate fatte al backend, in modo da non esporre l'indirizzo del servizio all'esterno e poter superare eventuali problemi di CORS. L'indirizzo del backend è stato configurato anch'esso tramite variabili d'ambiente, in modo da poterlo cambiare facilmente in base all'ambiente in cui si trova il container, e queste variabili vengono sostituite a seconda dell'ambiente di deploy in cui l'applicativo Angular viene eseguito.
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \section{Problem statement}
