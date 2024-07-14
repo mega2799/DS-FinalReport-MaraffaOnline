@@ -7,6 +7,75 @@ self-assessment/autovalidazione (fai i test unit e integrazione con jest)
 Ma noi usiamo Lint e Prettier???
 -vuole che i test della ci siano runnati il più frequentemente possibile (bot git che li runna?)
 
+
+
+\section{Test} 
+
+-- parlare di come viene usato TDD, Jest, e come vengono eseguiti i test nella CI
+-- parlare del fatto che vengono testati i servizi con le logiche e non le funzioni
+
+
+
+\section{Automated quality assurance}
+\subsection{Testing}
+
+Per ogni servizio in questo sistema è stato adottato, ove possibile, il paradigma di programmazione TDD, cioè Test Driven Development. Questo approccio prevede che i test siano scritti prima del codice, in modo da guidare lo sviluppo e garantire che il codice prodotto soddisfi i requisiti specificati.
+All'interno della CI, la fase di test è stata implementata con Jest per quanto riguarda i servizi che usano Node.js, generando di fatto un report abbastanza comprensibile direttamente nella finestra della CI. Il componente middleware, scritto in Java, invece, generava risultati di test non così chiari. Per modificare questo comportamento, è stata introdotta una dipendenza nel build Gradle che permette di avere un report più dettagliato e comprensibile. 
+La libreria \href{https://plugins.gradle.org/plugin/com.adarshr.test-logger}{\underline{Test Logger}}, tramite una piccola configurazione nel file build.gradle come qui riportata, ha soddisfatto le nostre esigenze.
+
+\begin{lstlisting}[language=Java, caption={Test logger}, label=list:gradle_testlogger]
+import com.adarshr.gradle.testlogger.TestLoggerExtension
+import com.adarshr.gradle.testlogger.TestLoggerPlugin
+import com.adarshr.gradle.testlogger.theme.ThemeType
+
+testlogger {
+    theme = ThemeType.MOCHA
+    showExceptions = true
+    showStackTraces = true
+    showFullStackTraces = false
+    showCauses = true
+    slowThreshold = 2000
+    showSummary = true
+    showSimpleNames = false
+    showPassed = true
+    showSkipped = true
+    showFailed = true
+    showOnlySlow = false
+    showStandardStreams = false
+    showPassedStandardStreams = true
+    showSkippedStandardStreams = true
+    showFailedStandardStreams = true
+    logLevel = LogLevel.LIFECYCLE
+}
+\end{lstlisting}
+
+\section{Code quality e linting} 
+\label{code_quality}
+
+Durante lo sviluppo dei servizi è stata adottata una politica di code quality e linting per garantire la coerenza e la leggibilità del codice.
+
+Per i servizi in Node.js, sono stati utilizzati ESLint assieme a Prettier. ESLint è uno strumento di analisi statica del codice che aiuta a identificare e correggere gli errori di codice, le pratiche non ottimali e le violazioni dello stile di codice.
+Questi strumenti necessitano soltanto di un file di configurazione che è presente nelle repository e che i software per la scrittura di codice, come ad esempio VSCode, possono adoperare.
+
+Il componente in Java ha adottato Checkstyle, un tool di analisi statica del codice che aiuta a garantire che il codice Java rispetti uno standard di codifica predefinito. Anche in questo caso è stato sufficiente aggiungere una dipendenza nel build.gradle per ottenere un report dettagliato e comprensibile ed un file di configurazione che è stato inserito nella repository. Per automatizzare il processo di formattazione del codice il più possibile è stata aggiunta la libreria \href{https://github.com/diffplug/spotless}{\underline{Spotless}}. L'aggiunta di queste dipendenze nel file build.gradle è stata sufficiente per garantire la formattazione del codice e la sua coerenza.
+
+\begin{lstlisting}[language=Java, caption={Code quality}, label=list:gradle_codequality]
+spotless {
+    java {
+        importOrder() // standard import order
+        removeUnusedImports()
+        googleJavaFormat() // has its own section below
+        eclipse()          // has its own section below
+    }
+}
+checkstyle {
+    toolVersion = "8.44" // Versione di Checkstyle
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml") // Configurazione di Checkstyle
+    // showViolations = true
+}
+\end{lstlisting}
+
+
 % \begin{table}[h!]
 %     \centering
 %     \caption{Undergraduate report template structure}

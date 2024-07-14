@@ -13,6 +13,9 @@ Come precedentemente citato, il middleware è stato implementato con WebSocket p
 Un grande vantaggio dell'uso delle WebSocket sta nella facile implementazione delle chat. Questo sistema richiedeva l'impiego di due diverse chat per permettere la comunicazione tra utenti sia globalmente che all'interno di una singola partita. 
 Anche in questo caso, il middleware si occupa di instradare i messaggi alle giuste chat, garantendo la privacy delle conversazioni. Il frontend, invece, si occupa di visualizzare i messaggi e di inviarli al middleware. La gestione della persistenza delle chat è stata implementata tramite l'uso del session storage del browser all'interno del middleware, permettendo di mantenere la chat anche in caso di refresh della pagina.
 
+\subsection{Reattivita' e aggiornamento in tempo reale}
+TODO
+
 \section{Stack Docker -> reti interne e IP privati}
 
 Il sistema è stato progettato per essere eseguito su qualsiasi piattaforma e si è arrivati a creare uno stack completo di Docker Compose. Questo ha permesso anche la creazione di reti interne tra i container che vengono utilizzate per la comunicazione tra i servizi. È stato possibile assegnare IP privati ai container, permettendo di non esporre i servizi all'esterno e di mantenere un'architettura più sicura. Tra le variabili d'ambiente che vengono passate ai container c'è anche l'indirizzo del servizio a cui connettersi, e questo indirizzo è il nome del servizio all'interno della rete. Questo permette di non dover modificare il codice ogni volta che si cambia l'indirizzo del servizio a cui connettersi, ma basta modificare il file di configurazione del Docker Compose.
