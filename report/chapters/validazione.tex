@@ -14,13 +14,8 @@ Ma noi usiamo Lint e Prettier???
 -- parlare di come viene usato TDD, Jest, e come vengono eseguiti i test nella CI
 -- parlare del fatto che vengono testati i servizi con le logiche e non le funzioni
 
-
-
-\section{Automated quality assurance}
-\subsection{Testing}
-
 Per ogni servizio in questo sistema è stato adottato, ove possibile, il paradigma di programmazione TDD, cioè Test Driven Development. Questo approccio prevede che i test siano scritti prima del codice, in modo da guidare lo sviluppo e garantire che il codice prodotto soddisfi i requisiti specificati.
-All'interno della CI, la fase di test è stata implementata con Jest per quanto riguarda i servizi che usano Node.js, generando di fatto un report abbastanza comprensibile direttamente nella finestra della CI. Il componente middleware, scritto in Java, invece, generava risultati di test non così chiari. Per modificare questo comportamento, è stata introdotta una dipendenza nel build Gradle che permette di avere un report più dettagliato e comprensibile. 
+Le operazioni di testing sono stata implementate con Jest per quanto riguarda i servizi che usano Node.js, generando di fatto un report abbastanza comprensibile. Il componente middleware, scritto in Java, invece, generava risultati di test non così chiari. Per modificare questo comportamento, è stata introdotta una dipendenza nel build Gradle che permette di avere un report più dettagliato e comprensibile. 
 La libreria \href{https://plugins.gradle.org/plugin/com.adarshr.test-logger}{\underline{Test Logger}}, tramite una piccola configurazione nel file build.gradle come qui riportata, ha soddisfatto le nostre esigenze.
 
 \begin{lstlisting}[language=Java, caption={Test logger}, label=list:gradle_testlogger]
@@ -48,6 +43,29 @@ testlogger {
     logLevel = LogLevel.LIFECYCLE
 }
 \end{lstlisting}
+
+\vspace{1cm}
+
+L'archietttura dei componenti si può riassumere in questo modo:
+\begin{itemize}
+	\item \textbf{classi controller}: che hanno la funzione di esporre le rotte e di contenere al loro interno classi di servizio.
+	\item \textbf{classi di servizio}: che contengono la logica di business.
+\end{itemize}
+
+I test vengono quindi eseguiti sulle classi di servizio andando a testare la logica di business e non le funzioni. Questo approccio permette di avere una copertura maggiore del codice e di garantire che la logica di business sia corretta.
+Un esempio di test su una classe di servizio, prendendo come esempio il componente userManagement rende chiaro il concetto.
+
+Questo componente di fatto svolge 2 funzioni ben distinte:
+\begin{itemize}
+	\item Collegarsi ad un databse mysql e fare delle operazioni CRUD su tabelle di utenti e le loro rispettive statistiche. 
+	\item Gestire la registrazione e l'autenticazione degli utenti.
+\end{itemize}
+
+La parte di testing quindi non va assolutamente a verificare che la connessione al database funzioni, ma che le operazioni CRUD siano corrette e che la registrazione e l'autenticazione degli utenti avvenga correttamente, cosi come l'aggiornamento delle statistiche.
+
+Avendo scelto un architettura a microservizi, è stato necessario testare anche il corretto funzionamento delle comunicazioni tra i servizi. Per fare ciò, è stato necessario creare dei test di integrazione 
+che testassero il corretto funzionamento delle API esposte dai servizi. 
+Questi test sono stati implementati nel componente middleware che, come sicuramente si ricorderà, ha il compito di mettere in comunicazione i servizi tra di loro e con il frontend.
 
 \section{Code quality e linting} 
 \label{code_quality}
