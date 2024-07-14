@@ -2,17 +2,8 @@
 % in this template few examples are mention
 \chapter{Validazione}
 \label{ch:validazione} % Label for method chapter
-test driven development
-self-assessment/autovalidazione (fai i test unit e integrazione con jest)
-Ma noi usiamo Lint e Prettier???
--vuole che i test della ci siano runnati il più frequentemente possibile (bot git che li runna?)
-
-
 
 \section{Test} 
-
--- parlare di come viene usato TDD, Jest, e come vengono eseguiti i test nella CI
--- parlare del fatto che vengono testati i servizi con le logiche e non le funzioni
 
 Per ogni servizio in questo sistema è stato adottato, ove possibile, il paradigma di programmazione TDD, cioè Test Driven Development. Questo approccio prevede che i test siano scritti prima del codice, in modo da guidare lo sviluppo e garantire che il codice prodotto soddisfi i requisiti specificati.
 Le operazioni di testing sono stata implementate con Jest per quanto riguarda i servizi che usano Node.js, generando di fatto un report abbastanza comprensibile. Il componente middleware, scritto in Java, invece, generava risultati di test non così chiari. Per modificare questo comportamento, è stata introdotta una dipendenza nel build Gradle che permette di avere un report più dettagliato e comprensibile. 
@@ -43,28 +34,28 @@ testlogger {
     logLevel = LogLevel.LIFECYCLE
 }
 \end{lstlisting}
-
 \vspace{1cm}
 
-L'archietttura dei componenti si può riassumere in questo modo:
+L'architettura dei componenti si può riassumere in questo modo:
 \begin{itemize}
-	\item \textbf{classi controller}: che hanno la funzione di esporre le rotte e di contenere al loro interno classi di servizio.
-	\item \textbf{classi di servizio}: che contengono la logica di business.
+	\item \textbf{Classi controller}: che hanno la funzione di esporre le rotte e di contenere al loro interno classi di servizio.
+	\item \textbf{Classi di servizio}: che contengono la logica di business.
 \end{itemize}
 
-I test vengono quindi eseguiti sulle classi di servizio andando a testare la logica di business e non le funzioni. Questo approccio permette di avere una copertura maggiore del codice e di garantire che la logica di business sia corretta.
-Un esempio di test su una classe di servizio, prendendo come esempio il componente userManagement rende chiaro il concetto.
+I test vengono quindi eseguiti sulle classi di servizio, andando a testare la logica di business e non le funzioni. Questo approccio permette di avere una copertura maggiore del codice e di garantire che la logica di business sia corretta.
+Un esempio di test su una classe di servizio, prendendo come esempio il componente userManagement, rende chiaro il concetto.
 
-Questo componente di fatto svolge 2 funzioni ben distinte:
+Questo componente di fatto svolge due funzioni ben distinte:
 \begin{itemize}
-	\item Collegarsi ad un databse mysql e fare delle operazioni CRUD su tabelle di utenti e le loro rispettive statistiche. 
+	\item Collegarsi a un database MySQL e fare delle operazioni CRUD su tabelle di utenti e le loro rispettive statistiche. 
 	\item Gestire la registrazione e l'autenticazione degli utenti.
 \end{itemize}
 
-La parte di testing quindi non va assolutamente a verificare che la connessione al database funzioni, ma che le operazioni CRUD siano corrette e che la registrazione e l'autenticazione degli utenti avvenga correttamente, cosi come l'aggiornamento delle statistiche.
+La parte di testing quindi non va assolutamente a verificare che la connessione al database funzioni, ma che le operazioni CRUD siano corrette e che la registrazione e l'autenticazione degli utenti avvengano correttamente, così come l'aggiornamento delle statistiche.
 
-Avendo scelto un architettura a microservizi, è stato necessario testare anche il corretto funzionamento delle comunicazioni tra i servizi. Per fare ciò, è stato necessario creare dei test di integrazione 
-che testassero il corretto funzionamento delle API esposte dai servizi. 
+\vspace{0.5cm}
+
+Avendo scelto un'architettura a microservizi, è stato necessario testare anche il corretto funzionamento delle comunicazioni tra i servizi. Per fare ciò, è stato necessario creare dei test di integrazione che verificassero il corretto funzionamento delle API esposte dai servizi. 
 Questi test sono stati implementati nel componente middleware che, come sicuramente si ricorderà, ha il compito di mettere in comunicazione i servizi tra di loro e con il frontend.
 
 \section{Code quality e linting} 
@@ -72,8 +63,12 @@ Questi test sono stati implementati nel componente middleware che, come sicurame
 
 Durante lo sviluppo dei servizi è stata adottata una politica di code quality e linting per garantire la coerenza e la leggibilità del codice.
 
+\vspace{0.5cm}
+
 Per i servizi in Node.js, sono stati utilizzati ESLint assieme a Prettier. ESLint è uno strumento di analisi statica del codice che aiuta a identificare e correggere gli errori di codice, le pratiche non ottimali e le violazioni dello stile di codice.
 Questi strumenti necessitano soltanto di un file di configurazione che è presente nelle repository e che i software per la scrittura di codice, come ad esempio VSCode, possono adoperare.
+
+\vspace{0.5cm}
 
 Il componente in Java ha adottato Checkstyle, un tool di analisi statica del codice che aiuta a garantire che il codice Java rispetti uno standard di codifica predefinito. Anche in questo caso è stato sufficiente aggiungere una dipendenza nel build.gradle per ottenere un report dettagliato e comprensibile ed un file di configurazione che è stato inserito nella repository. Per automatizzare il processo di formattazione del codice il più possibile è stata aggiunta la libreria \href{https://github.com/diffplug/spotless}{\underline{Spotless}}. L'aggiunta di queste dipendenze nel file build.gradle è stata sufficiente per garantire la formattazione del codice e la sua coerenza.
 
