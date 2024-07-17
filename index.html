@@ -208,7 +208,11 @@ automation</a></li>
 </ul></li>
 <li><a href="#ch:validazione" id="toc-ch:validazione">Validazione</a>
 <ul>
-<li><a href="#test" id="toc-test">Test</a></li>
+<li><a href="#test" id="toc-test">Test</a>
+<ul>
+<li><a href="#testing-asincrono" id="toc-testing-asincrono">Testing
+asincrono</a></li>
+</ul></li>
 <li><a href="#code_quality" id="toc-code_quality">Code quality e
 linting</a></li>
 </ul></li>
@@ -248,7 +252,7 @@ Configurazione</a></li>
 <span> <em>Supervisors:</em> Giovanni Ciatto, Matteo Magnani, Andrea
 Omicini </span><br />
 </p>
-<p>2024-07-15</p>
+<p>2024-07-17</p>
 </div>
 </div>
 <h2 id="list-of-abbreviations">List of Abbreviations</h2>
@@ -1386,6 +1390,57 @@ integrazione che verificassero il corretto funzionamento delle API
 esposte dai servizi. Questi test sono stati implementati nel componente
 middleware che, come sicuramente si ricorderà, ha il compito di mettere
 in comunicazione i servizi tra di loro e con il frontend.</p>
+<h3 id="testing-asincrono">Testing asincrono</h3>
+<p>Durante la scrittura dei test all’interno del servizio in Java,
+alcune operazioni erano asincrone e quindi è stato necessario attendere
+che queste operazioni terminassero prima di poter eseguire i test e
+validarli. Per fare ciò, la normale struttura di test fornita da Vertx
+in un primo tentativo non era sufficiente. La classica struttura dei
+test è la seguente:</p>
+<div class="sourceCode" id="list:test_std_vertx" data-language="Java"
+data-caption="Standard Vertx test" label="list:test_std_vertx"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="list:test_std_vertx-1"><a href="#list:test_std_vertx-1" aria-hidden="true" tabindex="-1"></a><span class="at">@Test</span></span>
+<span id="list:test_std_vertx-2"><a href="#list:test_std_vertx-2" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="dt">void</span> <span class="fu">createGameTest</span><span class="op">(</span><span class="dt">final</span> VertxTestContext context<span class="op">)</span> <span class="op">{</span></span>
+<span id="list:test_std_vertx-3"><a href="#list:test_std_vertx-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">final</span> JsonObject gameResponse <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="fu">gameService</span><span class="op">.</span><span class="fu">createGame</span><span class="op">(</span>MARAFFA_PLAYERS<span class="op">,</span> TEST_USER<span class="op">,</span> EXPECTED_SCORE<span class="op">,</span> GAME_MODE<span class="op">.</span><span class="fu">toString</span><span class="op">(),</span> PASSWORD<span class="op">);</span></span>
+<span id="list:test_std_vertx-4"><a href="#list:test_std_vertx-4" aria-hidden="true" tabindex="-1"></a>    Assertions<span class="op">.</span><span class="fu">assertEquals</span><span class="op">(</span>UUID_SIZE<span class="op">,</span> gameResponse<span class="op">.</span><span class="fu">getString</span><span class="op">(</span>Constants<span class="op">.</span><span class="fu">GAME_ID</span><span class="op">).</span><span class="fu">length</span><span class="op">());</span> <span class="co">// Assuming UUID is 36</span></span>
+<span id="list:test_std_vertx-5"><a href="#list:test_std_vertx-5" aria-hidden="true" tabindex="-1"></a>    context<span class="op">.</span><span class="fu">completeNow</span><span class="op">();</span></span>
+<span id="list:test_std_vertx-6"><a href="#list:test_std_vertx-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Per risolvere questo problema sono stati utilizzati:</p>
+<ul>
+<li><p>il decoratore fornito da JUnit Jupiter <em>@Timeout</em>, che
+permette di aspettare un tempo definito prima di fallire automaticamente
+il test, per ovviare al problema di asincronicità con servizi esterni al
+componente stesso che non "rispondono alla chiamata".</p></li>
+<li><p>l’utilizzo asincrono del VertxTestContext, che permette di
+completare il test solo quando tutte le operazioni asincrone sono state
+completate.</p></li>
+<li><p>una struttura di risposta nei servizi con cui il middleware
+comunica, che permette di individuare errori tramite la chiave "error"
+in caso di fallimento contenuta all’interno del JSON di risposta. Il
+test non può accedere alla response di una chiamata HTTP che normalmente
+avrebbe uno status code 200 in caso di successo e quindi si è ricorso a
+questo espediente per individuare errori nei dati inviati al
+servizio.</p></li>
+</ul>
+<p>Come è possibile vedere nel test riportato di seguito, seguendo
+questi accorgimenti è possibile testare correttamente le operazioni
+asincrone.</p>
+<div class="sourceCode" id="list:test_async_vertx" data-language="Java"
+data-caption="Vertx test asincrono" label="list:test_async_vertx"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="list:test_async_vertx-1"><a href="#list:test_async_vertx-1" aria-hidden="true" tabindex="-1"></a><span class="at">@Timeout</span><span class="op">(</span>value <span class="op">=</span> <span class="dv">10</span><span class="op">,</span> unit <span class="op">=</span> <span class="bu">TimeUnit</span><span class="op">.</span><span class="fu">SECONDS</span><span class="op">)</span></span>
+<span id="list:test_async_vertx-2"><a href="#list:test_async_vertx-2" aria-hidden="true" tabindex="-1"></a><span class="at">@Test</span></span>
+<span id="list:test_async_vertx-3"><a href="#list:test_async_vertx-3" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="dt">void</span> <span class="fu">testgetShuffledDeckOK</span><span class="op">(</span><span class="dt">final</span> VertxTestContext context<span class="op">)</span> <span class="op">{</span></span>
+<span id="list:test_async_vertx-4"><a href="#list:test_async_vertx-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">final</span> JsonObject gameResponse <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="fu">gameService</span><span class="op">.</span><span class="fu">createGame</span><span class="op">(</span><span class="dv">4</span><span class="op">,</span> TEST_USER<span class="op">,</span> <span class="dv">41</span><span class="op">,</span></span>
+<span id="list:test_async_vertx-5"><a href="#list:test_async_vertx-5" aria-hidden="true" tabindex="-1"></a>            GameMode<span class="op">.</span><span class="fu">CLASSIC</span><span class="op">.</span><span class="fu">toString</span><span class="op">(),</span> PASSWORD<span class="op">);</span></span>
+<span id="list:test_async_vertx-6"><a href="#list:test_async_vertx-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="fu">businessLogicController</span></span>
+<span id="list:test_async_vertx-7"><a href="#list:test_async_vertx-7" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">getShuffledDeck</span><span class="op">(</span><span class="bu">UUID</span><span class="op">.</span><span class="fu">fromString</span><span class="op">(</span>gameResponse<span class="op">.</span><span class="fu">getString</span><span class="op">(</span>Constants<span class="op">.</span><span class="fu">GAME_ID</span><span class="op">)),</span> <span class="dv">4</span><span class="op">)</span></span>
+<span id="list:test_async_vertx-8"><a href="#list:test_async_vertx-8" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">whenComplete</span><span class="op">((</span>res<span class="op">,</span> err<span class="op">)</span> <span class="op">-&gt;</span> <span class="op">{</span></span>
+<span id="list:test_async_vertx-9"><a href="#list:test_async_vertx-9" aria-hidden="true" tabindex="-1"></a>                context<span class="op">.</span><span class="fu">verify</span><span class="op">(()</span> <span class="op">-&gt;</span> <span class="op">{</span></span>
+<span id="list:test_async_vertx-10"><a href="#list:test_async_vertx-10" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">assertNull</span><span class="op">(</span>res<span class="op">.</span><span class="fu">getString</span><span class="op">(</span><span class="st">&quot;error&quot;</span><span class="op">));</span></span>
+<span id="list:test_async_vertx-11"><a href="#list:test_async_vertx-11" aria-hidden="true" tabindex="-1"></a>                    context<span class="op">.</span><span class="fu">completeNow</span><span class="op">();</span></span>
+<span id="list:test_async_vertx-12"><a href="#list:test_async_vertx-12" aria-hidden="true" tabindex="-1"></a>                <span class="op">});</span></span>
+<span id="list:test_async_vertx-13"><a href="#list:test_async_vertx-13" aria-hidden="true" tabindex="-1"></a>            <span class="op">});</span></span>
+<span id="list:test_async_vertx-14"><a href="#list:test_async_vertx-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <h2 id="code_quality">Code quality e linting</h2>
 <p>Durante lo sviluppo dei servizi è stata adottata una politica di code
 quality e linting per garantire la coerenza e la leggibilità del
