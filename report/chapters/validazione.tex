@@ -58,45 +58,44 @@ La parte di testing quindi non va assolutamente a verificare che la connessione 
 Avendo scelto un'architettura a microservizi, è stato necessario testare anche il corretto funzionamento delle comunicazioni tra i servizi. Per fare ciò, è stato necessario creare dei test di integrazione che verificassero il corretto funzionamento delle API esposte dai servizi. 
 Questi test sono stati implementati nel componente middleware che, come sicuramente si ricorderà, ha il compito di mettere in comunicazione i servizi tra di loro e con il frontend.
 
-
 \subsection{Testing asincrono}
 
 Durante la scrittura dei test all'interno del servizio in Java, alcune operazioni erano asincrone e quindi è stato necessario attendere che queste operazioni terminassero prima di poter eseguire i test e validarli.
-Per fare ciò, la normale struttura di test fornita da Vertx in un primo tentativo non era sufficente, la classica stuttura dei test è la seguente.
+Per fare ciò, la normale struttura di test fornita da Vertx in un primo tentativo non era sufficiente. La classica struttura dei test è la seguente:
 
 \begin{lstlisting}[language=Java, caption={Standard Vertx test}, label=list:test_std_vertx]
-	@Test
-	public void createGameTest(final VertxTestContext context) {
-		final JsonObject gameResponse = this.gameService.createGame(MARAFFA_PLAYERS, TEST_USER, EXPECTED_SCORE, GAME_MODE.toString(), PASSWORD);
-		Assertions.assertEquals(UUID_SIZE, gameResponse.getString(Constants.GAME_ID).length()); // Assuming UUID is 36
-		context.completeNow();
-	}
+@Test
+public void createGameTest(final VertxTestContext context) {
+    final JsonObject gameResponse = this.gameService.createGame(MARAFFA_PLAYERS, TEST_USER, EXPECTED_SCORE, GAME_MODE.toString(), PASSWORD);
+    Assertions.assertEquals(UUID_SIZE, gameResponse.getString(Constants.GAME_ID).length()); // Assuming UUID is 36
+    context.completeNow();
+}
 \end{lstlisting}
 
 Per risolvere questo problema sono stati utilizzati:
 \begin{itemize}
-\item il decoratore fornito da junit jupiter \textit{@Timeout} che permette di aspettare un tempo definito prima di fallire automaticamente il test, per poter ovviare al problema di asincronicità con servizi esterni al componente stesso che non "rispondono alla chiamata"
-\item l'utilizzo asincrono del VertxTestContext, che permette di completare il test solo quando tutte le operazioni asincrone sono state completate.
-\item una struttura di risposta, all'interno dei servizi con cui il middleware comunica che permette di inviduare errori tramite la chiave error in caso di fallimento contenuta all'interno del JSON di risposta. Il test non può accedere alla response di una chiamata HTTP che normalmente avrebbe
-uno status code 200 in caso di successo e quindi si è ricorsi a questo espendiente per individuare errori nei dati che sarebbero stati inviati al servizio.
+    \item il decoratore fornito da JUnit Jupiter \textit{@Timeout}, che permette di aspettare un tempo definito prima di fallire automaticamente il test, per ovviare al problema di asincronicità con servizi esterni al componente stesso che non "rispondono alla chiamata".
+    \item l'utilizzo asincrono del VertxTestContext, che permette di completare il test solo quando tutte le operazioni asincrone sono state completate.
+    \item una struttura di risposta nei servizi con cui il middleware comunica, che permette di individuare errori tramite la chiave "error" in caso di fallimento contenuta all'interno del JSON di risposta. Il test non può accedere alla response di una chiamata HTTP che normalmente avrebbe uno status code 200 in caso di successo e quindi si è ricorso a questo espediente per individuare errori nei dati inviati al servizio.
 \end{itemize}
-Come è possibile vedere nell test riportato seguendo questi due accorgimenti, è possibile testare correttamente le operazioni asincrone.
 
-\begin{lstlisting}[language=Java, caption={Vertx test Asincrono}, label=list:test_async_vertx]
-	@Timeout(value = 10, unit = TimeUnit.SECONDS)
-	@Test
-	public void testgetShuffledDeckOK(final VertxTestContext context) {
-		final JsonObject gameResponse = this.gameService.createGame(4, TEST_USER, 41,
-				GameMode.CLASSIC.toString(), PASSWORD);
-		this.businessLogicController
-				.getShuffledDeck(UUID.fromString(gameResponse.getString(Constants.GAME_ID)), 4)
-				.whenComplete((res, err) -> {
-					context.verify(() -> {
-						assertNull(res.getString("error"));
-						context.completeNow();
-					});
-				});
-	}
+Come è possibile vedere nel test riportato di seguito, seguendo questi accorgimenti è possibile testare correttamente le operazioni asincrone.
+
+\begin{lstlisting}[language=Java, caption={Vertx test asincrono}, label=list:test_async_vertx]
+@Timeout(value = 10, unit = TimeUnit.SECONDS)
+@Test
+public void testgetShuffledDeckOK(final VertxTestContext context) {
+    final JsonObject gameResponse = this.gameService.createGame(4, TEST_USER, 41,
+            GameMode.CLASSIC.toString(), PASSWORD);
+    this.businessLogicController
+            .getShuffledDeck(UUID.fromString(gameResponse.getString(Constants.GAME_ID)), 4)
+            .whenComplete((res, err) -> {
+                context.verify(() -> {
+                    assertNull(res.getString("error"));
+                    context.completeNow();
+                });
+            });
+}
 \end{lstlisting}
 
 
