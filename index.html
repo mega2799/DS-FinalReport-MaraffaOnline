@@ -174,8 +174,9 @@ d’ambiente</a></li>
 </ul></li>
 <li><a href="#ch:interazioni" id="toc-ch:interazioni">Interazioni</a>
 <ul>
-<li><a href="#frontend---websocket"
-id="toc-frontend---websocket">Frontend &lt;-&gt; WebSocket</a>
+<li><a href="#frontend-leftrightarrow-websocket"
+id="toc-frontend-leftrightarrow-websocket">Frontend <span
+class="math inline">↔︎</span> WebSocket</a>
 <ul>
 <li><a href="#chat-globale-e-privata"
 id="toc-chat-globale-e-privata">Chat globale e privata</a></li>
@@ -183,9 +184,9 @@ id="toc-chat-globale-e-privata">Chat globale e privata</a></li>
 id="toc-reattivita-e-aggiornamento-in-tempo-reale">Reattivita’ e
 aggiornamento in tempo reale</a></li>
 </ul></li>
-<li><a href="#stack-docker---reti-interne-e-ip-privati"
-id="toc-stack-docker---reti-interne-e-ip-privati">Stack Docker -&gt;
-reti interne e IP privati</a>
+<li><a href="#stack-docker-rightarrow-reti-interne-e-ip-privati"
+id="toc-stack-docker-rightarrow-reti-interne-e-ip-privati">Stack Docker
+<span class="math inline">→</span> reti interne e IP privati</a>
 <ul>
 <li><a href="#Nginx" id="toc-Nginx">Nginx</a></li>
 </ul></li>
@@ -209,6 +210,8 @@ id="toc-usermanagementmaraffa-e-businesslogic">UserManagementMaraffa e
 BusinessLogic:</a></li>
 <li><a href="#middlewaremaraffa"
 id="toc-middlewaremaraffa">MiddlewareMaraffa:</a></li>
+<li><a href="#frontendmaraffa"
+id="toc-frontendmaraffa">FrontendMaraffa:</a></li>
 </ul></li>
 <li><a href="#continuous-integration"
 id="toc-continuous-integration">Continuous integration</a></li>
@@ -269,12 +272,14 @@ Omicini </span><br />
 <p>Continuous Integration</p>
 </div>
 <h2 id="glossario-dei-termini">Glossario dei termini</h2>
+<div class="adjustbox">
+<p><span>max width=1.1,center</span></p>
 <table>
 <thead>
 <tr class="header">
-<th style="text-align: left;"><strong>Nome</strong></th>
-<th style="text-align: left;"><strong>Descrizione</strong></th>
-<th style="text-align: left;"><strong>Sinonimi</strong></th>
+<th style="text-align: left;">Nome</th>
+<th style="text-align: left;">Descrizione</th>
+<th style="text-align: left;">Sinonimi</th>
 </tr>
 </thead>
 <tbody>
@@ -285,62 +290,48 @@ giocatori e la seguente serie di 10 prese</td>
 <td style="text-align: left;">Round</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Mano</td>
+<td style="text-align: left;">Carte dei giocatori non ancora
+giocate</td>
+<td style="text-align: left;">Hand</td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">Presa</td>
 <td style="text-align: left;">Quando ogni giocatore, a turno, gioca sul
 tavolo una carta. L’ultima presa della mano vale 1 punto.</td>
 <td style="text-align: left;">Trick</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Partita</td>
 <td style="text-align: left;">Insieme di più mani fino al raggiungimento
 del punteggio di 41 punti.</td>
 <td style="text-align: left;">Game</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Partita corta</td>
 <td style="text-align: left;">Insieme di più mani fino al raggiungimento
 del punteggio di 31 punti.</td>
 <td style="text-align: left;">Short Game</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Tavolo</td>
 <td style="text-align: left;">Raggruppamento di 4 giocatori, suddivisi
 in 2 coppie, i giocatori delle stessa squadra “siedono” in direzione
 opposta</td>
 <td style="text-align: left;">Table</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Seme</td>
 <td style="text-align: left;">Tipologia distintiva di carta, ne esistono
-4:</td>
-<td style="text-align: left;"> </td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">- Denari</td>
-<td style="text-align: left;"> </td>
-<td style="text-align: left;"> </td>
+4: Denari, Coppe, Spade, Bastoni</td>
+<td style="text-align: left;">Suit: Coins, Cups, Swords, Clubs </td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">- Coppe</td>
-<td style="text-align: left;"> </td>
-<td style="text-align: left;"> </td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">- Spade</td>
-<td style="text-align: left;"> </td>
-<td style="text-align: left;"> </td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">- Bastoni</td>
-<td style="text-align: left;">Suit: -Coins -Cups -Swords -Clubs</td>
-<td style="text-align: left;"> </td>
-</tr>
-<tr class="odd">
 <td style="text-align: left;">Briscola</td>
 <td style="text-align: left;">Seme con priorita’ piu’ alta.</td>
 <td style="text-align: left;">Trump</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Maraffa</td>
 <td style="text-align: left;">Se un giocatore possiede le tre carte di
 valore maggiore (asso, due e tre, dette assieme "Maraffa" o "Cricca")
@@ -349,15 +340,11 @@ scendere con l’asso di quel seme.</td>
 <td style="text-align: left;">Cricca, Marafon, Tresette con la
 Briscola</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">Mazzo</td>
-<td style="text-align: left;">40 carte, di 4 semi diversi</td>
-<td style="text-align: left;"> </td>
-</tr>
 <tr class="even">
-<td style="text-align: left;">1,2,3,4,5,6,7, fante, cavallo e re.</td>
+<td style="text-align: left;">Mazzo</td>
+<td style="text-align: left;">40 carte, di 4 semi diversi,
+1,2,3,4,5,6,7, fante, cavallo e re.</td>
 <td style="text-align: left;">Deck</td>
-<td style="text-align: left;"> </td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Taglio</td>
@@ -440,13 +427,15 @@ l’11 a 0 per la squadra avversaria</td>
 <td style="text-align: left;">Call out</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">non abbiamo messo l’altro significato di
-mano</td>
-<td style="text-align: left;"> </td>
-<td style="text-align: left;"> </td>
+<td style="text-align: left;">Modalità di gioco</td>
+<td style="text-align: left;">regole di gioco classiche o varianti che
+influenzano aspetti come il punteggio, condizioni di vittoria/perdita,
+... Ne sono state implementate due: classica, 11 a 0.</td>
+<td style="text-align: left;">Game mode</td>
 </tr>
 </tbody>
 </table>
+</div>
 <h1 id="ch:into">Introduzione</h1>
 <p>MaraffaOnline è un’applicazione che permette alle persone di giocare
 al gioco di carte <a
@@ -1189,7 +1178,8 @@ riportano di seguito:</p>
 <figcaption> Mockup della schermata di gioco</figcaption>
 </figure>
 <h1 id="ch:interazioni">Interazioni</h1>
-<h2 id="frontend---websocket">Frontend &lt;-&gt; WebSocket</h2>
+<h2 id="frontend-leftrightarrow-websocket">Frontend <span
+class="math inline">↔︎</span> WebSocket</h2>
 <p>Come precedentemente citato, il middleware è stato implementato con
 WebSocket per poter comunicare in modo reattivo con il frontend. Queste
 comunicazioni frontend &lt;-&gt; middleware sono in buona parte scambi
@@ -1218,8 +1208,8 @@ di mantenere la chat anche in caso di refresh della pagina.</p>
 <h3 id="reattivita-e-aggiornamento-in-tempo-reale">Reattivita’ e
 aggiornamento in tempo reale</h3>
 <p>TODO</p>
-<h2 id="stack-docker---reti-interne-e-ip-privati">Stack Docker -&gt;
-reti interne e IP privati</h2>
+<h2 id="stack-docker-rightarrow-reti-interne-e-ip-privati">Stack Docker
+<span class="math inline">→</span> reti interne e IP privati</h2>
 <p>Il sistema è stato progettato per essere eseguito su qualsiasi
 piattaforma e si è arrivati a creare uno stack completo di Docker
 Compose. Questo ha permesso anche la creazione di reti interne tra i
@@ -1340,58 +1330,41 @@ Actions</p></li>
 BusinessLogic:</h3>
 <p>Essendo le due repository estremamente simili e avendo entrambe un
 ambiente in node.js, è stato implementato un workflow pressochè analogo.
-Questo workflow reagisce all’evento push sul main branch, e pull request
-sui branch main e develop e sono stati implementati 3 job: build, test e
-deploy. Dopo una checkout iniziale (fetch-depth è 0 in quanto il
-changelog necessita di tutta la history dei commit), viene creata una
-cache per permettere ai job di comunicare tra loro. Successivamente alla
-build il sistema viene testato (in entrambi i casi viene usata l’action
-di yarn) e infine viene effettuato il deploy del servizio
-containerizzato Nel quale viene effettuato il chekout, si configura il
-nome del progetto e si configura la versione della build. Se il commit
-viene effettuato sul main si configura il nome del tag e la versione a
-"LATEST", nel caso non fosse nel main viene configurata la versione a
-"develop". Infine si effettua il login al Github container registry, la
-build e la push dell’immagine sul registro. L’immagine viene configurata
-in modo parametrico con delle variabili d’ambiente e il nome viene
-trasformato in minuscolo.</p>
+Questo workflow reagisce all’evento di pull request chiuse sul branch
+develop e alle release, le quali vengano generate a mano. Durante lo
+sviluppo del workflow, infatti, si è notato come non fosse possibile
+catturare l’evento della creazione di un nuovo tag che avrebbe permesso
+di automatizzare il processo di release di github. e sono stati
+implementati 3 job: build, test e deploy. Dopo una checkout iniziale,
+viene creata una cache per permettere ai job di comunicare tra loro.
+Successivamente alla build il sistema viene testato (in entrambi i casi
+viene usata l’action di yarn) e infine viene effettuato il deploy del
+servizio containerizzato Nel quale viene effettuato il chekout, si
+configura il nome del progetto e si configura la versione della build.
+Se il commit viene effettuato sul main si configura il nome del tag e la
+versione a "LATEST", nel caso non fosse nel main viene configurata la
+versione a "develop". Infine si effettua il login al Github container
+registry, la build e la push dell’immagine sul registro. L’immagine
+viene configurata in modo parametrico con delle variabili d’ambiente e
+il nome viene trasformato in minuscolo.</p>
 <h3 id="middlewaremaraffa">MiddlewareMaraffa:</h3>
-<p>Quando viene effettuata una pull request sul branch develop ed è di
-tipo closed (non sta progredendo e quindi l’esecuzione non è in corso)
-il workflow del Middleware viene attivato. Anch’esso è costituito da tre
-jobs: build, test e deploy. Come prima cosa nella build, viene eseguito
-il checkout, effettuato il setup di Java e Gradle. Infine viene
-effettuata la build di Gradle. Nel job del test si effettua il login al
-database di MongoDB. Password e username vengono passati tramite i
-secrets. Successivamente si prosegue con checkout, setup di Java
-utilizzando la cache per utilizzare la build di Gradle svolta
-precedentemente e infine si esegue il test con gradlew. Per quanto
-riguarda il deploy, si effettua il checkout utilizzando un token salvato
-all’interno di un secret. La parte restante coincide con quella delle
-repository precedenti.</p>
-<ul>
-<li><p><strong>ChatServer:</strong> Il servizio è sviluppato in un
-ambiente Java, pertanto dopo aver effettuato il checkout nel job build
-and test, si effettua il set-up di Java (distribuzione: temurin,
-versione 20). Viene svolto il set-up di Gradle, in cui viene usata
-un’action per la build e creata una cache. Inoltre viene aggiunto un
-commento con un riassunto dei risultati dei job alla pull request, il
-cui valore è impostato a "on-failure". Si noti che il suo valore di
-default è "never"; se fosse "always", si potrebbero verificare scenari
-indesiderati. Il riassunto dei risultati dei job risulta particolarmente
-utile: un utente che vuole esaminare la pull request riesce a
-comprendere lo stato dei job (se sono stati eseguiti correttamente
-oppure no) in modo leggibile e intuitivo. Successivamente si effettua il
-deploy del container di rabbitMQ se l’evento è una pull request oppure
-se è una push sul master o se la stringa con il riferimento a github
-contiene "tags/v". Infine se tutti il job da cui dipende
-(build-and-test) non è fallito e non è stato interrotto. Con
-l’istruzione run si verifica che non ci siano stati dei fallimenti nel
-job deploy and test.</p></li>
-<li><p><strong>FrontendMaraffa:</strong> //TODO Sarebbe figo spiegare
-come i nostri workflow hanno ridotto i conflitti di integrazione, il
-rilevamento precoce di bug e i problemi di compatibilità.</p></li>
-</ul>
+<p>Quando viene effettuata una release o una pull request sul branch
+develop ed è di tipo closed (non sta progredendo e quindi l’esecuzione
+non è in corso) il workflow del Middleware viene attivato. Anch’esso è
+costituito da tre jobs: build, test e deploy. Come prima cosa nella
+build, viene eseguito il checkout, effettuato il setup di Java e Gradle.
+Infine viene effettuata la build di Gradle. Nel job del test si crea un
+container con un database di MongoDB. Password e username vengono
+passati tramite i secrets. Successivamente si prosegue con checkout,
+setup di Java utilizzando la cache per utilizzare la build di Gradle
+svolta precedentemente e infine si esegue il test con gradlew. Per
+quanto riguarda il deploy, si effettua il checkout utilizzando un token
+salvato all’interno di un secret. La parte restante coincide con quella
+delle repository precedenti.</p>
+<h3 id="frontendmaraffa">FrontendMaraffa:</h3>
+<p>//Todo Sarebbe figo spiegare come i nostri workflow hanno ridotto i
+conflitti di integrazione, il rilevamento precoce di bug e i problemi di
+compatibilità.</p>
 <h2 id="continuous-integration">Continuous integration</h2>
 <p>Per migliorare la qualità del software e velocizzare il processo di
 sviluppo, è stata implementata la Continuous Integration. Questa pratica
