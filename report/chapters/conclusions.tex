@@ -1,17 +1,35 @@
 \chapter{Conclusions and Future Work}
 \label{ch:con}
-\section{Conclusions}
-Typically a conclusions chapter first summarizes the investigated problem and its aims and objectives. It summaries the critical/significant/major findings/results about the aims and objectives that have been obtained by applying the key methods/implementations/experiment set-ups. A conclusions chapter draws a picture/outline of your project's central and the most signification contributions and achievements. 
+\section{Conclusioni}
+L'architettura basata su micro-servizi si è rivelata una scelta altamente vantaggiosa per il progetto,
+ garantendo modularità, scalabilità e resilienza. Ogni micro-servizio è stato progettato per gestire specifiche
+  funzionalità, e la loro integrazione avviene tramite API REST e websocket orchestrate da un middleware centrale, che facilita
+   una comunicazione efficiente e ben strutturata tra le componenti del sistema. L'adozione di Docker ha semplificato
+    ulteriormente il processo di deploy, offrendo un ambiente di esecuzione coerente e adattabile, capace di gestire le
+     diverse esigenze di configurazione e scaling e affidabilità.
+% \ref{ch:results} 
 
-A good conclusions summary could be approximately 300--500 words long, but this is just a recommendation.
+L'architettura basata su micro-servizi si è rivelata una scelta altamente vantaggiosa per il progetto,
+ garantendo modularità, scalabilità e resilienza. 
+  Questo approccio consente una maggiore flessibilità nello sviluppo,
+permettendo ai team di lavorare in modo indipendente su componenti diverse, riducendo al contempo le interdipendenze
+ e i conflitti di integrazione.
 
-A conclusions chapter followed by an abstract is the last things you write in your project report.
+Quest'integrazione avviene tramite API REST e websocket orchestrate da un middleware centrale, che facilita una 
+comunicazione efficiente e ben strutturata tra le componenti del sistema. Questo sistema intermediario,
+ gestisce le richieste e il bilanciamento del carico, garantendo che i dati siano trasferiti in modo rapido
+ tra i vari micro-servizi. Inoltre, l'uso di websocket consente una comunicazione bidirezionale in near real-time,
+  migliorando la reattività dell'applicazione.
 
-\section{Future work}
-This section should refer to Chapter~\ref{ch:results} where the author has reflected their criticality about their own solution. The future work is then sensibly proposed in this section.
+L'adozione di Docker ha semplificato ulteriormente il processo di deploy, offrendo un ambiente di esecuzione coerente
+ e adattabile. Docker, infatti, permette di incapsulare ogni micro-servizio in un container, che include tutte le
+  dipendenze necessarie, eliminando problemi legati alle differenze tra ambienti di sviluppo e di test.
+Questo approccio non solo facilita la distribuzione, ma migliora anche la portabilità delle applicazioni e la gestione
+ delle risorse. Grazie a Docker, è possibile scalare orizzontalmente i micro-servizi in base alle necessità,
+ rispondendo rapidamente alle variazioni del carico di lavoro e garantendo così un'elevata disponibilità e affidabilità del sistema.
 
-\textbf{Guidance on writing future work:} While working on a project, you gain experience and learn the potential of your project and its future works. Discuss the future work of the project in technical terms. This has to be based on what has not been yet achieved in comparison to what you had initially planned and what you have learned from the project. Describe to a reader what future work(s) can be started from the things you have completed. This includes identifying what has not been achieved and what could be achieved. 
-
-
-
-A good future work summary could be approximately 300--500 words long, but this is just a recommendation.
+Infine, l'architettura a micro-servizi, risulta essere altamente resiliente. In caso di fallimento di un singolo micro-servizio,
+ il sistema può continuare a funzionare, con la possibilità di isolare e risolvere il problema senza impattare l'intera
+  applicazione. Questo approccio modulare non solo migliora la robustezza del sistema, ma facilita anche l'implementazione
+   di nuove funzionalità e l'aggiornamento di quelle esistenti, rendendo l'intero processo di sviluppo più agile e
+    reattivo.
