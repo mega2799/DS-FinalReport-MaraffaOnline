@@ -56,9 +56,12 @@ In questo modo si riesce a automatizzare i processi di build, test e deploy, ott
 \end{itemize}
 
 
-\subsection{UserManagementMaraffa e BusinessLogic:} Essendo le due repository estremamente simili e avendo entrambe un ambiente in node.js, è stato implementato un workflow pressochè analogo. Questo workflow reagisce all'evento push sul main branch, e pull request sui branch main e develop 
+\subsection{UserManagementMaraffa e BusinessLogic:} Essendo le due repository estremamente simili e avendo entrambe un ambiente in node.js, è stato implementato un workflow pressochè analogo.
+ Questo workflow reagisce all'evento di pull request chiuse sul branch develop e alle release, le quali vengano generate a mano. Durante lo sviluppo del workflow, infatti, si 
+ è notato come non fosse possibile catturare l'evento della creazione di un nuovo tag che avrebbe permesso di automatizzare 
+ il processo di release di github.
 e sono stati implementati 3 job: build, test e deploy.
-Dopo una checkout iniziale (fetch-depth è 0 in quanto il changelog necessita di tutta la history dei commit),
+Dopo una checkout iniziale,
  viene creata una cache per permettere ai job di comunicare tra loro. Successivamente alla build il sistema viene testato
   (in entrambi i casi viene usata l'action di yarn) e infine viene effettuato il deploy del servizio containerizzato
  Nel quale viene effettuato il chekout, si configura il nome del progetto e si configura la versione della build.
@@ -66,12 +69,12 @@ Dopo una checkout iniziale (fetch-depth è 0 in quanto il changelog necessita di
   Infine si effettua il login al Github container registry, la build e la push dell'immagine sul registro. L'immagine viene configurata in modo parametrico con delle variabili d'ambiente e il nome viene trasformato in minuscolo. 
 
 \subsection{MiddlewareMaraffa:} 
-Quando viene effettuata una pull request sul branch develop ed è di tipo closed
+Quando viene effettuata una release o una pull request sul branch develop ed è di tipo closed
 (non sta progredendo e quindi l’esecuzione non è in corso) il workflow del Middleware viene attivato.
 Anch'esso è costituito da tre jobs: build, test e deploy.
 Come prima cosa nella build, viene eseguito il checkout, effettuato il setup di Java e Gradle. Infine viene effettuata la 
 build di Gradle.
-Nel job del test si effettua il login al database di MongoDB. Password e username vengono passati tramite i secrets. Successivamente
+Nel job del test si crea un container con un database di MongoDB. Password e username vengono passati tramite i secrets. Successivamente
 si prosegue con checkout, setup di Java utilizzando la cache per utilizzare la build di Gradle svolta precedentemente e 
 infine si esegue il test con gradlew.
 Per quanto riguarda il deploy, si effettua il checkout utilizzando un token salvato all'interno di un secret. La parte
@@ -82,13 +85,11 @@ restante coincide con quella delle repository precedenti.
 % Parte finale 
 
 
-\begin{itemize}
-\item \textbf{ChatServer:} Il servizio è sviluppato in un ambiente Java, pertanto dopo aver effettuato il checkout nel job build and test,  si effettua il set-up di Java (distribuzione: temurin, versione 20). Viene svolto il set-up di Gradle, in cui viene usata un'action per la build e creata una cache. Inoltre viene aggiunto un commento con un riassunto dei risultati dei job  alla pull request, il cui valore è impostato a "on-failure". Si noti che il suo valore di default è "never"; se fosse "always", si potrebbero verificare scenari indesiderati. Il riassunto dei risultati dei job risulta particolarmente utile: un utente che vuole esaminare la pull request riesce a comprendere lo stato dei job (se sono stati eseguiti correttamente oppure no) in modo leggibile e intuitivo. Successivamente si effettua il deploy del container di rabbitMQ se l'evento è una pull request oppure se è una push sul master o se la stringa con il riferimento a github contiene "tags/v". Infine se tutti il job da cui dipende (build-and-test) non è fallito e non è stato interrotto. Con l'istruzione run si verifica che non ci siano stati dei fallimenti nel job deploy and test.
 
 \item \textbf{FrontendMaraffa:} //TODO
 Sarebbe figo spiegare come i nostri workflow hanno ridotto i conflitti di integrazione, il rilevamento precoce di bug e i problemi di compatibilità.
 
-\end{itemize}
+
 \section{Continuous integration}
 Per migliorare la qualità del software e velocizzare il processo di sviluppo, è stata implementata la Continuous Integration.
 Questa pratica permette di integrare il codice frequentemente, evitando possibili rischi d'integrazione e consetendo 
