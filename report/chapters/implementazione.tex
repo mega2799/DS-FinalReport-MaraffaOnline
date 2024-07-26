@@ -226,6 +226,17 @@ Data la scelta di dockerizzare interamente i servizi, è stato necessario l'util
 
 Per quanto riguarda invece lo sviluppo in CI, è stato necessario creare un file `.env.example` che contenesse tutte le variabili d'ambiente necessarie al funzionamento del servizio, in modo da poterle settare correttamente nel CI/CD, soprattutto per la fase di testing, e metterlo sulla repository. È importante tenere a mente che non dovrebbero mai essere caricati dati sensibili su strumenti di controllo di versione. In questo caso, non ci sono database o account cloud eventualmente raggiungibili dall'esterno.
 
+\section{Riflessioni sulla politiche di autovalutazione}
+\begin{itemize}
+    \item \textbf{l'elenco delle partite iniziate/finite deve rimanere aggiornato:} la reattività è stata garantita grazie alle WebSocket. 
+    \item \textbf{se un giocatore si disconnette la partita termina per tutti:}
+    analizzando i casi pratici si è notato che quando un giocatore si disconnette è perchè non ha intenzione di rientrare, è pertanto inutile far attendere gli altri giocatori per una possibile riconnessione.
+    Ogni giocatore viene notificato che la partita è stata terminata e, successivamente, vengono reindirizzati alla dashboard
+    \item \textbf{connessione lenta o malfunzionamenti da parte di un giocatore:} il giocatore potrà rimanere sempre aggiornato sullo stato corrente della partita riaggiornado la pagina
+    \item \textbf{un giocatore clicca sul tasto "esci":} allo stesso modo della disconessione, verrà comunicato a tutti gli altri giocatori che la partita è terminata e verranno reindirizzati alla schermata principale
+    \item \textbf{nel caso di un crash di un servizio si deve garantire che il servizio venga riavviato in automatico evitando che il sistema si blocchi:}
+    se crasha un servizio docker ha una funzione builtin per riavviare in automatico il container
+\end{itemize}
 \section{Screen}
 \section{Mockup}
 Per soddisfare le aspettative degli utenti di Maraffa sono stati realizzati dei mockup. Grazie a questi si è riuscito a raccogliere

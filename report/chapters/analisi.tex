@@ -16,13 +16,13 @@ I principali requisiti funzionali e obiettivi del sistema sono:
     \item \textbf{Persistenza dei dati: } salvataggio su database degli utenti e delle statistiche delle partite (mani giocate, briscola, etc...).
 \end{itemize}
 \section{Politiche di autovalutazione} 
+Di seguito vengono riportati i casi che dovranno essere gestiti dal sistema:
 \begin{itemize}
     \item l'elenco delle partite iniziate/finite deve rimanere aggiornato
-    \item se un giocatore si disconnette la partita termina per tutti (analizzando i casi pratici si è notato che quando un giocatore si disconnette è perchè non ha intenzione di rientrare, è pertanto inutile far attendere gli altri giocatori per una possibile riconnessione)
-    \item nel caso di connessione lenta o malfunzionamenti da parte di un giocatore, il giocatore potrà rimanere sempre aggiornato sullo stato corrente della partita riaggiornado la pagina
-    \item quando un giocatore clicca sul tasto "esci", verrà comunicato a tutti gli altri giocatori che la partita è terminata e verranno reindirizzati alla schermata principale
+    \item se un giocatore si disconnette la partita termina per tutti 
+    \item connessione lenta o malfunzionamenti da parte di un giocatore
+    \item un giocatore clicca sul tasto "esci"
     \item nel caso di un crash di un servizio si deve garantire che il servizio venga riavviato in automatico evitando che il sistema si blocchi
-    % \item se crasha un servizio docker ha già una funzione builtin di riavviare in automatico il container
 \end{itemize}
 % Si devono seguire le regole per completare una sessione di gioco.
 % • Se un giocatore che non `e l’ultimo rimasto si disconnette si disconnette la
