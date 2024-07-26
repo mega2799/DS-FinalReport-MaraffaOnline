@@ -169,6 +169,9 @@ javadoc, github page [NON so se va bene qua ma lo scrivo] </a></li>
 id="toc-lettura-variabili-dambiente">Lettura variabili
 d’ambiente</a></li>
 </ul></li>
+<li><a href="#riflessioni-sulla-politiche-di-autovalutazione"
+id="toc-riflessioni-sulla-politiche-di-autovalutazione">Riflessioni
+sulla politiche di autovalutazione</a></li>
 <li><a href="#screen" id="toc-screen">Screen</a></li>
 <li><a href="#mockup" id="toc-mockup">Mockup</a></li>
 </ul></li>
@@ -261,7 +264,7 @@ Configurazione</a></li>
 <span> <em>Supervisors:</em> Giovanni Ciatto, Matteo Magnani, Andrea
 Omicini </span><br />
 </p>
-<p>2024-07-25</p>
+<p>2024-07-26</p>
 </div>
 </div>
 <h2 id="list-of-abbreviations">List of Abbreviations</h2>
@@ -492,20 +495,16 @@ degli utenti e delle statistiche delle partite (mani giocate, briscola,
 etc...).</p></li>
 </ul>
 <h2 id="politiche-di-autovalutazione">Politiche di autovalutazione</h2>
+<p>Di seguito vengono riportati i casi che dovranno essere gestiti dal
+sistema:</p>
 <ul>
 <li><p>l’elenco delle partite iniziate/finite deve rimanere
 aggiornato</p></li>
-<li><p>se un giocatore si disconnette la partita termina per tutti
-(analizzando i casi pratici si è notato che quando un giocatore si
-disconnette è perchè non ha intenzione di rientrare, è pertanto inutile
-far attendere gli altri giocatori per una possibile
-riconnessione)</p></li>
-<li><p>nel caso di connessione lenta o malfunzionamenti da parte di un
-giocatore, il giocatore potrà rimanere sempre aggiornato sullo stato
-corrente della partita riaggiornado la pagina</p></li>
-<li><p>quando un giocatore clicca sul tasto "esci", verrà comunicato a
-tutti gli altri giocatori che la partita è terminata e verranno
-reindirizzati alla schermata principale</p></li>
+<li><p>se un giocatore si disconnette la partita termina per
+tutti</p></li>
+<li><p>connessione lenta o malfunzionamenti da parte di un
+giocatore</p></li>
+<li><p>un giocatore clicca sul tasto "esci"</p></li>
 <li><p>nel caso di un crash di un servizio si deve garantire che il
 servizio venga riavviato in automatico evitando che il sistema si
 blocchi</p></li>
@@ -1147,6 +1146,31 @@ metterlo sulla repository. È importante tenere a mente che non
 dovrebbero mai essere caricati dati sensibili su strumenti di controllo
 di versione. In questo caso, non ci sono database o account cloud
 eventualmente raggiungibili dall’esterno.</p>
+<h2 id="riflessioni-sulla-politiche-di-autovalutazione">Riflessioni
+sulla politiche di autovalutazione</h2>
+<ul>
+<li><p><strong>l’elenco delle partite iniziate/finite deve rimanere
+aggiornato:</strong> la reattività è stata garantita grazie alle
+WebSocket.</p></li>
+<li><p><strong>se un giocatore si disconnette la partita termina per
+tutti:</strong> analizzando i casi pratici si è notato che quando un
+giocatore si disconnette è perchè non ha intenzione di rientrare, è
+pertanto inutile far attendere gli altri giocatori per una possibile
+riconnessione. Ogni giocatore viene notificato che la partita è stata
+terminata e, successivamente, vengono reindirizzati alla
+dashboard</p></li>
+<li><p><strong>connessione lenta o malfunzionamenti da parte di un
+giocatore:</strong> il giocatore potrà rimanere sempre aggiornato sullo
+stato corrente della partita riaggiornado la pagina</p></li>
+<li><p><strong>un giocatore clicca sul tasto "esci":</strong> allo
+stesso modo della disconessione, verrà comunicato a tutti gli altri
+giocatori che la partita è terminata e verranno reindirizzati alla
+schermata principale</p></li>
+<li><p><strong>nel caso di un crash di un servizio si deve garantire che
+il servizio venga riavviato in automatico evitando che il sistema si
+blocchi:</strong> se crasha un servizio docker ha una funzione builtin
+per riavviare in automatico il container</p></li>
+</ul>
 <h2 id="screen">Screen</h2>
 <h2 id="mockup">Mockup</h2>
 <p>Per soddisfare le aspettative degli utenti di Maraffa sono stati
