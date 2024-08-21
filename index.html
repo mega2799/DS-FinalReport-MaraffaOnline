@@ -131,9 +131,8 @@ id="toc-servizio-business-logic">Servizio Business Logic</a></li>
 id="toc-servizio-ponte-tra-i-microservizi">Servizio ponte tra i
 microservizi</a></li>
 </ul></li>
-<li><a href="#dsspe-perche-i-microservizi"
-id="toc-dsspe-perche-i-microservizi">[DS/SPE] Perche’ i
-microservizi?</a>
+<li><a href="#perche-i-microservizi"
+id="toc-perche-i-microservizi">Perche’ i microservizi?</a>
 <ul>
 <li><a href="#vantaggi-dellarchitettura-a-microservizi"
 id="toc-vantaggi-dellarchitettura-a-microservizi">Vantaggi
@@ -183,8 +182,8 @@ class="math inline">↔︎</span> WebSocket</a>
 <ul>
 <li><a href="#chat-globale-e-privata"
 id="toc-chat-globale-e-privata">Chat globale e privata</a></li>
-<li><a href="#reattivita-e-aggiornamento-in-tempo-reale"
-id="toc-reattivita-e-aggiornamento-in-tempo-reale">Reattivita’ e
+<li><a href="#reattività-e-aggiornamento-in-tempo-reale"
+id="toc-reattività-e-aggiornamento-in-tempo-reale">Reattività e
 aggiornamento in tempo reale</a></li>
 </ul></li>
 <li><a href="#stack-docker-rightarrow-reti-interne-e-ip-privati"
@@ -208,11 +207,13 @@ template</a></li>
 <li><a href="#build-automation" id="toc-build-automation">Build
 automation</a>
 <ul>
-<li><a href="#usermanagementmaraffa-e-businesslogic"
-id="toc-usermanagementmaraffa-e-businesslogic">UserManagementMaraffa e
-BusinessLogic:</a></li>
-<li><a href="#middlewaremaraffa"
-id="toc-middlewaremaraffa">MiddlewareMaraffa:</a></li>
+<li><a href="#scheletro-del-workflow"
+id="toc-scheletro-del-workflow">Scheletro del workflow</a></li>
+<li><a href="#usermanagement-e-businesslogic"
+id="toc-usermanagement-e-businesslogic">UserManagement e
+BusinessLogic</a></li>
+<li><a href="#middleware-1" id="toc-middleware-1">Middleware</a></li>
+<li><a href="#frontend" id="toc-frontend">Frontend</a></li>
 <li><a href="#frontendmaraffa"
 id="toc-frontendmaraffa">FrontendMaraffa:</a></li>
 </ul></li>
@@ -264,7 +265,7 @@ Configurazione</a></li>
 <span> <em>Supervisors:</em> Giovanni Ciatto, Matteo Magnani, Andrea
 Omicini </span><br />
 </p>
-<p>2024-07-31</p>
+<p>2024-08-21</p>
 </div>
 </div>
 <h2 id="list-of-abbreviations">List of Abbreviations</h2>
@@ -659,8 +660,7 @@ microservizi</h3>
 </tbody>
 </table>
 </div>
-<h2 id="dsspe-perche-i-microservizi">[DS/SPE] Perche’ i
-microservizi?</h2>
+<h2 id="perche-i-microservizi">Perche’ i microservizi?</h2>
 <p>Ogni microservizio si occupa di gestire un singolo ambito di
 progetto, il che fa sì che si ottengano ottimi risultati riguardo la
 qualità e l’affidabilità, la riutilizzabilità, la flessibilità e la
@@ -1229,9 +1229,16 @@ occupa di visualizzare i messaggi e di inviarli al middleware. La
 gestione della persistenza delle chat è stata implementata tramite l’uso
 del session storage del browser all’interno del middleware, permettendo
 di mantenere la chat anche in caso di refresh della pagina.</p>
-<h3 id="reattivita-e-aggiornamento-in-tempo-reale">Reattivita’ e
+<h3 id="reattività-e-aggiornamento-in-tempo-reale">Reattività e
 aggiornamento in tempo reale</h3>
-<p>TODO</p>
+<p>Tramite l’utilizzo delle WebSocket, è possibile ottenere un
+aggiornamento in tempo reale delle informazioni, senza dover fare
+polling continuo al server. Questa tecnologia è stata ampiamente
+utilizzata nella pagina della partita, permettendo ai client di ricevere
+aggiornamenti immediati, ad esempio sulle carte giocate da altri
+giocatori o su eventi scatenati da azioni specifiche, come l’abbandono
+di un giocatore, la gestione dei punteggi o la conclusione della partita
+stessa.</p>
 <h2 id="stack-docker-rightarrow-reti-interne-e-ip-privati">Stack Docker
 <span class="math inline">→</span> reti interne e IP privati</h2>
 <p>Il sistema è stato progettato per essere eseguito su qualsiasi
@@ -1350,41 +1357,58 @@ Actions</p></li>
 <li><p>minimizzazione degli errori umani</p></li>
 <li><p>garantisce il continuous deployment</p></li>
 </ul>
-<h3 id="usermanagementmaraffa-e-businesslogic">UserManagementMaraffa e
-BusinessLogic:</h3>
+<h3 id="scheletro-del-workflow">Scheletro del workflow</h3>
+<p>I workflow utilizzati in questo progetto, pur utilizzando actions
+diverse specifiche per ogni servizio e linguaggio, seguono uno schema
+comune che ne facilita lo sviluppo e la manutenzione.</p>
+<p>Ogni workflow di deployment è composto da tre job principali: build,
+test e deploy. Seguono una logica sequenziale e non parallela, in cui la
+fine di ogni job decreta l’inizio di quello successivo. Il collegamento
+tra i job è garantito da un sistema di cache, che permette di passare i
+dati tra i vari job migliorandone l’efficienza e la velocità. Questi job
+vengono attivati secondo alcune regole di progetto comuni alle
+repository, in linea con il workflow adottato. Questi ultimi non sono
+attivati ad ogni commit, ma solo in determinate circostanze, qui di
+seguito elencate:</p>
+<ul>
+<li><p><strong>Pull request su develop</strong></p></li>
+<li><p><strong>Release manuale su main pubblicata</strong></p></li>
+</ul>
+<p>La struttura dei workflow è stata progettata per essere il più
+modulare possibile. Sono state utilizzate variabili d’ambiente per
+differenziare il deploy su develop e main, in modo da poter riutilizzare
+lo stesso workflow per entrambi i branch e produrre diverse immagini del
+software. Il nome dell’immagine pubblicata viene creato in modo
+parametrico, utilizzando il nome della repository, modificando i
+caratteri in minuscolo e aggiungendo la versione del software, che viene
+presa dal tag della release o impostata su stage o develop a seconda del
+branch che ha attivato il workflow.</p>
+<h3 id="usermanagement-e-businesslogic">UserManagement e
+BusinessLogic</h3>
 <p>Essendo le due repository estremamente simili e avendo entrambe un
-ambiente in node.js, è stato implementato un workflow pressochè analogo.
-Questo workflow reagisce all’evento di pull request chiuse sul branch
-develop e alle release, le quali vengano generate a mano. Durante lo
-sviluppo del workflow, infatti, si è notato come non fosse possibile
-catturare l’evento della creazione di un nuovo tag che avrebbe permesso
-di automatizzare il processo di release di github. e sono stati
-implementati 3 job: build, test e deploy. Dopo una checkout iniziale,
-viene creata una cache per permettere ai job di comunicare tra loro.
-Successivamente alla build il sistema viene testato (in entrambi i casi
-viene usata l’action di yarn) e infine viene effettuato il deploy del
-servizio containerizzato Nel quale viene effettuato il chekout, si
-configura il nome del progetto e si configura la versione della build.
-Se il commit viene effettuato sul main si configura il nome del tag e la
-versione a "LATEST", nel caso non fosse nel main viene configurata la
-versione a "develop". Infine si effettua il login al Github container
-registry, la build e la push dell’immagine sul registro. L’immagine
-viene configurata in modo parametrico con delle variabili d’ambiente e
-il nome viene trasformato in minuscolo.</p>
-<h3 id="middlewaremaraffa">MiddlewareMaraffa:</h3>
-<p>Quando viene effettuata una release o una pull request sul branch
-develop ed è di tipo closed (non sta progredendo e quindi l’esecuzione
-non è in corso) il workflow del Middleware viene attivato. Anch’esso è
-costituito da tre jobs: build, test e deploy. Come prima cosa nella
-build, viene eseguito il checkout, effettuato il setup di Java e Gradle.
-Infine viene effettuata la build di Gradle. Nel job del test si crea un
-container con un database di MongoDB. Password e username vengono
-passati tramite i secrets. Successivamente si prosegue con checkout,
-setup di Java utilizzando la cache per utilizzare la build di Gradle
-svolta precedentemente e infine si esegue il test con gradlew. Per
-quanto riguarda il deploy, si effettua il checkout utilizzando un token
-salvato all’interno di un secret. La parte restante coincide con quella
-delle repository precedenti.</p>
+ambiente in Node.js, è stato implementato un workflow pressoché analogo.
+Le actions utilizzate sono quelle di Yarn per le varie fasi di build,
+test e deploy, e per la creazione della cache tra i vari job.</p>
+<h3 id="middleware-1">Middleware</h3>
+<p>Questa repository è stata implementata in Java, quindi il workflow è
+stato leggermente diverso. Per le varie fasi sono state utilizzate le
+action di Java e Gradle. Per il corretto funzionamento della action di
+setup e quindi delle successive, si è reso necessario, anche se non
+previsto e non consigliato, mantenere sul repository remoto il file
+‘gradle-wrapper.jar‘. Per la fase di test, invece, è stata utilizzata
+un’action che permette di creare un container con un database di
+MongoDB, in modo da poter testare il codice che interagisce con un
+database, il che compone una delle funzionalità principali del servizio.
+Anche in questo caso, password e username vengono passati tramite i
+secrets.</p>
+<h3 id="frontend">Frontend</h3>
+<p>La repository di frontend è stata implementata in Angular, quindi il
+workflow è stato leggermente diverso. Per le varie fasi sono state
+utilizzate le action di Yarn per le fasi di build, deploy e per la
+creazione della cache tra i vari job. Non è stato necessario utilizzare
+la fase di test, poiché il frontend di un’applicazione non ha un sistema
+di unit test; la comunicazione con il middleware viene testata
+"manualmente".</p>
 <h3 id="frontendmaraffa">FrontendMaraffa:</h3>
 <p>//Todo Sarebbe figo spiegare come i nostri workflow hanno ridotto i
 conflitti di integrazione, il rilevamento precoce di bug e i problemi di
