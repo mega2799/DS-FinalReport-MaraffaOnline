@@ -160,10 +160,9 @@ OpenAPI</a></li>
 <li><a href="#postman" id="toc-postman">Postman</a></li>
 <li><a href="#log-automatici" id="toc-log-automatici">Log
 automatici</a></li>
-<li><a
-href="#checkstyle-javadoc-github-page-non-so-se-va-bene-qua-ma-lo-scrivo"
-id="toc-checkstyle-javadoc-github-page-non-so-se-va-bene-qua-ma-lo-scrivo">Checkstyle,
-javadoc, github page [NON so se va bene qua ma lo scrivo] </a></li>
+<li><a href="#checkstyle-javadoc-github-page"
+id="toc-checkstyle-javadoc-github-page">Checkstyle, javadoc, github page
+</a></li>
 <li><a href="#lettura-variabili-dambiente"
 id="toc-lettura-variabili-dambiente">Lettura variabili
 d’ambiente</a></li>
@@ -214,8 +213,6 @@ id="toc-usermanagement-e-businesslogic">UserManagement e
 BusinessLogic</a></li>
 <li><a href="#middleware-1" id="toc-middleware-1">Middleware</a></li>
 <li><a href="#frontend" id="toc-frontend">Frontend</a></li>
-<li><a href="#frontendmaraffa"
-id="toc-frontendmaraffa">FrontendMaraffa:</a></li>
 </ul></li>
 <li><a href="#continuous-integration"
 id="toc-continuous-integration">Continuous integration</a></li>
@@ -265,7 +262,7 @@ Configurazione</a></li>
 <span> <em>Supervisors:</em> Giovanni Ciatto, Matteo Magnani, Andrea
 Omicini </span><br />
 </p>
-<p>2024-08-21</p>
+<p>2024-08-24</p>
 </div>
 </div>
 <h2 id="list-of-abbreviations">List of Abbreviations</h2>
@@ -1063,9 +1060,8 @@ label="list:dockerfile_log"><pre class="sourceCode python"><code class="sourceCo
 <span id="list:dockerfile_log-14"><a href="#list:dockerfile_log-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="list:dockerfile_log-15"><a href="#list:dockerfile_log-15" aria-hidden="true" tabindex="-1"></a>EXPOSE <span class="dv">3003</span></span>
 <span id="list:dockerfile_log-16"><a href="#list:dockerfile_log-16" aria-hidden="true" tabindex="-1"></a>ENTRYPOINT [<span class="st">&quot;java&quot;</span>,<span class="st">&quot;-jar&quot;</span>,<span class="st">&quot;/app/Middleware.jar&quot;</span>]</span></code></pre></div>
-<h3
-id="checkstyle-javadoc-github-page-non-so-se-va-bene-qua-ma-lo-scrivo">Checkstyle,
-javadoc, github page [NON so se va bene qua ma lo scrivo] </h3>
+<h3 id="checkstyle-javadoc-github-page">Checkstyle, javadoc, github page
+</h3>
 <p>Dopo aver eseguito i controlli di stile sul codice sono stati trovati
 numerosi errori e warning, che sono stati corretti automaticamente da un
 plugin che ha sistemato ciò che Spotless non era riuscito a correggere.
@@ -1409,10 +1405,6 @@ creazione della cache tra i vari job. Non è stato necessario utilizzare
 la fase di test, poiché il frontend di un’applicazione non ha un sistema
 di unit test; la comunicazione con il middleware viene testata
 "manualmente".</p>
-<h3 id="frontendmaraffa">FrontendMaraffa:</h3>
-<p>//Todo Sarebbe figo spiegare come i nostri workflow hanno ridotto i
-conflitti di integrazione, il rilevamento precoce di bug e i problemi di
-compatibilità.</p>
 <h2 id="continuous-integration">Continuous integration</h2>
 <p>Per migliorare la qualità del software e velocizzare il processo di
 sviluppo, è stata implementata la Continuous Integration. Questa pratica
