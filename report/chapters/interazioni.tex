@@ -13,8 +13,8 @@ Come precedentemente citato, il middleware è stato implementato con WebSocket p
 Un grande vantaggio dell'uso delle WebSocket sta nella facile implementazione delle chat. Questo sistema richiedeva l'impiego di due diverse chat per permettere la comunicazione tra utenti sia globalmente che all'interno di una singola partita. 
 Anche in questo caso, il middleware si occupa di instradare i messaggi alle giuste chat, garantendo la privacy delle conversazioni. Il frontend, invece, si occupa di visualizzare i messaggi e di inviarli al middleware. La gestione della persistenza delle chat è stata implementata tramite l'uso del session storage del browser all'interno del middleware, permettendo di mantenere la chat anche in caso di refresh della pagina.
 
-\subsection{Reattivita' e aggiornamento in tempo reale}
-TODO
+\subsection{Reattività e aggiornamento in tempo reale}
+Tramite l'utilizzo delle WebSocket, è possibile ottenere un aggiornamento in tempo reale delle informazioni, senza dover fare polling continuo al server. Questa tecnologia è stata ampiamente utilizzata nella pagina della partita, permettendo ai client di ricevere aggiornamenti immediati, ad esempio sulle carte giocate da altri giocatori o su eventi scatenati da azioni specifiche, come l'abbandono di un giocatore, la gestione dei punteggi o la conclusione della partita stessa.
 
 \section{Stack Docker $ \rightarrow $ reti interne e IP privati}
 
