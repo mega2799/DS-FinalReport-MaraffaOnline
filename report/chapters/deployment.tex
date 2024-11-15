@@ -139,3 +139,11 @@ La configurazione di questi strumenti è stata gestita tramite Docker Compose, p
 \end{lstlisting}
 
 Con questa configurazione, il sistema di monitoraggio offre una visione completa delle performance e dello stato dei microservizi, permettendo di mantenere un'operatività ottimale e di intervenire prontamente in caso di anomalie.
+
+\subsection{Esecuzione del sistema}
+
+L'esecuzione del sistema può essere avviata tramite un unico file docker-compose.yaml. Con l'ambiente configurato correttamente, il sistema è in grado di operare autonomamente dopo l'esecuzione del comando docker compose up.
+
+Per l'esecuzione dei singoli servizi, sono necessari alcuni accorgimenti specifici. Il middleware e la business logic possono essere avviati in modo indipendente, poiché sono sempre gli altri servizi a interagire con loro. Lo User Service, invece, richiede un collegamento attivo a un database, mentre il frontend necessita di una serie di chiamate API e connessioni WebSocket al middleware (o a un componente che implementi le sue interfacce).
+
+In ogni caso, ciascun servizio può essere eseguito, esteso o migliorato in modo indipendente rispetto agli altri, a condizione che vengano rispettate le interfacce di comunicazione condivise tra i servizi.
