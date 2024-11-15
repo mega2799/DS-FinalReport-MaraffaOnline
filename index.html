@@ -244,6 +244,8 @@ id="toc-containerization">Containerization</a>
 <li><a href="#integrazione-e-configurazione"
 id="toc-integrazione-e-configurazione">Integrazione e
 Configurazione</a></li>
+<li><a href="#esecuzione-del-sistema"
+id="toc-esecuzione-del-sistema">Esecuzione del sistema</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#ch:con" id="toc-ch:con">Conclusions and Future Work</a>
@@ -580,6 +582,13 @@ comunicazioni tra i vari microservizi, e svolge la funzione di "motore
 di gioco".</p></li>
 </ul>
 <p><img src="report/img/Architecture.png" style="width:12cm"
+alt="image" /><br />
+Le interazioni tra i microservizi avvengono prevalentemente tramite API
+rest e websocket. Qui di seguito uno sequence diagram che riassume come
+avviene lo scambio di informazioni tra i vari componenti.</p>
+<p>All’interno del capitolo dedicato alle Iterazioni quest’ultime
+verranno approfondite in dettaglio.</p>
+<p><img src="report/img/Maraffa_Diagram.png" style="width:12cm"
 alt="image" /><br />
 </p>
 <h2 id="micro-servizi-e-la-loro-architettura">Micro-servizi e la loro
@@ -1786,6 +1795,22 @@ class="sourceCode python"><code class="sourceCode python"><span id="list:docker_
 visione completa delle performance e dello stato dei microservizi,
 permettendo di mantenere un’operatività ottimale e di intervenire
 prontamente in caso di anomalie.</p>
+<h3 id="esecuzione-del-sistema">Esecuzione del sistema</h3>
+<p>L’esecuzione del sistema può essere avviata tramite un unico file
+docker-compose.yaml. Con l’ambiente configurato correttamente, il
+sistema è in grado di operare autonomamente dopo l’esecuzione del
+comando docker compose up.</p>
+<p>Per l’esecuzione dei singoli servizi, sono necessari alcuni
+accorgimenti specifici. Il middleware e la business logic possono essere
+avviati in modo indipendente, poiché sono sempre gli altri servizi a
+interagire con loro. Lo User Service, invece, richiede un collegamento
+attivo a un database, mentre il frontend necessita di una serie di
+chiamate API e connessioni WebSocket al middleware (o a un componente
+che implementi le sue interfacce).</p>
+<p>In ogni caso, ciascun servizio può essere eseguito, esteso o
+migliorato in modo indipendente rispetto agli altri, a condizione che
+vengano rispettate le interfacce di comunicazione condivise tra i
+servizi.</p>
 <h1 id="ch:con">Conclusions and Future Work</h1>
 <h2 id="conclusioni">Conclusioni</h2>
 <p>L’architettura basata su micro-servizi si è rivelata una scelta
