@@ -27,23 +27,6 @@ All'interno del capitolo dedicato alle Iterazioni quest'ultime verranno approfon
 \section{Micro-servizi e la loro architettura}
 
 \newpage
-% \subsection{Servizio per la Chat}
-
-% \begin{table}[h!]
-%     \centering
-%     \caption{Tabella descrittiva Chat Service}
-%     \label{tab:chat_serv_table}
-%     \begin{tabular}{ll}     
-%         \toprule                   
-%         Linguaggio & Java \\        
-%         Server & Vertx, Swagger \\
-%         Librerie & RabbitMQ(vertx) \\
-%         Architettura & Agenti vertx \\
-%         \bottomrule
-%     \end{tabular}
-% \end{table}
-
-% \includegraphics[width=15cm]{report/img/Architettura ChatService.png}\\[10.5cm]
 
 \subsection{Servizio per Gestione Utenti}
 
@@ -90,7 +73,7 @@ All'interno del capitolo dedicato alle Iterazioni quest'ultime verranno approfon
         Linguaggio & Java \\        
         Server & Vertx \\
         Librerie & RabbitMQ(vertx) \\
-        Architettura & Multi-agent, motore di gioco \\
+        Architettura & Multi-attore, motore di gioco \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -169,7 +152,7 @@ Non è stato implementato nessun meccanismo di discovery per la gestione di chia
 
 Si è seguito un approccio modulare nello sviluppo di questo componente che, in un primo step, conteneva soltanto la logica di gestione delle partite, al quale sono stati aggiunti i moduli per la comunicazione con il servizio degli utenti e della business logic. Ogni modulo segue la stessa struttura, ossia una classe denominata controller che si occupa esclusivamente della dichiarazione delle rotte HTTP e che a sua volta contiene un service. Ogni servizio contiene poi le logiche di calcolo e crea un JSON di risposta che viene passato al controller che lo invia come risposta HTTP, questo per poter separare completamente e rispettare il principio di single responsibility.
 
-Nel modulo contenente le logiche di gioco è stato necessario aggiungere un ulteriore strato alla struttura controller-service, data la struttura multi-agente della gestione delle partite che non permetteva una separazione netta. Quindi è stato aggiunto, tra il controller e il service, un componente ibrido per poter comunque avere servizi indipendenti.
+Nel modulo contenente le logiche di gioco è stato necessario aggiungere un ulteriore strato alla struttura controller-service, data la struttura multi-attore della gestione delle partite che non permetteva una separazione netta. Quindi è stato aggiunto, tra il controller e il service, un componente ibrido per poter comunque avere servizi indipendenti.
 
 Questa separazione, oltre a essere una buona pratica, è stata scelta per poter effettuare del testing comodamente soltanto sui servizi, testando quindi solamente la parte relativa all'elaborazione di una risposta.
 
@@ -178,14 +161,14 @@ Questa separazione, oltre a essere una buona pratica, è stata scelta per poter 
 L'interazione con il frontend avviene prevalentemente tramite il protocollo HTTP, ma per la gestione di alcuni aspetti in tempo reale sono state introdotte le WebSocket.
 Questo componente è stato creato, ad esempio, per la gestione delle chat di gioco, in modo che i giocatori possano comunicare tra loro in tempo reale. Ogni client, istanziato sul computer degli utenti, effettua una connessione WebSocket con il middleware utilizzando come endpoint il proprio UUID, che viene assegnato automaticamente all'avvio, e lo username del giocatore, dopo aver effettuato il login. Il middleware contiene al proprio interno una mappa di tutti i client e giocatori connessi con la relativa WebSocket e una classe che espone due metodi per inviare messaggi a un singolo giocatore o effettuare un messaggio broadcast a tutti i giocatori connessi.
 
-Il modulo di game si occupa di gestire le partite, quindi è l'unico che può sapere quali giocatori devono ricevere determinati messaggi relativi a una singola partita. Per utilizzare il servizio di WebSocket, è stata implementata una semplice interfaccia all'interno dell'agente di gioco con la quale si effettuano chiamate "onEvent". Ogni volta che un particolare evento si verifica, un'invocazione a queste chiamate permette di inviare messaggi alle WebSocket dei giocatori interessati.
+Il modulo di game si occupa di gestire le partite, quindi è l'unico che può sapere quali giocatori devono ricevere determinati messaggi relativi a una singola partita. Per utilizzare il servizio di WebSocket, è stata implementata una semplice interfaccia all'interno dell'attore di gioco con la quale si effettuano chiamate "onEvent". Ogni volta che un particolare evento si verifica, un'invocazione a queste chiamate permette di inviare messaggi alle WebSocket dei giocatori interessati.
 
 \begin{lstlisting}[language=Java, caption={Interfaccia per gestire chiamate websocket}, label=list:java_websocket_interface]
 package game;
 
 import game.service.User;
 
-public interface IGameAgent {
+public interface IGameActor {
 
 	void onCreateGame(User user);
 

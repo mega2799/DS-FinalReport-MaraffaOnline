@@ -40,7 +40,7 @@ Utilizza API REST per comunicare con il middleware e ottenere i dati necessari p
 
 \includegraphics[width=12cm]{report/img/middleware.png}\\[10.5cm]
 
-Come già citato, il middleware è il cuore del sistema. L'architettura utilizzata per la gestione delle partite è quella di un multi-agente, in cui ogni agente si occupa di gestire una partita 
+Come già citato, il middleware è il cuore del sistema. L'architettura utilizzata per la gestione delle partite è quella di un multi-attore, in cui ogni attore si occupa di gestire una partita 
 e di orchestrare la comunicazione con gli altri servizi, come ad esempio il front-end. Questo core è stato realizzato con Vertx, che è stato utilizzato anche per creare un web-server in Java.
 
 Inoltre, al middleware è collegato un database NoSQL su MongoDB, che viene aggiornato a ogni trick completato dai giocatori per creare uno storico delle partite e salvare le loro decisioni in gioco. 
