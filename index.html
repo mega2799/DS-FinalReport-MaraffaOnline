@@ -321,7 +321,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <span> <em>Supervisors:</em> Giovanni Ciatto, Matteo Magnani, Andrea
 Omicini </span><br />
 </p>
-<p>2025-01-13</p>
+<p>2025-01-19</p>
 </div>
 </div>
 <h2 id="list-of-abbreviations">List of Abbreviations</h2>
@@ -718,7 +718,7 @@ microservizi</h3>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Architettura</td>
-<td style="text-align: left;">Multi-agent, motore di gioco</td>
+<td style="text-align: left;">Multi-attore, motore di gioco</td>
 </tr>
 </tbody>
 </table>
@@ -845,7 +845,7 @@ che lo invia come risposta HTTP, questo per poter separare completamente
 e rispettare il principio di single responsibility.</p>
 <p>Nel modulo contenente le logiche di gioco è stato necessario
 aggiungere un ulteriore strato alla struttura controller-service, data
-la struttura multi-agente della gestione delle partite che non
+la struttura multi-attore della gestione delle partite che non
 permetteva una separazione netta. Quindi è stato aggiunto, tra il
 controller e il service, un componente ibrido per poter comunque avere
 servizi indipendenti.</p>
@@ -870,7 +870,7 @@ connessi.</p>
 <p>Il modulo di game si occupa di gestire le partite, quindi è l’unico
 che può sapere quali giocatori devono ricevere determinati messaggi
 relativi a una singola partita. Per utilizzare il servizio di WebSocket,
-è stata implementata una semplice interfaccia all’interno dell’agente di
+è stata implementata una semplice interfaccia all’interno dell’attore di
 gioco con la quale si effettuano chiamate "onEvent". Ogni volta che un
 particolare evento si verifica, un’invocazione a queste chiamate
 permette di inviare messaggi alle WebSocket dei giocatori
@@ -883,7 +883,7 @@ class="sourceCode java"><code class="sourceCode java"><span id="list:java_websoc
 <span id="list:java_websocket_interface-2"><a href="#list:java_websocket_interface-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="list:java_websocket_interface-3"><a href="#list:java_websocket_interface-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">game</span><span class="op">.</span><span class="im">service</span><span class="op">.</span><span class="im">User</span><span class="op">;</span></span>
 <span id="list:java_websocket_interface-4"><a href="#list:java_websocket_interface-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="list:java_websocket_interface-5"><a href="#list:java_websocket_interface-5" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="kw">interface</span> IGameAgent <span class="op">{</span></span>
+<span id="list:java_websocket_interface-5"><a href="#list:java_websocket_interface-5" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="kw">interface</span> IGameActor <span class="op">{</span></span>
 <span id="list:java_websocket_interface-6"><a href="#list:java_websocket_interface-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="list:java_websocket_interface-7"><a href="#list:java_websocket_interface-7" aria-hidden="true" tabindex="-1"></a>	<span class="dt">void</span> <span class="fu">onCreateGame</span><span class="op">(</span>User user<span class="op">);</span></span>
 <span id="list:java_websocket_interface-8"><a href="#list:java_websocket_interface-8" aria-hidden="true" tabindex="-1"></a></span>
@@ -958,8 +958,8 @@ middleware.</p>
 <p><img src="report/img/middleware.png" style="width:12cm"
 alt="image" /><br />
 Come già citato, il middleware è il cuore del sistema. L’architettura
-utilizzata per la gestione delle partite è quella di un multi-agente, in
-cui ogni agente si occupa di gestire una partita e di orchestrare la
+utilizzata per la gestione delle partite è quella di un multi-attore, in
+cui ogni attore si occupa di gestire una partita e di orchestrare la
 comunicazione con gli altri servizi, come ad esempio il front-end.
 Questo core è stato realizzato con Vertx, che è stato utilizzato anche
 per creare un web-server in Java.</p>
